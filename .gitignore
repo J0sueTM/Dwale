@@ -1,0 +1,20 @@
+# \file .gitignore
+
+# binaries
+*.exe
+*.bin
+**/bin/*
+
+# libs and shared objects
+*.a
+*.so
+*.dll
+
+# editor 
+Session.vim
+*.#
+*~
+.vs/*
+
+# generated
+**/Makefile
