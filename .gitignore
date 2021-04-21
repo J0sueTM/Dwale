@@ -10,7 +10,8 @@
 *.so
 *.dll
 
-# editor 
+# editor
+.undodir/*
 Session.vim
 *.#
 *~
