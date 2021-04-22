@@ -45,17 +45,23 @@ D_raise_warning(char *__warning_buffer)
 void
 D_raise_error_alt(char *__error_buffer,
                   char *__error_file,
-                  int  *__error_line)
+                  i32   __error_line)
 {
-  char *temp_error_buffer = (char *)malloc(1024);
+  char *temp_error_buffer;
   if (!__error_buffer)
-  { temp_error_buffer = "Something went wrong"; }
+  {
+    temp_error_buffer = (char *)malloc(22 * sizeof(char));
+    temp_error_buffer = "Something went wrong\0";
+  }
   else
   { temp_error_buffer = __error_buffer; }
+  
+  fprintf(stderr, "%s[ ERROR ]:%s %s:%d %s.\n", C_RED,
+                                                C_NORMAL,
+                                                __error_file,
+                                                __error_line,
+                                                __error_buffer);
 
-  fprintf(stderr, "%s[ ERROR ]:%s %s.\n", C_RED,
-                                          C_NORMAL,
-                                          temp_error_buffer);
-
-  free(temp_error_buffer);
+  if (temp_error_buffer != __error_buffer)
+  { free(temp_error_buffer); }
 }

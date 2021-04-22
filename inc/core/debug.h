@@ -41,6 +41,8 @@ extern "C"
 #define C_RED    "\e[1;91m"
 #endif /* _WIN32 */
 
+#define USE_ERRNO NULL
+
 void
 D_raise_log(char *__log_buffer);
 
@@ -50,7 +52,7 @@ D_raise_warning(char *__warning_buffer);
 void
 D_raise_error_alt(char *__error_buffer,
                   char *__error_file,
-                  i32  *__error_line);
+                  i32   __error_line);
 
 #define D_raise_error(__error_buffer) \
   D_raise_error_alt((__error_buffer) \
@@ -62,7 +64,7 @@ D_raise_error_alt(char *__error_buffer,
 #define D_assert(__statement, \
                  __error_buffer) \
   if (!__statement) \
-    ? D_raise_error(__error_buffer)
+    D_raise_error(__error_buffer)
 
 #endif /* __D_DEBUG_H__ */
 

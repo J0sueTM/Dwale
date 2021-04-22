@@ -28,9 +28,11 @@ main(int    argc,
   D_raise_warning("This is a warning!");
   D_raise_error("This is probably an error!!!");
 
-  /* NULL error, should raise errno */
-  FILE *nonexistent_file = fopen("/usr/lib/random_name.c");
-  D_assert(nonexistent_file, NULL);
+  D_assert(0, "Assertion outputing an error!");
+
+  FILE *nonexistent_file = fopen("nonexistent_file.png", "rb");
+  D_assert(nonexistent_file, USE_ERRNO);
+  D_assert(nonexistent_file, "You tried to open a file that does not exist :(");
 
   return 0;
 }

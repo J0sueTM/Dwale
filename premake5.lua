@@ -1,7 +1,7 @@
 --[[
--- \file premake5.lua
--- \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
--- \date April 20, 2021
+-- file premake5.lua
+-- author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
+-- date April 20, 2021
 --
 -- Copyright (C) Josué Teodoro Moreira
 --
@@ -30,17 +30,17 @@ workspace "Dwale"
   includedirs
   {
     "./inc",
-    "./vendor/glfw/include",
-    "./vendor/glad/include"
+    "./vendor/glfw/include/",
+    "./vendor/glad/include/"
   }
 
   group "libs"
-    include "./vendor/glfw"
-    include "./vendor/glad"
+    include "./vendor/glfw/"
+    include "./vendor/glad/"
   group ""
 
   include "./inc"
 
-  group "unittest"
-    include "./test"
-  group ""
+  filter "configurations:Debug"
+    include "./test/"
+  filter ""

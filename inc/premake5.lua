@@ -1,7 +1,7 @@
 --[[
--- \file inc/premake5.lua
--- \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
--- \data April 20, 2021
+-- file inc/premake5.lua
+-- author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
+-- data April 20, 2021
 --
 -- Copyright (C) Josué Teodoro Moreira
 --

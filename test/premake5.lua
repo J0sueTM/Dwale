@@ -1,7 +1,7 @@
 --[[
--- \file test/premake5.lua
--- \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
--- \date April 21, 2021
+-- file test/premake5.lua
+-- author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
+-- date April 21, 2021
 --
 -- Copyright (C) Josué Teodoro Moreira
 --
@@ -20,14 +20,14 @@ project "DebugTest"
   kind "ConsoleApp"
   language "C"
 
-  targetdir("../bin/test/%{prj.name}")
-  objdir("../bin/obj/test/%{prj.name}")
+  targetdir("./bin/%{prj.name}")
+  objdir("./bin/%{prj.name}")
 
   files
   { "./src/t_debug.c" }
 
   includedirs
-  { "../inc" }
+  { "../inc/" }
 
   links
   {
@@ -38,6 +38,8 @@ project "DebugTest"
 
   systemversion "latest"
   staticruntime "On"
+  runtime "Debug"
+  symbols "On"  
 
   filter "system:linux"
     linkoptions
@@ -53,10 +55,4 @@ project "DebugTest"
   filter "system:windows"
     defines
     { "_CRT_SECURE_NO_WARNINGS" }
-  filter "configurations:Debug"
-    runtime "Debug"
-    symbols "On"
-  filter "configurations:Release"
-    runtime "Release"
-    optimize "On"
   filter ""
