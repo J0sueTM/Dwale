@@ -51,6 +51,8 @@ D_raise_error_alt(char *__error_buffer,
   if (!__error_buffer)
   {
     temp_error_buffer = (char *)malloc(22 * sizeof(char));
+    D_assert(temp_error_buffer, DERR_NOMEMO);
+    
     temp_error_buffer = "Something went wrong\0";
   }
   else
