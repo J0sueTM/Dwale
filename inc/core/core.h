@@ -51,10 +51,7 @@ extern "C"
 #endif /* __amd64__ __amd64 _M_AMD64 __M_X64 __x86_64__ __x86_64 */
 
 #include "core/types.h"
-/*
- * TODO(J0sueTM): Add error codes
- * #include "core/errcode.h"
- */
+#include "core/errcode.h"
 
 #endif /* __D_CORE_H__ */
 

@@ -1,8 +1,10 @@
 /**
- * \file test/src/t_debug.c
+ * \file inc/core/errcode.h
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
- * \date April 21, 2021
+ * \date April 22, 2021
  *
+ * \brief Error codes for debugging
+ * 
  * Copyright (C) Josué Teodoro Moreira
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -16,21 +18,24 @@
  * GNU General Public License for more details.
  */
 
-#include "core/debug.h"
-
-int
-main(int    argc,
-     char **argv)
+#ifdef __cplusplus
+extern "C"
 {
-  D_raise_log("Log is working");
-  D_raise_warning("This is a warning!");
-  D_raise_error("This is probably an error!!!");
+#endif /* __cplusplus */
 
-  D_assert(0, "Assertion outputing an error!");
+#ifndef __D_ERRCODE_H__
+#define __D_ERRCODE_H__
 
-  FILE *nonexistent_file = fopen("nonexistent_file.png", "rb");
-  D_assert(nonexistent_file, USE_ERRNO);
-  D_assert(nonexistent_file, "You tried to open a file that does not exist :(");
+/**
+ * NOTE(all): This error code list should be upgraded throughout
+ * development time
+ */
 
-  return 0;
+#define DERR_NOMEMO "Could not allocate memory"
+#define DERR_OUTBOUND "Value out of bound"
+
+#endif /* __D_ERRCODE_H__ */
+
+#ifdef __cplusplus
 }
+#endif /* __cplusplus */
