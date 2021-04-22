@@ -1,8 +1,10 @@
 /**
- * \file test/src/t_debug.c
+ * \file inc/dwale.h
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
- * \date April 21, 2021
+ * \date April 22, 2021
  *
+ * \brief Base includes for dwale
+ * 
  * Copyright (C) Josué Teodoro Moreira
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -16,21 +18,11 @@
  * GNU General Public License for more details.
  */
 
-#include "dwale.h"
+#include "core/core.h"
+#include "video/video.h"
 
-int
-main(int    argc,
-     char **argv)
-{
-  D_raise_log("Log is working");
-  D_raise_warning("This is a warning!");
-  D_raise_error("This is probably an error!!!");
+void
+D_init();
 
-  D_assert(0, "Assertion outputing an error!");
-
-  FILE *nonexistent_file = fopen("nonexistent_file.png", "rb");
-  D_assert(nonexistent_file, USE_ERRNO);
-  D_assert(nonexistent_file, "You tried to open a file that does not exist :(");
-
-  return 0;
-}
+void
+D_end();

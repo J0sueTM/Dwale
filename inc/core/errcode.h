@@ -33,6 +33,7 @@ extern "C"
 
 #define DERR_NOMEMO "Could not allocate memory"
 #define DERR_OUTBOUND "Value out of bound"
+#define DERR_NOINIT(x) "Could not initialize " x
 
 #endif /* __D_ERRCODE_H__ */
 

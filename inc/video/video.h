@@ -1,9 +1,9 @@
 /**
- * \file inc/core/core.h
+ * \file inc/video/video.h
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
- * \date April 21, 2021
+ * \date April 22, 2021
  *
- * \brief Base includes and defines
+ * \brief Visual related utilities
  * 
  * Copyright (C) Josué Teodoro Moreira
  * 
@@ -23,38 +23,22 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-#ifndef __D_CORE_H__
-#define __D_CORE_H__
+#ifndef __D_VIDEO_H__
+#define __D_VIDEO_H__
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
-#include <memory.h>
-#include <errno.h>
+#include "core/core.h"
 
-#ifdef _WIN32
-#include <Windows.h>
-#else
-#include <unistd.h>
-#endif /*_WIN32 */
+#include "glad/glad.h"
+#define GLFW_INCLUDE_NONE
+#include "GLFW/glfw3.h"
 
-#if defined(__amd64__)  || \
-    defined(__amd64)    || \
-    defined(_M_AMD64)   || \
-    defined(__M_X64)    || \
-    defined(__x86_64__) || \
-    defined(__x86_64)
-#define __D_ARCH64__
-#else
-#define __D_ARCH32__
-#endif /* __amd64__ __amd64 _M_AMD64 __M_X64 __x86_64__ __x86_64 */
+void
+D_init_video();
 
-#include "core/types.h"
-#include "core/errcode.h"
-#include "core/debug.h"
+void
+D_end_video();
 
-#endif /* __D_CORE_H__ */
+#endif /* __D_VIDEO_H__ */
 
 #ifdef __cplusplus
 }
