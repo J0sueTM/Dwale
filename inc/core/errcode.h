@@ -18,13 +18,13 @@
  * GNU General Public License for more details.
  */
 
+#ifndef __D_ERRCODE_H__
+#define __D_ERRCODE_H__
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
-
-#ifndef __D_ERRCODE_H__
-#define __D_ERRCODE_H__
 
 /**
  * NOTE(all): This error code list should be upgraded throughout
@@ -35,8 +35,8 @@ extern "C"
 #define DERR_OUTBOUND "Value out of bound"
 #define DERR_NOINIT(x) "Could not initialize " x
 
-#endif /* __D_ERRCODE_H__ */
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+#endif /* __D_ERRCODE_H__ */

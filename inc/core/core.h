@@ -18,13 +18,13 @@
  * GNU General Public License for more details.
  */
 
+#ifndef __D_CORE_H__
+#define __D_CORE_H__
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
-
-#ifndef __D_CORE_H__
-#define __D_CORE_H__
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,8 +54,8 @@ extern "C"
 #include "core/errcode.h"
 #include "core/debug.h"
 
-#endif /* __D_CORE_H__ */
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+#endif /* __D_CORE_H__ */

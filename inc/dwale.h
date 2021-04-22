@@ -18,6 +18,14 @@
  * GNU General Public License for more details.
  */
 
+#ifndef __D_H__
+#define __D_H__
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 #include "core/core.h"
 #include "video/video.h"
 
@@ -26,3 +34,9 @@ D_init();
 
 void
 D_end();
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
+#endif /* __D_H__ */

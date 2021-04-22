@@ -47,23 +47,19 @@ D_raise_error_alt(char *__error_buffer,
                   char *__error_file,
                   i32   __error_line)
 {
-  char *temp_error_buffer;
   if (!__error_buffer)
   {
-    temp_error_buffer = (char *)malloc(22 * sizeof(char));
-    D_assert(temp_error_buffer, DERR_NOMEMO);
-    
-    temp_error_buffer = "Something went wrong\0";
+    fprintf(stderr, "%s[ ERROR ]:%s %s:%d Something went wron.\n", C_RED,
+                                                                   C_NORMAL,
+                                                                   __error_file,
+                                                                   __error_line);
+
+    return;
   }
-  else
-  { temp_error_buffer = __error_buffer; }
   
   fprintf(stderr, "%s[ ERROR ]:%s %s:%d %s.\n", C_RED,
                                                 C_NORMAL,
                                                 __error_file,
                                                 __error_line,
                                                 __error_buffer);
-
-  if (temp_error_buffer != __error_buffer)
-  { free(temp_error_buffer); }
 }

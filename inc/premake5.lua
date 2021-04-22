@@ -31,8 +31,8 @@ project "Dwale"
 
   includedirs
   {
-    "../vendor/glad/include",
-    "../vendor/glfw/include"
+    "../vendor/glad/include/",
+    "../vendor/glfw/include/"
   }
 
   systemversion "latest"

@@ -27,7 +27,11 @@ project "DebugTest"
   { "./src/t_debug.c" }
 
   includedirs
-  { "../inc/" }
+  {
+     "../inc/",
+     "../vendor/glad/include/",
+     "../vendor/glfw/include/"
+  }
 
   links
   {
@@ -38,8 +42,6 @@ project "DebugTest"
 
   systemversion "latest"
   staticruntime "On"
-  runtime "Debug"
-  symbols "On"  
 
   filter "system:linux"
     linkoptions
@@ -55,4 +57,10 @@ project "DebugTest"
   filter "system:windows"
     defines
     { "_CRT_SECURE_NO_WARNINGS" }
-  filter ""
+  filter "configurations:Debug"
+    runtime "Debug"
+    symbols "On"
+  filter "configurations:Release"
+    runtime "Release"
+    optimize "On"
+  filter ""    

@@ -18,16 +18,15 @@
  * GNU General Public License for more details.
  */
 
+#ifndef __D_VIDEO_H__
+#define __D_VIDEO_H__
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-#ifndef __D_VIDEO_H__
-#define __D_VIDEO_H__
-
 #include "core/core.h"
-
 #include "glad/glad.h"
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
@@ -38,8 +37,8 @@ D_init_video();
 void
 D_end_video();
 
-#endif /* __D_VIDEO_H__ */
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+#endif /* __D_VIDEO_H__ */

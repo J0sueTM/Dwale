@@ -18,13 +18,13 @@
  * GNU General Public License for more details.
  */
 
+#ifndef __D_DEBUG_H__
+#define __D_DEBUG_H__
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
-
-#ifndef __D_DEBUG_H__
-#define __D_DEBUG_H__
 
 #include "core/core.h"
 
@@ -66,8 +66,8 @@ D_raise_error_alt(char *__error_buffer,
   if (!__statement) \
     D_raise_error(__error_buffer)
 
-#endif /* __D_DEBUG_H__ */
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+#endif /* __D_DEBUG_H__ */

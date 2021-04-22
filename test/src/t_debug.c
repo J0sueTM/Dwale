@@ -22,6 +22,8 @@ int
 main(int    argc,
      char **argv)
 {
+  D_init();
+
   D_raise_log("Log is working");
   D_raise_warning("This is a warning!");
   D_raise_error("This is probably an error!!!");
@@ -31,6 +33,8 @@ main(int    argc,
   FILE *nonexistent_file = fopen("nonexistent_file.png", "rb");
   D_assert(nonexistent_file, USE_ERRNO);
   D_assert(nonexistent_file, "You tried to open a file that does not exist :(");
+
+  D_end();
 
   return 0;
 }
