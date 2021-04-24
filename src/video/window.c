@@ -35,6 +35,12 @@ _update_current_global_dimensions(struct D_window *__window)
   }
 }
 
+static void
+_default_framebuffer_size_callback(GLFWwindow *__window,
+                                   u32         __width,
+                                   u32         __height)
+{ glViewport(0, 0, __width, __height); }
+
 struct D_window *
 D_create_window(char *__title,
                 u32   __width,
@@ -152,7 +158,7 @@ D_toggle_context_current(struct D_window *__window)
   
   glViewport(0, 0,
              __window->current_global_dimensions.u32vector2.x,
-             __window->current_global_dimensions.u32vector2.y);  
+             __window->current_global_dimensions.u32vector2.y);
 
   D_raise_log("Toggled current OpenGL rendering context");
 }
