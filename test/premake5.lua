@@ -28,16 +28,16 @@ project "DebugTest"
 
   includedirs
   {
-     "../inc/",
+     "../vendor/glfw/include/",
      "../vendor/glad/include/",
-     "../vendor/glfw/include/"
+     "../inc/"    
   }
 
   links
   {
-    "GLAD",
+    "Dwale",
     "GLFW",
-    "Dwale"
+    "GLAD",    
   }
 
   systemversion "latest"
@@ -64,3 +64,52 @@ project "DebugTest"
     runtime "Release"
     optimize "On"
   filter ""    
+
+project "WindowTest"
+  kind "ConsoleApp"
+  language "C"
+
+  targetdir("./bin/%{prj.name}")
+  objdir("./bin/%{prj.name}")
+
+  files
+  { "./src/t_window.c" }
+
+  includedirs
+  {
+     "../vendor/glfw/include/",
+     "../vendor/glad/include/",
+     "../inc/"    
+  }
+
+  links
+  {
+    "Dwale",
+    "GLFW",
+    "GLAD",    
+  }
+
+  systemversion "latest"
+  staticruntime "On"
+
+  filter "system:linux"
+    linkoptions
+    {
+      "-lpthread",
+      "-lGL",
+      "-lXi",
+      "-lX11",
+      "-lXrandr",
+      "-lm",
+      "-ldl"
+    }
+  filter "system:windows"
+    defines
+    { "_CRT_SECURE_NO_WARNINGS" }
+  filter "configurations:Debug"
+    runtime "Debug"
+    symbols "On"
+  filter "configurations:Release"
+    runtime "Release"
+    optimize "On"
+  filter ""

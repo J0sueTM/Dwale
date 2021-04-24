@@ -27,19 +27,8 @@ extern "C"
 #endif /* __cplusplus */
 
 #include "core/core.h"
-
-/* colours do not work on windows terminal */
-#ifdef _WIN32
-#define C_NORMAL ""
-#define C_GREEN  ""
-#define C_YELLOW ""
-#define C_RED    ""
-#else
-#define C_NORMAL "\e[0m"
-#define C_GREEN  "\e[1;92m"
-#define C_YELLOW "\e[1;93m"
-#define C_RED    "\e[1;91m"
-#endif /* _WIN32 */
+#define __D_INCLUDE_NONE__
+#include "dwale.h"
 
 #define USE_ERRNO NULL
 
@@ -64,7 +53,19 @@ D_raise_error_alt(char *__error_buffer,
 #define D_assert(__statement, \
                  __error_buffer) \
   if (!__statement) \
-    D_raise_error(__error_buffer)
+  { D_raise_error(__error_buffer); }
+
+#define D_assert_fatal(__statement, \
+                      __error_buffer) \
+  if (!__statement) \
+  { \
+    D_raise_error(C_RED \
+                  "FATAL" \
+                  C_NORMAL \
+                  __error_buffer); \
+    \
+    D_end(); \
+  }
 
 #ifdef __cplusplus
 }

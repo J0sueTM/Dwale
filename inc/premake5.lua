@@ -31,8 +31,9 @@ project "Dwale"
 
   includedirs
   {
-    "../vendor/glad/include/",
-    "../vendor/glfw/include/"
+    "./"
+    "../vendor/glfw/include/",
+    "../vendor/glad/include/"    
   }
 
   systemversion "latest"
@@ -40,8 +41,8 @@ project "Dwale"
 
   links 
   {
-    "GLAD",
-    "GLFW"
+    "GLFW",
+    "GLAD"
   }
 
   filter "system:linux"

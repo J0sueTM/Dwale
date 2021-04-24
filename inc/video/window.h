@@ -1,9 +1,9 @@
 /**
- * \file inc/dwale.h
+ * \file inc/video/window.h
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
- * \date April 22, 2021
+ * \date April 23, 2021
  *
- * \brief Base includes for dwale
+ * \brief Window related functionalities
  * 
  * Copyright (C) Josué Teodoro Moreira
  * 
@@ -18,31 +18,47 @@
  * GNU General Public License for more details.
  */
 
-#ifndef __D_H__
-#define __D_H__
+#ifndef __D_WINDOW_H__
+#define __D_WINDOW_H__
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-#ifndef __D_INCLUDE_NONE__
 #include "core/core.h"
-
+#include "video/video.h"
 #include "util/vector2.h"
 
-#include "video/video.h"
-#include "video/window.h"
-#endif /* __D_INCLUDE_NONE__ */
+struct D_window
+{
+  GLFWwindow *handle;
+  GLFWmonitor *monitor;
+  GLFWmonitor **alt_monitors;
+
+  bool fullscreen;
+  const GLFWvidmode *fullscreen_dimensions;
+  union D_vector2 windowed_dimensions, current_global_dimensions;
+};
+
+struct D_window *
+D_create_window(char *__title,
+                u32   __width,
+                u32   __height,
+                i32   __monitor_index,
+                bool  __context_current);
 
 void
-D_init();
+D_end_window(struct D_window *__window);
 
 void
-D_end();
+D_toggle_context_current(struct D_window *__window);
+
+bool
+D_is_window_open(struct D_window *__window);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif /* __D_H__ */
+#endif /* __D_WINDOW_H__ */

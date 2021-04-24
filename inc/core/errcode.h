@@ -25,15 +25,46 @@
 extern "C"
 {
 #endif /* __cplusplus */
+  
+/* colours do not work on windows terminal */
+#ifdef _WIN32
+#define C_NORMAL ""
+#define C_GREEN  ""
+#define C_YELLOW ""
+#define C_RED    ""
+#else
+#define C_NORMAL "\e[0m"
+#define C_GREEN  "\e[1;92m"
+#define C_YELLOW "\e[1;93m"
+#define C_RED    "\e[1;91m"
+#endif /* _WIN32 */  
 
-/**
- * NOTE(all): This error code list should be upgraded throughout
- * development time
+/*
+ * This error code list should be upgraded throughout development time.
+ * If an error is known by errno, just pass a NULL errcode on D_raise_error
  */
 
-#define DERR_NOMEMO "Could not allocate memory"
-#define DERR_OUTBOUND "Value out of bound"
-#define DERR_NOINIT(x) "Could not initialize " x
+/* Dwale specific */
+#define DERR_DNOINIT \
+  "Dwale was not initialized. Try using D_init() and D_end()"
+
+#define DERR_NOINIT(x) \
+  "Could not initialize " x
+
+#define DERR_NOCREATE(x) \
+  "Could not create " x
+
+/* Syntax specific */
+#define DERR_NOPARAM(x, \
+                     y) \
+  "Invalid parameter " \
+  x \
+  ", " \
+  y
+
+#define DERR_NULLPARAM(x) \
+  DERR_NOPARAM(x, \
+               x " can't be NULL")
 
 #ifdef __cplusplus
 }

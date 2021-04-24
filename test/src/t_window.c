@@ -1,10 +1,8 @@
 /**
- * \file src/dwale.c
+ * \file test/src/t_window.c
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
- * \date April 22, 2021
+ * \date April 23, 2021
  *
- * \brief Base includes for dwale
- * 
  * Copyright (C) Josué Teodoro Moreira
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -20,15 +18,28 @@
 
 #include "dwale.h"
 
-void
-D_init()
-{ 
-#ifndef __D_INIT__
-#define __D_INIT__
-  D_init_video();
-#endif /* __D_INIT__ */
-}
+int
+main(int    argc,
+     char **argv)
+{
+  D_init();
+  struct D_window *test_window = D_create_window("Dwale",
+                                                 800,
+                                                 600,
+                                                 -1,
+                                                 true);
 
-void
-D_end()
-{ D_end_video(); }
+  while (D_is_window_open(test_window))
+  {
+    glClearColor(0.2f, 0.5f, 0.4f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glfwSwapBuffers(test_window->handle);
+    glfwPollEvents();
+  }
+
+  D_end_window(test_window);
+  D_end();
+
+  return 0;
+}

@@ -1,9 +1,9 @@
 /**
- * \file src/video/video.c
+ * \file inc/util/vector2.h
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
- * \date April 22, 2021
+ * \date April 23, 2021
  *
- * \brief Visual related utilities
+ * \brief Bidimensional vector related functionalities
  * 
  * Copyright (C) Josué Teodoro Moreira
  * 
@@ -18,24 +18,37 @@
  * GNU General Public License for more details.
  */
 
-#include "video/video.h"
+#ifndef __D_VECTOR2_H__
+#define __D_VECTOR2_H__
 
-void
-D_init_video()
+#ifdef __cplusplus
+extern "C"
 {
-#ifndef __D_INIT_VIDEO__
-#define __D_INIT_VIDEO__
-#ifndef __D_INIT_VIDEO_GLFW__
-  D_assert(glfwInit(), DERR_NOINIT("glfw"));
-#endif /* __D_INIT_VIDEO_GLFW__ */
-#endif /* __D_INIT_VIDEO__ */
-}
+#endif /* __cplusplus */
 
-void
-D_end_video()
+#include "core/core.h"
+#include <math.h>
+
+struct D_u32vector2
 {
-#ifdef __D_INIT_VIDEO__
-#undef __D_INIT_VIDEO__
-  glfwTerminate();
-#endif /* __D_INIT_VIDEO__ */
+  u32 x;
+  u32 y;
+};
+
+struct D_i32vector2
+{
+  i32 x;
+  i32 y;
+};
+
+union D_vector2
+{
+  struct D_u32vector2 u32vector2;
+  struct D_i32vector2 i32vector2;
+};
+
+#ifdef __cplusplus
 }
+#endif /* __cplusplus */
+
+#endif /* __D_VECTOR2_H__ */
