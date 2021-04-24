@@ -144,16 +144,15 @@ D_toggle_context_current(struct D_window *__window)
 
   _update_current_global_dimensions(__window);
   glfwMakeContextCurrent(__window->handle);
-  /*
-  glViewport(0, 0,
-             __window->current_global_dimensions.u32vector2.x,
-             __window->current_global_dimensions.u32vector2.y);
-  */
 
 #ifndef __D_INIT_VIDEO_GLAD__
 #define __D_INIT_VIDEO_GLAD__
   D_assert_fatal(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), DERR_NOINIT("glad"));
 #endif /* __D_INIT_VIDEO_GLAD__ */
+  
+  glViewport(0, 0,
+             __window->current_global_dimensions.u32vector2.x,
+             __window->current_global_dimensions.u32vector2.y);  
 
   D_raise_log("Toggled current OpenGL rendering context");
 }

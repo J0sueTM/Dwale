@@ -31,7 +31,7 @@ project "Dwale"
 
   includedirs
   {
-    "./"
+    "./",
     "../vendor/glfw/include/",
     "../vendor/glad/include/"    
   }
