@@ -19,3 +19,5 @@ Session.vim
 
 # generated
 **/Makefile
+*.Make
+*.make
