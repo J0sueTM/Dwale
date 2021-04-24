@@ -24,7 +24,12 @@ project "DebugTest"
   objdir("./bin/%{prj.name}")
 
   files
-  { "./src/t_debug.c" }
+  {
+     "./src/t_debug.c",
+     "../inc/",
+     "../vendor/glad/include",
+     "../vendor/glfw/include"
+  }
 
   includedirs
   {
