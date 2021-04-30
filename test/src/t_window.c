@@ -23,19 +23,13 @@ main(int    argc,
      char **argv)
 {
   D_init();
-  struct D_window *test_window = D_create_window("Dwale",
-                                                 800,
-                                                 600,
-                                                 -1,
-                                                 true);
+  struct D_window *test_window = D_create_window("Dwale", 800, 600, -1, true);
 
   while (D_is_window_open(test_window))
   {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    D_clear_window(0.2f, 0.4f, 0.1f, 1.0f);
 
-    glfwSwapBuffers(test_window->handle);
-    glfwPollEvents();
+    D_swap_window_buffers();
   }
 
   D_end_window(test_window);
