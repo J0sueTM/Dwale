@@ -37,9 +37,14 @@ _update_current_global_dimensions(struct D_window *__window)
 
 static void
 _default_framebuffer_size_callback(GLFWwindow *__window,
-                                   u32         __width,
-                                   u32         __height)
+                                   i32         __width,
+                                   i32         __height)
 { glViewport(0, 0, __width, __height); }
+
+static void
+_default_error_callback(i32         __code,
+                        const char *__description)
+{ D_raise_error((char *)__description); }
 
 struct D_window *
 D_create_window(char *__title,
@@ -76,6 +81,9 @@ D_create_window(char *__title,
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_TRUE);
+
+  glfwSetErrorCallback(_default_error_callback);
 
   /*
    * Gets monitor handle according to __monitor_index
@@ -87,6 +95,8 @@ D_create_window(char *__title,
   {
     new_window->monitor = NULL;
     new_window->fullscreen = false;
+
+    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);    
 
     goto normal_window_selected;
   }
@@ -124,6 +134,8 @@ end_window_creation:
   if (__context_current)
   { D_toggle_context_current(new_window); }
 
+  glfwSetFramebufferSizeCallback(new_window->handle, _default_framebuffer_size_callback);
+  
   D_raise_log("Created window");
   return new_window;
 }
