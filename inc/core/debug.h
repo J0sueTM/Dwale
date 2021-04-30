@@ -59,10 +59,7 @@ D_raise_error_alt(char *__error_buffer,
                       __error_buffer) \
   if (!__statement) \
   { \
-    D_raise_error(C_RED \
-                  "FATAL" \
-                  C_NORMAL \
-                  __error_buffer); \
+    D_raise_error(__error_buffer); \
     \
     D_end(); \
   }
