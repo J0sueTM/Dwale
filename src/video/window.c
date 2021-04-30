@@ -20,26 +20,33 @@
 
 #include "video/window.h"
 
+static struct D_window *_global_window;
+
 static void
-_update_current_global_dimensions(struct D_window *__window)
+_update_current_global_dimensions()
 {
-  if (__window->fullscreen)
+  if (_global_window->fullscreen)
   {
-    __window->current_global_dimensions.u32vector2.x = __window->fullscreen_dimensions->width;
-    __window->current_global_dimensions.u32vector2.y = __window->fullscreen_dimensions->height;
+    _global_window->current_global_dimensions.u32vector2.x = _global_window->fullscreen_dimensions->width;
+    _global_window->current_global_dimensions.u32vector2.y = _global_window->fullscreen_dimensions->height;
   }
   else
   {
-    __window->current_global_dimensions.u32vector2.x = __window->windowed_dimensions.u32vector2.x;
-    __window->current_global_dimensions.u32vector2.y = __window->windowed_dimensions.u32vector2.y;
+    _global_window->current_global_dimensions.u32vector2.x = _global_window->windowed_dimensions.u32vector2.x;
+    _global_window->current_global_dimensions.u32vector2.y = _global_window->windowed_dimensions.u32vector2.y;
   }
+
+  glViewport(0, 0,
+             _global_window->current_global_dimensions.u32vector2.x,
+             _global_window->current_global_dimensions.u32vector2.y);
+
 }
 
 static void
 _default_framebuffer_size_callback(GLFWwindow *__window,
                                    i32         __width,
                                    i32         __height)
-{ glViewport(0, 0, __width, __height); }
+{ _update_current_global_dimensions(); }
 
 static void
 _default_error_callback(i32         __code,
@@ -72,11 +79,11 @@ D_create_window(char *__title,
     return NULL;
   }
 
-  struct D_window *new_window = (struct D_window *)malloc(sizeof(struct D_window));
-  D_assert(new_window, NULL);
+  _global_window = (struct D_window *)malloc(sizeof(struct D_window));
+  D_assert_fatal(_global_window, NULL);
 
-  new_window->windowed_dimensions.u32vector2.x = __width;
-  new_window->windowed_dimensions.u32vector2.y = __height;
+  _global_window->windowed_dimensions.u32vector2.x = __width;
+  _global_window->windowed_dimensions.u32vector2.y = __height;
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -93,88 +100,86 @@ D_create_window(char *__title,
    */
   if (__monitor_index < 0)
   {
-    new_window->monitor = NULL;
-    new_window->fullscreen = false;
+    _global_window->monitor = NULL;
+    _global_window->fullscreen = false;
 
-    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);    
+    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
     goto normal_window_selected;
   }
   else
   {
     i32 *monitor_count = (i32 *)malloc(sizeof(i32)), real_monitor_index;
-    new_window->alt_monitors = glfwGetMonitors(monitor_count);
+    _global_window->alt_monitors = glfwGetMonitors(monitor_count);
 
     if (__monitor_index >= *monitor_count)
     { real_monitor_index = 0; }
     else
     { real_monitor_index = __monitor_index; }
 
-    new_window->monitor = *(new_window->alt_monitors + real_monitor_index);
-    new_window->fullscreen_dimensions = glfwGetVideoMode(new_window->monitor);
+    _global_window->monitor = *(_global_window->alt_monitors + real_monitor_index);
+    _global_window->fullscreen_dimensions = glfwGetVideoMode(_global_window->monitor);
 
-    new_window->handle = glfwCreateWindow(new_window->fullscreen_dimensions->width,
-                                          new_window->fullscreen_dimensions->height,
-                                          __title,
-                                          new_window->monitor,
-                                          NULL);
-    new_window->fullscreen = true;
+    _global_window->handle = glfwCreateWindow(_global_window->fullscreen_dimensions->width,
+                                              _global_window->fullscreen_dimensions->height,
+                                              __title,
+                                              _global_window->monitor,
+                                              NULL);
+    _global_window->fullscreen = true;
 
     free(monitor_count);
     goto end_window_creation;
   }
 
 normal_window_selected:
-  new_window->handle = glfwCreateWindow(new_window->windowed_dimensions.u32vector2.x,
-                                        new_window->windowed_dimensions.u32vector2.y,
-                                        __title,
-                                        new_window->monitor,
-                                        NULL);
+  _global_window->handle = glfwCreateWindow(_global_window->windowed_dimensions.u32vector2.x,
+                                            _global_window->windowed_dimensions.u32vector2.y,
+                                            __title,
+                                            _global_window->monitor,
+                                            NULL);
 end_window_creation:
   if (__context_current)
-  { D_toggle_context_current(new_window); }
+  { 
+    D_toggle_context_current(_global_window);
+    glfwSetFramebufferSizeCallback(_global_window->handle, _default_framebuffer_size_callback);
+  }
 
-  glfwSetFramebufferSizeCallback(new_window->handle, _default_framebuffer_size_callback);
-  
   D_raise_log("Created window");
-  return new_window;
+  return _global_window;
 }
 
 void
-D_end_window(struct D_window *__window)
+D_end_window(struct D_window *_global_window)
 {
-  if (!__window)
+  if (!_global_window)
   { return; }
 
-  glfwDestroyWindow(__window->handle);
+  glfwDestroyWindow(_global_window->handle);
   D_raise_log("Ended window");
 }
 
 void
-D_toggle_context_current(struct D_window *__window)
+D_toggle_context_current(struct D_window *_global_window)
 {
-  if (!__window)
+  if (!_global_window)
   {
-    D_raise_error(DERR_NULLPARAM("__window"));
+    D_raise_error(DERR_NULLPARAM("_global_window"));
 
     return;
   }
 
-  _update_current_global_dimensions(__window);
-  glfwMakeContextCurrent(__window->handle);
+  glfwMakeContextCurrent(_global_window->handle);
 
 #ifndef __D_INIT_VIDEO_GLAD__
 #define __D_INIT_VIDEO_GLAD__
   D_assert_fatal(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), DERR_NOINIT("glad"));
 #endif /* __D_INIT_VIDEO_GLAD__ */
-  
-  glViewport(0, 0,
-             __window->current_global_dimensions.u32vector2.x,
-             __window->current_global_dimensions.u32vector2.y);
+
+  _update_current_global_dimensions();
 
   D_raise_log("Toggled current OpenGL rendering context");
 }
 
 bool
-D_is_window_open(struct D_window *__window)
-{ return !glfwWindowShouldClose(__window->handle); }
+D_is_window_open(struct D_window *_global_window)
+{ return !glfwWindowShouldClose(_global_window->handle); }
