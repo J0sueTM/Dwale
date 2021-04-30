@@ -50,13 +50,22 @@ D_create_window(char *__title,
                 bool  __context_current);
 
 void
-D_end_window(struct D_window *__window);
+D_end_window();
 
 void
-D_toggle_context_current(struct D_window *__window);
+D_toggle_context_current();
 
 bool
-D_is_window_open(struct D_window *__window);
+D_is_window_open();
+
+void
+D_clear_window(float __red,
+               float __green,
+               float __blue,
+               float __alpha);
+
+void
+D_swap_window_buffers();
 
 #ifdef __cplusplus
 }

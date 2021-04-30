@@ -149,7 +149,7 @@ end_window_creation:
 }
 
 void
-D_end_window(struct D_window *_global_window)
+D_end_window()
 {
   if (!_global_window)
   { return; }
@@ -159,7 +159,7 @@ D_end_window(struct D_window *_global_window)
 }
 
 void
-D_toggle_context_current(struct D_window *_global_window)
+D_toggle_context_current()
 {
   if (!_global_window)
   {
@@ -183,3 +183,17 @@ D_toggle_context_current(struct D_window *_global_window)
 bool
 D_is_window_open(struct D_window *_global_window)
 { return !glfwWindowShouldClose(_global_window->handle); }
+
+void
+D_clear_window(float __red,
+               float __green,
+               float __blue,
+               float __alpha)
+{
+  glClearColor(__red, __green, __blue, __alpha);
+  glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void
+D_swap_window_buffers()
+{ glfwSwapBuffers(_global_window->handle); }
