@@ -20,8 +20,8 @@ project "Dwale"
   kind "StaticLib"
   language "C"
 
-  targetdir("../bin/" .. outputdir .. "-%{prj.name}")
-  objdir("../bin/obj/" .. outputdir .. "-%{prj.name}")
+  targetdir("../bin/" .. outputdir)
+  objdir("../bin/obj/" .. outputdir)
 
   files
   {

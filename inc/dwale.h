@@ -27,12 +27,15 @@ extern "C"
 #endif /* __cplusplus */
 
 #ifndef __D_INCLUDE_NONE__
+  
 #include "core/core.h"
 
 #include "util/vector2.h"
 
 #include "video/video.h"
 #include "video/window.h"
+#include "video/gl/gl_object.h"
+  
 #endif /* __D_INCLUDE_NONE__ */
 
 void
