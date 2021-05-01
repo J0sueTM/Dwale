@@ -31,9 +31,15 @@ extern "C"
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
+/**
+ * \brief Initialises dwale's video related dependencies.
+ */  
 void
 D_init_video();
 
+/**
+ * \brief Ends dwale's video related dependencies.
+ */
 void
 D_end_video();
 

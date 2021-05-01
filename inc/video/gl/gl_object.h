@@ -45,11 +45,22 @@ struct D_vbo
 struct D_vao
 { u32 handle; };
 
+/**
+ * \brief Creates a new vertex array object.
+ *
+ * \param __buffer_type Specifies the OpenGL vertex buffer type,
+ *                       used on binding proccess.
+ * \param __draw_type   Specifies the OpenGL vertex buffer draw type.
+ * \param __draw_mode   Specifies the OPenGL vertex buffer draw mode.
+ */  
 struct D_vbo *
 D_create_vbo(u32 __buffer_type,
              u32 __draw_type,
              u32 __draw_mode);
 
+/**
+ * \brief Creates a new vertex array object.
+ */  
 struct D_vao *
 D_create_vao();
 

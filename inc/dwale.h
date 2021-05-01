@@ -38,9 +38,15 @@ extern "C"
   
 #endif /* __D_INCLUDE_NONE__ */
 
+/**
+ * \brief Initialises dwale and it's dependencies
+ */
 void
 D_init();
 
+/**
+ * \brief Ends dwale and it's dependencies
+ */
 void
 D_end();
 

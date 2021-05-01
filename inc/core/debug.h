@@ -32,17 +32,44 @@ extern "C"
 
 #define USE_ERRNO NULL
 
+/**
+ * \brief Prints a formatted log message
+ *
+ * \param __log_buffer Specifies a NULL terminated C string
+ *                     that will be prompted.
+ */
 void
 D_raise_log(char *__log_buffer);
 
+/**
+ * \brief Prints a formatted warning message
+ *
+ * \param __warning_buffer Specifies a NULL terminated C string
+ *                         that will be prompted.
+ */  
 void
 D_raise_warning(char *__warning_buffer);
 
+/**
+ * \brief Prints a formatted error message
+ *
+ * \param __error_buffer Specifies a NULL terminated C string
+ *                       that will be prompted.
+ * \param __error_file   Specifies the file name where the error occurred.
+ * \param __error_line   Specifies the line where the error occurred.
+ */
 void
 D_raise_error_alt(char *__error_buffer,
                   char *__error_file,
                   i32   __error_line);
 
+/**
+ * \brief Prints a formatted error message using D_raise_error_alt,
+ *        parsing either the error buffer or errno
+ *
+ * \param __error_buffer Specifies a NULL terminated C string
+ *                       that will be prompted.
+ */  
 #define D_raise_error(__error_buffer) \
   D_raise_error_alt((__error_buffer) \
                       ? __error_buffer \
@@ -50,13 +77,29 @@ D_raise_error_alt(char *__error_buffer,
                     __FILE__, \
                     __LINE__)
 
+/**
+ * \brief Raises an error if __statement is false.
+ *
+ * \param __statement    Specifies the statement to be checked
+ *                       whether false or true.
+ * \param __error_buffer Specifies a NULL terminated C string
+ *                       that will be prompted.
+ */  
 #define D_assert(__statement, \
                  __error_buffer) \
   if (!__statement) \
   { D_raise_error(__error_buffer); }
 
+/**
+ * \brief Raises an error an closes dwale if __statement is false.
+ *
+ * \param __statement    Specifies the statement to be checked
+ *                       whether false or true.
+ * \param __error_buffer Specifies a NULL terminated C string
+ *                       that will be prompted.
+ */
 #define D_assert_fatal(__statement, \
-                      __error_buffer) \
+                       __error_buffer) \
   if (!__statement) \
   { \
     D_raise_error(__error_buffer); \
