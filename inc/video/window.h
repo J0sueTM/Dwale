@@ -80,6 +80,8 @@ D_toggle_context_current();
 
 /**
  * \brief Checks whether the global window instance is open or not.
+ *
+ * \return Whether the global window instance is open (true) or not (false).
  */  
 bool
 D_is_window_open();
