@@ -43,7 +43,7 @@ main(int    argc,
      char **argv)
 {
   D_init();
-  struct D_window *window = D_create_window("Dwale", 800, 600, -1, true);
+  struct D_window *window = D_create_window("Dwale", 800, 600, 0, true);
 
   if (!_shader())
   {
@@ -52,23 +52,44 @@ main(int    argc,
     return -1;
   }
 
+  /* triangle */
   float vertices[] =
   {
-    -0.5f, -0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
+    -0.8f, -0.1f, 0.0f,
+    -0.2f,  0.0f, 0.0f,
      0.0f,  0.5f, 0.0f
   };
-
   struct D_vao *__test_vao = D_create_vao();  
   struct D_vbo *__test_vbo = D_create_vbo(GL_ARRAY_BUFFER, GL_TRIANGLES, GL_STATIC_DRAW);
   D_bind_vao(__test_vao);
-  D_bind_vbo(__test_vbo);
-
   D_vbo_data(__test_vbo, sizeof(vertices), vertices);
-  D_vao_attrib_pointer(__test_vao, __test_vbo, 0, 3, GL_FLOAT, 3 * sizeof(float), 0);
-
+  D_vao_attrib_pointer(__test_vao, 0, 3, GL_FLOAT, 3 * sizeof(float), 0);
   D_unbind_vbo();
   D_unbind_vao();
+
+  /* quad */
+  float vertices_quad[] =
+  {
+    0.8f,  0.8f, 0.0f,
+    0.8f, -0.6f, 0.0f,
+    0.2f, -0.1f, 0.0f,
+    0.1f,  0.2f, 0.0f
+  };
+  u32 vertices_quad_indices[] =
+  {
+    0, 1, 3,
+    1, 2, 3
+  };
+  struct D_vao *__vao_quad = D_create_vao();
+  struct D_vbo *__vbo_quad = D_create_vbo(GL_ARRAY_BUFFER, GL_TRIANGLES, GL_STATIC_DRAW);
+  struct D_vbo *__ebo_quad = D_create_vbo(GL_ELEMENT_ARRAY_BUFFER, GL_TRIANGLES, GL_STATIC_DRAW);
+  D_bind_vao(__vao_quad);
+  /* vbo */
+  D_vbo_data(__vbo_quad, sizeof(vertices_quad), vertices_quad);
+  /* ebo */
+  D_vbo_data(__ebo_quad, sizeof(vertices_quad_indices), vertices_quad_indices);
+  D_vao_attrib_pointer(__vao_quad, 0, 3, GL_FLOAT, 3 * sizeof(float), 0);
+  D_unbind_vao(__vao_quad);
 
   while (D_is_window_open(window))
   {
@@ -76,18 +97,38 @@ main(int    argc,
 
     if (glfwGetKey(window->handle, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     { goto end_all; }
+    else if (glfwGetKey(window->handle, GLFW_KEY_F11) == GLFW_PRESS)
+    {  }
+
+    if (glfwGetKey(window->handle, GLFW_KEY_ENTER) == GLFW_PRESS)
+    { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); }
+    else if (glfwGetKey(window->handle, GLFW_KEY_ENTER) == GLFW_RELEASE)
+    { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
 
     glUseProgram(shader_program);
+
     D_bind_vao(__test_vao);
     glDrawArrays(__test_vbo->draw_type, 0, 3);
+    D_unbind_vao();
+
+    D_bind_vao(__vao_quad);
+    glDrawElements(__ebo_quad->draw_type, 6, GL_UNSIGNED_INT, 0);
+    D_unbind_vao();
     
     D_swap_window_buffers();
     D_poll_window_events();
   }
 
 end_all:  
-  D_end_vbo(__test_vbo);
+  /* tringle */
   D_end_vao(__test_vao);
+  D_end_vbo(__test_vbo);
+
+  /* quad */
+  D_end_vao(__vao_quad);
+  D_end_vbo(__vbo_quad);
+  D_end_vbo(__ebo_quad);
+
   glDeleteProgram(shader_program);
 
   D_end_window(window);

@@ -119,28 +119,18 @@ D_vbo_data(struct D_vbo *__vbo,
 
 void
 D_vao_attrib_pointer(struct D_vao *__vao,
-                     struct D_vbo *__vbo,
                      u32           __index,
                      i32           __size,
                      u32           __type,
                      u32           __stride,
                      size_t        __offset)
 {
-  if (!__vbo)
-  {
-    D_raise_error(DERR_NOPARAM("__vbo", "VBO can't be NULL"));
-
-    return;
-  }
-  else if (!__vao)
+  if (!__vao)
   {
     D_raise_error(DERR_NOPARAM("__vao", "VAO can't be NULL"));
 
     return;
   }
-
-  D_bind_vao(__vao);
-  D_bind_vbo(__vbo);
 
   if (__type == GL_UNSIGNED_INT_2_10_10_10_REV)
   { glVertexAttribIPointer(__index, __size, __type, __stride, (void *)__offset); }
