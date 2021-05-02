@@ -89,7 +89,7 @@ D_is_window_open();
 /**
  * \brief Clears the currently bounded OpenGL rendering context.
  *        NOTE(all): This will only clear the global window if it's the currently
- *                   bounded OpenGL rendering context. Make sure to toggel it.
+ *                   bounded OpenGL rendering context. Make sure to toggle it.
  *
  * \param __red   Specifies the red channel.
  * \param __green Specifies the green channel.
