@@ -197,3 +197,7 @@ D_clear_window(float __red,
 void
 D_swap_window_buffers()
 { glfwSwapBuffers(_global_window->handle); }
+
+void
+D_poll_window_events()
+{ glfwPollEvents(); }  

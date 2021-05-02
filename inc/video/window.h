@@ -106,6 +106,12 @@ D_clear_window(float __red,
 void
 D_swap_window_buffers();
 
+/**
+ * \brief Poll window's events.
+ */  
+void
+D_poll_window_events();
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

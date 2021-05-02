@@ -27,11 +27,16 @@ main(int    argc,
 
   while (D_is_window_open(test_window))
   {
+    if (glfwGetKey(test_window->handle, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    { goto end_all; }
+    
     D_clear_window(0.2f, 0.4f, 0.1f, 1.0f);
 
     D_swap_window_buffers();
+    D_poll_window_events();
   }
 
+end_all:  
   D_end_window(test_window);
   D_end();
 

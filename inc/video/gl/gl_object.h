@@ -11,7 +11,7 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -52,7 +52,7 @@ struct D_vao
  *                       used on binding proccess.
  * \param __draw_type   Specifies the OpenGL vertex buffer draw type.
  * \param __draw_mode   Specifies the OPenGL vertex buffer draw mode.
- */  
+ */
 struct D_vbo *
 D_create_vbo(u32 __buffer_type,
              u32 __draw_type,
@@ -60,7 +60,7 @@ D_create_vbo(u32 __buffer_type,
 
 /**
  * \brief Creates a new vertex array object.
- */  
+ */
 struct D_vao *
 D_create_vao();
 
@@ -81,19 +81,19 @@ D_unbind_vbo();
 
 void
 D_unbind_vao();
-  
+
 void
 D_vbo_data(struct D_vbo *__vbo,
-	   u32           __size,
+           u32           __size,
            void         *__data);
 
 void
 D_vao_attrib_pointer(struct D_vao *__vao,
-		     struct D_vbo *__vbo,
-		     u32           __index,
-		     i32           __size,
-		     u32           __type,
-		     u32           __stride,
+                     struct D_vbo *__vbo,
+                     u32					 __index,
+                     i32					 __size,
+                     u32					 __type,
+                     u32					 __stride,
                      size_t        __offset);
 
 

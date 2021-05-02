@@ -42,7 +42,7 @@ D_create_vao()
 {
   struct D_vao *new_vao = (struct D_vao *)malloc(sizeof(struct D_vao));
   D_assert_fatal(new_vao, NULL);
-  
+
   glGenVertexArrays(1, &new_vao->handle);
 
   D_raise_log("Created vertex array object");
@@ -58,7 +58,7 @@ D_end_vbo(struct D_vbo *__vbo)
 
     return;
   }
-  
+
   glDeleteBuffers(1, &__vbo->handle);
 
   D_raise_log("Ended vertex buffer object");
@@ -72,8 +72,8 @@ D_end_vao(struct D_vao *__vao)
     D_raise_error(DERR_NOPARAM("__vao", "VAO can't be NULL"));
 
     return;
-  }  
-  
+  }
+
   glDeleteVertexArrays(1, &__vao->handle);
 
   D_raise_log("Ended vertex array object");
@@ -103,7 +103,7 @@ D_unbind_vao()
 
 void
 D_vbo_data(struct D_vbo *__vbo,
-	   u32           __size,
+           u32           __size,
            void         *__data)
 {
   if (!__vbo)
@@ -112,19 +112,19 @@ D_vbo_data(struct D_vbo *__vbo,
 
     return;
   }
-  
+
   D_bind_vbo(__vbo);
   glBufferData(__vbo->buffer_type,  __size, __data, __vbo->draw_mode);
 }
 
 void
 D_vao_attrib_pointer(struct D_vao *__vao,
-		     struct D_vbo *__vbo,
-		     u32           __index,
-		     i32           __size,
-		     u32           __type,
-		     u32           __stride,
-                     size_t        __offset)
+                     struct D_vbo *__vbo,
+                     u32						__index,
+                     i32						__size,
+                     u32						__type,
+                     u32						__stride,
+                     size_t				__offset)
 {
   if (!__vbo)
   {
