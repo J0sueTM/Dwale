@@ -90,10 +90,10 @@ D_vbo_data(struct D_vbo *__vbo,
 void
 D_vao_attrib_pointer(struct D_vao *__vao,
                      struct D_vbo *__vbo,
-                     u32					 __index,
-                     i32					 __size,
-                     u32					 __type,
-                     u32					 __stride,
+                     u32           __index,
+                     i32           __size,
+                     u32           __type,
+                     u32           __stride,
                      size_t        __offset);
 
 
