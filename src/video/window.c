@@ -109,15 +109,15 @@ D_create_window(char *__title,
   }
   else
   {
-    i32 *monitor_count = (i32 *)malloc(sizeof(i32)), real_monitor_index;
+    i32 *monitor_count = (i32 *)malloc(sizeof(i32)), final_monitor;
     _global_window->alt_monitors = glfwGetMonitors(monitor_count);
 
     if (__monitor_index >= *monitor_count)
-    { real_monitor_index = 0; }
+    { final_monitor = 0; }
     else
-    { real_monitor_index = __monitor_index; }
+    { final_monitor = __monitor_index; }
 
-    _global_window->monitor = *(_global_window->alt_monitors + real_monitor_index);
+    _global_window->monitor = *(_global_window->alt_monitors + final_monitor);
     _global_window->fullscreen_dimensions = glfwGetVideoMode(_global_window->monitor);
 
     _global_window->handle = glfwCreateWindow(_global_window->fullscreen_dimensions->width,
