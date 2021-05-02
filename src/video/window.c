@@ -27,19 +27,18 @@ _update_current_global_dimensions()
 {
   if (_global_window->fullscreen)
   {
-    _global_window->current_global_dimensions.u32vector2.x = _global_window->fullscreen_dimensions->width;
-    _global_window->current_global_dimensions.u32vector2.y = _global_window->fullscreen_dimensions->height;
+    _global_window->current_global_dimensions.x = _global_window->fullscreen_dimensions->width;
+    _global_window->current_global_dimensions.y = _global_window->fullscreen_dimensions->height;
   }
   else
   {
-    _global_window->current_global_dimensions.u32vector2.x = _global_window->windowed_dimensions.u32vector2.x;
-    _global_window->current_global_dimensions.u32vector2.y = _global_window->windowed_dimensions.u32vector2.y;
+    _global_window->current_global_dimensions.x = _global_window->windowed_dimensions.x;
+    _global_window->current_global_dimensions.y = _global_window->windowed_dimensions.y;
   }
 
   glViewport(0, 0,
-             _global_window->current_global_dimensions.u32vector2.x,
-             _global_window->current_global_dimensions.u32vector2.y);
-
+             _global_window->current_global_dimensions.x,
+             _global_window->current_global_dimensions.y);  
 }
 
 static void
@@ -82,8 +81,8 @@ D_create_window(char *__title,
   _global_window = (struct D_window *)malloc(sizeof(struct D_window));
   D_assert_fatal(_global_window, NULL);
 
-  _global_window->windowed_dimensions.u32vector2.x = __width;
-  _global_window->windowed_dimensions.u32vector2.y = __height;
+  _global_window->windowed_dimensions.x = __width;
+  _global_window->windowed_dimensions.y = __height;
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -132,8 +131,8 @@ D_create_window(char *__title,
   }
 
 normal_window_selected:
-  _global_window->handle = glfwCreateWindow(_global_window->windowed_dimensions.u32vector2.x,
-                                            _global_window->windowed_dimensions.u32vector2.y,
+  _global_window->handle = glfwCreateWindow(_global_window->windowed_dimensions.x,
+                                            _global_window->windowed_dimensions.y,
                                             __title,
                                             _global_window->monitor,
                                             NULL);

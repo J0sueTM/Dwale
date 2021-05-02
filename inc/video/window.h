@@ -38,8 +38,8 @@ struct D_window
 
   bool fullscreen;
   const GLFWvidmode *fullscreen_dimensions;
-  union D_vector2 windowed_dimensions,
-                  current_global_dimensions;
+  struct D_u32vector2 windowed_dimensions,
+                      current_global_dimensions;
 };
 
 /**

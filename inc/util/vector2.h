@@ -41,12 +41,6 @@ struct D_i32vector2
   i32 y;
 };
 
-union D_vector2
-{
-  struct D_u32vector2 u32vector2;
-  struct D_i32vector2 i32vector2;
-};
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
