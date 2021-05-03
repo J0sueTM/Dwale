@@ -97,8 +97,6 @@ main(int    argc,
 
     if (glfwGetKey(window->handle, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     { goto end_all; }
-    else if (glfwGetKey(window->handle, GLFW_KEY_F11) == GLFW_PRESS)
-    {  }
 
     if (glfwGetKey(window->handle, GLFW_KEY_ENTER) == GLFW_PRESS)
     { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); }
