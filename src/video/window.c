@@ -162,7 +162,7 @@ D_toggle_context_current()
 {
   if (!_global_window)
   {
-    D_raise_error(DERR_NULLPARAM("_global_window"));
+    D_raise_error(DERR_NOPARAM("_global_window", "Global window can't be NULL. Check if you created it"));
 
     return;
   }
@@ -199,4 +199,4 @@ D_swap_window_buffers()
 
 void
 D_poll_window_events()
-{ glfwPollEvents(); }  
+{ glfwPollEvents(); }

@@ -43,14 +43,9 @@ main(int    argc,
      char **argv)
 {
   D_init();
-  struct D_window *window = D_create_window("Dwale", 800, 600, 0, true);
+  struct D_window *window = D_create_window("Dwale", 800, 600, -1, true);
 
-  if (!_shader())
-  {
-    D_raise_error("Could not compile shader");
-
-    return -1;
-  }
+  struct D_shaders *test_shaders = D_create_shaders(vertex_shader_source, fragment_shader_source);
 
   /* triangle */
   float vertices[] =
@@ -105,7 +100,7 @@ main(int    argc,
     else if (glfwGetKey(window->handle, GLFW_KEY_ENTER) == GLFW_RELEASE)
     { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
 
-    glUseProgram(shader_program);
+    D_apply_shaders(test_shaders);
 
     D_bind_vao(__test_vao);
     glDrawArrays(__test_vbo->draw_type, 0, 3);
@@ -135,51 +130,4 @@ end_all:
   D_end();
 
   return 0;
-}
-
-bool
-_shader()
-{
-  i32 success;
-  char infoLog[512];
-  
-  vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vertex_shader, 1, &vertex_shader_source, NULL);
-  glCompileShader(vertex_shader);
-  glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-  if (!success)
-  {
-    glGetShaderInfoLog(vertex_shader, 512, NULL, infoLog);
-
-    return false;
-  }
-
-  fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragment_shader, 1, &fragment_shader_source, NULL);
-  glCompileShader(fragment_shader);
-  glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-  if (!success)
-  {
-    glGetShaderInfoLog(fragment_shader, 512, NULL, infoLog);
-
-    return false;
-  }
-  
-  shader_program = glCreateProgram();
-  glAttachShader(shader_program, vertex_shader);
-  glAttachShader(shader_program, fragment_shader);
-  glLinkProgram(shader_program);
-
-  glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
-  if (!success)
-  {
-    glGetProgramInfoLog(shader_program, 512, NULL, infoLog);
-
-    return false;
-  }
-  
-  glDeleteShader(vertex_shader);
-  glDeleteShader(fragment_shader);
-
-  return true;
 }

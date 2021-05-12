@@ -3,7 +3,7 @@
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
  * \date May 02, 2021
  *
- * \brief Vertex Shader related functionalities
+ * \brief Vertex/Fragment Shader related functionalities
  *
  * Copyright (C) Josué Teodoro Moreira
  * 
@@ -27,21 +27,35 @@ extern "C"
 #endif /* __cplusplus */
 
 #include "core/core.h"
+#include "video/video.h"
 
-struct D_shader
+typedef u32 D_shader;
+typedef u32 D_program;
+
+struct D_shaders
 {
-  u32 vertex_shader_handle,
-      fragment_shader_handle,
-      shader_program_handle;
+  D_shader  vertex_shader, fragment_shader;
+  const char *vertex_shader_source, *fragment_shader_source;
+  D_program program;
 };
 
-struct D_shader *
-D_create_shader(char *__vertex_shader_file,
-                char *__fragment_shader_file);
+D_shader
+D_create_shader(u32         __type,
+                const char *__shader_source);
 
-struct D_shader *
-D_create_shader_from_string(const char *__vertex_shader_source,
-                            const char *__fragment_shader_source);
+struct D_shaders *
+D_create_shaders(const char *__vertex_shader_source,
+                 const char *__fragment_shader_source);
+
+void
+D_end_shaders(struct D_shaders *__shaders);
+
+struct D_shaders *
+D_create_shaders_from_file(char *__vertex_shader_source_file_name,
+                           char *__fragment_shader_source_file_name);
+
+void
+D_apply_shaders(struct D_shaders *__shaders);
 
 #ifdef __cplusplus
 }

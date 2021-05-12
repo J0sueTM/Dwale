@@ -62,9 +62,8 @@ extern "C"
   ", " \
   y
 
-#define DERR_NULLPARAM(x) \
-  DERR_NOPARAM(x, \
-               x " can't be NULL")
+/* Vendor specific */
+#define DERR_OPENGL "Opengl error"
 
 #ifdef __cplusplus
 }

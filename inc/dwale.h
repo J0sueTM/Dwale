@@ -35,6 +35,7 @@ extern "C"
 #include "video/video.h"
 #include "video/window.h"
 #include "video/gl/gl_object.h"
+#include "video/gl/shader.h"  
   
 #endif /* __D_INCLUDE_NONE__ */
 
