@@ -35,9 +35,6 @@ const char *fragment_shader_source =
 
 u32 fragment_shader, vertex_shader, shader_program;
 
-bool
-_shader();
-
 int
 main(int    argc,
      char **argv)
@@ -122,7 +119,7 @@ end_all:
   D_end_vbo(__vbo_quad);
   D_end_vbo(__ebo_quad);
 
-  glDeleteProgram(shader_program);
+  D_end_shaders(test_shaders);
 
   D_end_window(window);
   D_end();

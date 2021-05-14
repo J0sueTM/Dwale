@@ -3,7 +3,7 @@
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
  * \date May 02, 2021
  *
- * \brief Vertex Shader related functionalities
+ * \brief GL shaders related functionalities
  *
  * Copyright (C) Josué Teodoro Moreira
  * 
@@ -20,7 +20,14 @@
 
 #include "video/gl/shader.h"
 
-static char *
+/**
+ * \brief Copies file content to C string.
+ *
+ * \param __source_file Specifies the file whose content will be copied.
+ *
+ * \return The file's content.
+ */
+static const char *
 _read_from_file_to_string(FILE *__source_file)
 {
   if (!__source_file)
@@ -38,7 +45,7 @@ _read_from_file_to_string(FILE *__source_file)
     source_file_size = ftell(__source_file);
     fseek(__source_file, 0, SEEK_SET);
 
-    source = malloc(source_file_size);
+    source = (const char *)malloc(source_file_size);
     if (source)
     {
       D_raise_error("Could not allocate memory for shader source");
@@ -50,13 +57,15 @@ _read_from_file_to_string(FILE *__source_file)
     fread((void *)source, 1, source_file_size, __source_file);
     fclose(__source_file);
   }
+
+  return source;
 }
 
-D_shader
+u32
 D_create_shader(u32         __type,
                 const char *__shader_source)
 {
-  D_shader new_shader;
+  u32 new_shader;
   i32 status;
   char log[512];
 
@@ -101,13 +110,10 @@ D_create_shaders(const char *__vertex_shader_source,
   struct D_shaders *new_shaders = (struct D_shaders *)malloc(sizeof(struct D_shaders));
   D_assert(new_shaders, NULL);
 
-  new_shaders->vertex_shader_source = __vertex_shader_source;
-  new_shaders->fragment_shader_source = __fragment_shader_source;
-
-  new_shaders->vertex_shader = D_create_shader(GL_VERTEX_SHADER, new_shaders->vertex_shader_source);
+  new_shaders->vertex_shader = D_create_shader(GL_VERTEX_SHADER, __vertex_shader_source);
   if (!new_shaders->vertex_shader)
   { return NULL; }
-  new_shaders->fragment_shader = D_create_shader(GL_FRAGMENT_SHADER, new_shaders->fragment_shader_source);
+  new_shaders->fragment_shader = D_create_shader(GL_FRAGMENT_SHADER, __fragment_shader_source);
   if (!new_shaders->fragment_shader)
   { return NULL; }
 
@@ -140,12 +146,9 @@ D_end_shaders(struct D_shaders *__shaders)
   if (!__shaders)
   {
     D_raise_error(DERR_NOPARAM("__shaders", "Shaders can't be NULL"));
-    
+
     return;
   }
-
-  free((void *)__shaders->vertex_shader_source);
-  free((void *)__shaders->fragment_shader_source);
   
   glDeleteShader(__shaders->vertex_shader);
   glDeleteShader(__shaders->fragment_shader);

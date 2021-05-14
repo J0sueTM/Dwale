@@ -3,7 +3,7 @@
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
  * \date May 02, 2021
  *
- * \brief Vertex/Fragment Shader related functionalities
+ * \brief GL shaders related functionalities
  *
  * Copyright (C) Josué Teodoro Moreira
  * 
@@ -29,27 +29,59 @@ extern "C"
 #include "core/core.h"
 #include "video/video.h"
 
-typedef u32 D_shader;
-typedef u32 D_program;
+/* TODO(J0sueTM): Add geometry shader */
 
 struct D_shaders
 {
-  D_shader  vertex_shader, fragment_shader;
-  const char *vertex_shader_source, *fragment_shader_source;
-  D_program program;
+  u32 vertex_shader,
+      fragment_shader,
+      program;
 };
 
-D_shader
+/**
+ * \brief Creates an opengl shader according to __type
+ *
+ * \param __type          Specifies the shader type, whether vertex or fragment.
+ * \param __shader_source Specifies a C null terminated string containing a GLSL code for the shader.
+ *
+ * \return The created buffer's gpu buffer
+ */
+u32
 D_create_shader(u32         __type,
                 const char *__shader_source);
 
+/**
+ * \brief Creates both vertex and fragment shaders on a D_shaders structure
+ *
+ * \param __vertex_shader_source   Specifies a C null terminated string containing a GLSL code for the vertex shader.
+ * \param __fragment_shader_source Specifies a C null terminated string containing a GLSL code for the fragment shader.
+ *
+ * \return The D_shaders structure containing the shaders' buffer and their source code.
+ *
+ * NOTE(All): The source code points to the given params. So, freeing the given source code may block dwale's ability on debugging.
+ */
 struct D_shaders *
 D_create_shaders(const char *__vertex_shader_source,
                  const char *__fragment_shader_source);
 
+/**
+ * \brief Ends given shaders buffers and frees it's source codes (if not freed yet).
+ *
+ * \param __shaders Specifies the shaders structure to be ended.
+ */
 void
 D_end_shaders(struct D_shaders *__shaders);
 
+/**
+ * \brief Copies given files content (which should be GLSL code) to C strings and calls D_create_shaders.
+ *
+ * \param __vertex_shader_source_file_name   Specifies the file name of the vertex shader's source code.
+ * \param __fragment_shader_source_file_name Specifies the file name of the fragment shader's source code.
+ *
+ * \return Created shaders structure, which should be returned from D_create_shaders.
+ *
+ * \see D_create_shaders
+ */
 struct D_shaders *
 D_create_shaders_from_file(char *__vertex_shader_source_file_name,
                            char *__fragment_shader_source_file_name);
