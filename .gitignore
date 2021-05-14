@@ -10,7 +10,8 @@
 *.so
 *.dll
 
-# editor 
+# editor
+.undodir/*
 Session.vim
 *.#
 *~
@@ -18,3 +19,5 @@ Session.vim
 
 # generated
 **/Makefile
+*.Make
+*.make

@@ -1,7 +1,7 @@
 --[[
--- \file inc/premake5.lua
--- \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
--- \data April 20, 2021
+-- file inc/premake5.lua
+-- author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
+-- data April 20, 2021
 --
 -- Copyright (C) Josué Teodoro Moreira
 --
@@ -20,8 +20,8 @@ project "Dwale"
   kind "StaticLib"
   language "C"
 
-  targetdir("../bin/" .. outputdir .. "-%{prj.name}")
-  objdir("../bin/obj/" .. outputdir .. "-%{prj.name}")
+  targetdir("../bin/" .. outputdir)
+  objdir("../bin/obj/" .. outputdir)
 
   files
   {
@@ -31,8 +31,9 @@ project "Dwale"
 
   includedirs
   {
-    "../vendor/glad/include",
-    "../vendor/glfw/include"
+    "./",
+    "../vendor/glfw/include/",
+    "../vendor/glad/include/"    
   }
 
   systemversion "latest"
@@ -40,8 +41,8 @@ project "Dwale"
 
   links 
   {
-    "GLAD",
-    "GLFW"
+    "GLFW",
+    "GLAD"
   }
 
   filter "system:linux"
