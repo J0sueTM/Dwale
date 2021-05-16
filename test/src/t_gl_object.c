@@ -95,15 +95,8 @@ main(int    argc,
     else if (glfwGetKey(window->handle, GLFW_KEY_ENTER) == GLFW_RELEASE)
     { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
 
-    D_apply_shaders(test_shaders);
-
-    D_bind_vao(__test_vao);
-    glDrawArrays(__test_vbo->draw_type, 0, 3);
-    D_unbind_vao();
-
-    D_bind_vao(__vao_quad);
-    glDrawElements(__ebo_quad->draw_type, 6, GL_UNSIGNED_INT, 0);
-    D_unbind_vao();
+    D_draw_arrays(__test_vao, __test_vbo, test_shaders);
+    D_draw_elements(__vao_quad, __ebo_quad, 6, GL_UNSIGNED_INT, test_shaders);
     
     D_swap_window_buffers();
     D_poll_window_events();

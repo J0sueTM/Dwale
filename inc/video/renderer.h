@@ -1,9 +1,9 @@
 /**
- * \file inc/dwale.h
+ * \file inc/video/renderer.h
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
- * \date April 22, 2021
+ * \date May 14, 2021
  *
- * \brief Base includes for dwale
+ * \brief Renderer related functionalities
  * 
  * Copyright (C) Josué Teodoro Moreira
  * 
@@ -18,42 +18,33 @@
  * GNU General Public License for more details.
  */
 
-#ifndef __D_H__
-#define __D_H__
+#ifndef __D_RENDERER_H__
+#define __D_RENDERER_H__
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-#ifndef __D_INCLUDE_NONE__
-  
 #include "core/core.h"
-
-#include "util/vector2.h"
-
 #include "video/video.h"
-#include "video/window.h"
 #include "video/gl/gl_object.h"
-#include "video/gl/shader.h"  
-#include "video/renderer.h"
-  
-#endif /* __D_INCLUDE_NONE__ */
+#include "video/gl/shader.h"
 
-/**
- * \brief Initialises dwale and it's dependencies
- */
 void
-D_init();
+D_draw_arrays(struct D_vao     *__vao,
+              struct D_vbo     *__vbo,
+              struct D_shaders *__shaders);
 
-/**
- * \brief Ends dwale and it's dependencies
- */
 void
-D_end();
+D_draw_elements(struct D_vao     *__vao,
+                struct D_vbo     *__ebo,
+                u32               __count,
+                u32               __type,
+                struct D_shaders *__shaders);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif /* __D_H__ */
+#endif /* __D_RENDERER_H__ */

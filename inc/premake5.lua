@@ -58,7 +58,13 @@ project "Dwale"
   filter "configurations:Debug"
     runtime "Debug"
     symbols "On"
+
+    defines
+    { "__D_DEBUG__" }
   filter "configurations:Release"
     runtime "Release"
     optimize "On"
+
+    defines
+    { "__D_RELEASE__" }
   filter ""

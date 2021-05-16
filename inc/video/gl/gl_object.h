@@ -46,7 +46,7 @@ struct D_vao
 { u32 handle; };
 
 /**
- * \brief Creates a new vertex array object.
+ * \brief Creates a new vertex buffer object.
  *
  * \param __buffer_type Specifies the OpenGL vertex buffer type,
  *                       used on binding proccess.
