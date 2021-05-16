@@ -31,11 +31,31 @@ extern "C"
 #include "video/gl/gl_object.h"
 #include "video/gl/shader.h"
 
+/**
+ * \brief Creates a draw call for the given vertex buffer object.
+ *
+ * \param __vao     Specifies the vertex array object to be binded with the vertex
+ *                  buffer object.
+ * \param __vbo     Specifies the vertex buffer object from which attributes will
+ *                  be used on the draw call.
+ * \param __shaders Specifies the shaders to be applied.
+ */
 void
 D_draw_arrays(struct D_vao     *__vao,
               struct D_vbo     *__vbo,
               struct D_shaders *__shaders);
 
+/**
+ * \brief Creates a draw call for the given vertex element array buffer object.
+ *
+ * \param __vbo     Specifies the vertex array object to be binded with the 
+ *                  element array buffer object.
+ * \param __ebo     Specifies the vertex element array buffer object from which
+ *                  attributes will be used on the draw call.
+ * \param __count   Specifies the amount of elements in the element array buffer object.
+ * \param __type    Specifies the type of the elemens in the elementa rray buffer object.
+ * \param __shaders Specifies the shaders to be applied.
+ */
 void
 D_draw_elements(struct D_vao     *__vao,
                 struct D_vbo     *__ebo,

@@ -56,8 +56,11 @@ main(int    argc,
   D_bind_vao(__test_vao);
   D_vbo_data(__test_vbo, sizeof(vertices), vertices);
   D_vao_attrib_pointer(__test_vao, 0, 3, GL_FLOAT, 3 * sizeof(float), 0);
+
+#ifdef __D_DEBUG_H__
   D_unbind_vbo();
   D_unbind_vao();
+#endif /* __D_DEBUG_H__ */
 
   /* quad */
   float vertices_quad[] =
@@ -81,7 +84,10 @@ main(int    argc,
   /* ebo */
   D_vbo_data(__ebo_quad, sizeof(vertices_quad_indices), vertices_quad_indices);
   D_vao_attrib_pointer(__vao_quad, 0, 3, GL_FLOAT, 3 * sizeof(float), 0);
+
+#ifdef __D_DEBUG_H__
   D_unbind_vao(__vao_quad);
+#endif /* __D_DEBUG_H__ */
 
   while (D_is_window_open(window))
   {
