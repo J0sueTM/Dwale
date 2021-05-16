@@ -133,9 +133,9 @@ D_vao_attrib_pointer(struct D_vao *__vao,
   }
 
   if (__type == GL_UNSIGNED_INT_2_10_10_10_REV)
-  { glVertexAttribIPointer(__index, __size, __type, __stride, (void *)__offset); }
+  { glVertexAttribIPointer(__index, __size, __type, __stride, (void *)(__offset * sizeof(i32))); }
   else
-  { glVertexAttribPointer(__index, __size, __type, GL_FALSE, __stride, (void *)__offset); }
+  { glVertexAttribPointer(__index, __size, __type, GL_FALSE, __stride, (void *)(__offset * sizeof(f32))); }
 
   glEnableVertexAttribArray(__index);
 }

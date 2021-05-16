@@ -28,7 +28,7 @@ extern "C"
 
 #include "core/core.h"
 #include "video/video.h"
-#include "util/vector2.h"
+#include "util/vector.h"
 
 struct D_window
 {
@@ -38,8 +38,8 @@ struct D_window
 
   bool fullscreen;
   const GLFWvidmode *fullscreen_dimensions;
-  struct D_u32vector2 windowed_dimensions,
-                      current_global_dimensions;
+  struct u32vec2 windowed_dimensions,
+                 current_global_dimensions;
 };
 
 /**

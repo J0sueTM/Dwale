@@ -42,7 +42,7 @@ main(int    argc,
   D_vbo_data(__test_vbo, sizeof(vertices), vertices);
   D_vao_attrib_pointer(__test_vao, 0, 3, GL_FLOAT, 3 * sizeof(float), 0);
 
-#ifdef __D_DEBUG_H__
+#ifdef __D_DEBUG__
   D_unbind_vbo();
   D_unbind_vao();
 #endif /* __D_DEBUG_H__ */
@@ -70,7 +70,7 @@ main(int    argc,
   D_vbo_data(__ebo_quad, sizeof(vertices_quad_indices), vertices_quad_indices);
   D_vao_attrib_pointer(__vao_quad, 0, 3, GL_FLOAT, 3 * sizeof(float), 0);
 
-#ifdef __D_DEBUG_H__
+#ifdef __D_DEBUG__
   D_unbind_vao(__vao_quad);
 #endif /* __D_DEBUG_H__ */
 
@@ -85,6 +85,8 @@ main(int    argc,
     { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); }
     else if (glfwGetKey(window->handle, GLFW_KEY_ENTER) == GLFW_RELEASE)
     { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
+
+    D_set_uniform_f32(test_shaders, glfwGetTime(), "u_time");
 
     D_draw_arrays(__test_vao, __test_vbo, test_shaders);
     D_draw_elements(__vao_quad, __ebo_quad, 6, GL_UNSIGNED_INT, test_shaders);

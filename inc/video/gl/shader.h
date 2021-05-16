@@ -28,6 +28,7 @@ extern "C"
 
 #include "core/core.h"
 #include "video/video.h"
+#include "util/vector.h"
 
 /* TODO(J0sueTM): Add geometry shader */
 
@@ -86,8 +87,60 @@ struct D_shaders *
 D_create_shaders_from_file(char *__vertex_shader_source_file_name,
                            char *__fragment_shader_source_file_name);
 
+/**
+ * \brief Applies given shader.
+ *
+ * \param __shaders Specifies the shaders to be applied.
+ */
 void
 D_apply_shaders(struct D_shaders *__shaders);
+
+void
+D_set_uniform_i32(struct D_shaders *__shaders,
+                  i32               __value,
+                  char             *__name);
+
+void
+D_set_uniform_f32(struct D_shaders *__shaders,
+                  f32               __value,
+                  char             *__name);
+
+void
+D_set_uniform_bool(struct D_shaders *__shaders,
+                   bool              __value,
+                   char             *__name);
+
+void
+D_set_uniform_i32vec4(struct D_shaders *__shaders,
+                      struct i32vec4    __value,
+                      char             *__name);
+
+void
+D_set_uniform_i32vec3(struct D_shaders *__shaders,
+                      struct i32vec3    __value,
+                      char             *__name);
+
+void
+D_set_uniform_i32vec2(struct D_shaders *__shaders,
+                      struct i32vec2    __value,
+                      char             *__name);
+
+void
+D_set_uniform_f32vec4(struct D_shaders *__shaders,
+                      struct f32vec4    __value,
+                      char             *__name);
+
+void
+D_set_uniform_f32vec3(struct D_shaders *__shaders,
+                      struct f32vec3    __value,
+                      char             *__name);
+
+void
+D_set_uniform_f32vec2(struct D_shaders *__shaders,
+                      struct f32vec2    __value,
+                      char             *__name);
+
+/* TODO(J0sueTM): Add matrix uniforms */
 
 #ifdef __cplusplus
 }

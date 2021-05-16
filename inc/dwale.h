@@ -30,12 +30,15 @@ extern "C"
   
 #include "core/core.h"
 
-#include "util/vector2.h"
+#include "util/vector.h"
 
 #include "video/video.h"
 #include "video/window.h"
+
 #include "video/gl/gl_object.h"
-#include "video/gl/shader.h"  
+#include "video/gl/shader.h"
+#include "video/gl/texture.h"
+
 #include "video/renderer.h"
   
 #endif /* __D_INCLUDE_NONE__ */

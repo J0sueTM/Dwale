@@ -46,7 +46,7 @@ _read_from_file_to_string(FILE *__source_file)
     fseek(__source_file, 0, SEEK_SET);
 
     source = (const char *)malloc(source_file_size);
-    if (source)
+    if (!source)
     {
       D_raise_error("Could not allocate memory for shader source");
       fclose(__source_file);
@@ -196,4 +196,76 @@ D_apply_shaders(struct D_shaders *__shaders)
   }
 
   glUseProgram(__shaders->program);
+}
+
+void
+D_set_uniform_i32(struct D_shaders *__shaders,
+                  i32               __value,
+                  char             *__name)
+{ glUniform1i(glGetUniformLocation(__shaders->program, __name), __value); }
+
+void
+D_set_uniform_f32(struct D_shaders *__shaders,
+                  f32               __value,
+                  char             *__name)
+{ glUniform1f(glGetUniformLocation(__shaders->program, __name), __value); }
+
+void
+D_set_uniform_bool(struct D_shaders *__shaders,
+                   bool              __value,
+                   char             *__name)
+{ glUniform1i(glGetUniformLocation(__shaders->program, __name), __value); }
+
+void
+D_set_uniform_i32vec4(struct D_shaders *__shaders,
+                      struct i32vec4    __value,
+                      char             *__name)
+{
+  glUniform4i(glGetUniformLocation(__shaders->program, __name),
+              __value.x, __value.y, __value.z, __value.w);
+}
+
+void
+D_set_uniform_i32vec3(struct D_shaders *__shaders,
+                      struct i32vec3    __value,
+                      char             *__name)
+{
+  glUniform3i(glGetUniformLocation(__shaders->program, __name),
+              __value.x, __value.y, __value.z);
+}
+
+void
+D_set_uniform_i32vec2(struct D_shaders *__shaders,
+                      struct i32vec2    __value,
+                      char             *__name)
+{
+  glUniform2i(glGetUniformLocation(__shaders->program, __name),
+              __value.x, __value.y);
+}
+
+void
+D_set_uniform_f32vec4(struct D_shaders *__shaders,
+                      struct f32vec4    __value,
+                      char             *__name)
+{
+  glUniform4f(glGetUniformLocation(__shaders->program, __name),
+              __value.x, __value.y, __value.z, __value.w);
+}
+
+void
+D_set_uniform_f32vec3(struct D_shaders *__shaders,
+                      struct f32vec3    __value,
+                      char             *__name)
+{
+  glUniform3f(glGetUniformLocation(__shaders->program, __name),
+              __value.x, __value.y, __value.z);
+}
+
+void
+D_set_uniform_f32vec2(struct D_shaders *__shaders,
+                      struct f32vec2    __value,
+                      char             *__name)
+{
+  glUniform2f(glGetUniformLocation(__shaders->program, __name),
+              __value.x, __value.y);
 }

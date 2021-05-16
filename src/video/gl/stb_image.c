@@ -1,2 +1,2 @@
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "video/gl/stb_image.h"
