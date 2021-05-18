@@ -96,7 +96,7 @@ main(int    argc,
   }
 
 end_all:  
-  /* tringle */
+  /* triangle */
   D_end_vao(__test_vao);
   D_end_vbo(__test_vbo);
 
