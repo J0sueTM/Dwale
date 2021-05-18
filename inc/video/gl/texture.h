@@ -30,13 +30,16 @@ extern "C"
 #include "video/video.h"
 #include "video/gl/stb_image.h"
 
+#define TEXTURE_UNIT(x) GL_TEXTURE0 + x
+
 struct D_texture
 {
   u32 handle,
       type;
   i32 width,
       height,
-      nr_channels;
+      nr_channels,
+      unit;
 };
 
 struct D_texture *
@@ -46,7 +49,9 @@ D_create_texture(char *__file_name,
                  u32   __wrap_t,
                  u32   __filter_s,
                  u32   __filter_t,
-                 u32   __format);
+                 u32   __format,
+                 bool  __flip,
+                 i32   __texture_unit);
 
 void
 D_end_texture(struct D_texture *__texture);

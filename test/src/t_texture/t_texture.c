@@ -44,8 +44,40 @@ main(int    argc,
     (f32)window->current_dimensions.y
   };
 
-  struct D_shaders *shaders = D_create_shaders_from_file("test/src/t_texture/res/vertex_shader.glsl", "test/src/t_texture/res/fragment_shader.glsl");
+  struct D_shaders *shaders = D_create_shaders_from_file("test/src/t_texture/res/vertex_shader.glsl",
+                                                         "test/src/t_texture/res/fragment_shader.glsl");
 
+  float city_quad[] =
+  {
+     1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+     1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+    -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+    -1.0f,  1.0f, 0.0f, 0.0f, 1.0f
+  };
+  u32 city_quad_indices[] =
+  {
+    0, 1, 3,
+    1, 2, 3
+  };
+
+  struct D_vao *__city_vao_quad = D_create_vao();
+  struct D_vbo *__city_vbo_quad = D_create_vbo(GL_ARRAY_BUFFER, GL_TRIANGLES, GL_STATIC_DRAW);
+  struct D_vbo *__city_ebo_quad = D_create_vbo(GL_ELEMENT_ARRAY_BUFFER, GL_TRIANGLES, GL_STATIC_DRAW);
+  D_bind_vao(__city_vao_quad);
+  D_vbo_data(__city_vbo_quad, sizeof(city_quad), city_quad);
+  D_vbo_data(__city_ebo_quad, sizeof(city_quad_indices), city_quad_indices);
+
+  struct D_texture *city_texture = D_create_texture("test/src/t_texture/res/city.png",
+                                                    GL_TEXTURE_2D,
+                                                    GL_REPEAT, GL_REPEAT,
+                                                    GL_LINEAR, GL_LINEAR,
+                                                    GL_RGBA,
+                                                    true,
+                                                    GL_TEXTURE0);
+
+#ifdef __D_DEBUG__
+  D_unbind_vao(__vao_quad);
+#endif /* __D_DEBUG__ */
   /* quad */
   float vertices_quad[] =
   {
@@ -74,11 +106,17 @@ main(int    argc,
                                                     GL_TEXTURE_2D,
                                                     GL_REPEAT, GL_REPEAT,
                                                     GL_LINEAR, GL_LINEAR,
-                                                    GL_RGB);
+                                                    GL_RGB,
+                                                    true,
+                                                    GL_TEXTURE1);
 
 #ifdef __D_DEBUG__
   D_unbind_vao(__vao_quad);
 #endif /* __D_DEBUG__ */
+
+  D_apply_shaders(shaders);
+  D_set_uniform_i32(shaders, 0, "u_texture_city");
+  D_set_uniform_i32(shaders, 1, "u_texture_tux");
 
   while (D_is_window_open(window))
   {
@@ -94,8 +132,6 @@ main(int    argc,
 
     D_bind_texture(test_texture);
     D_set_uniform_f32(shaders, glfwGetTime(), "u_time");
-    D_set_uniform_f32vec2(shaders, mouse_pos, "u_mouse");
-    D_set_uniform_f32vec2(shaders, window_dims, "u_window");
     D_draw_elements(__vao_quad, __ebo_quad, 6, GL_UNSIGNED_INT, shaders);
 
     D_swap_window_buffers();

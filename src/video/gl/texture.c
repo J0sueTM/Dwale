@@ -27,7 +27,9 @@ D_create_texture(char *__file_name,
                  u32   __wrap_t,
                  u32   __filter_s,
                  u32   __filter_t,
-                 u32   __format)
+                 u32   __format,
+                 bool  __flip,
+                 i32   __texture_unit)
 {
   if (!__file_name)
   {
@@ -35,10 +37,17 @@ D_create_texture(char *__file_name,
 
     return NULL;
   }
+  else if (__texture_unit > GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS)
+  {
+    D_raise_error(DERR_NOPARAM("__texture_unit", "Your gpu does not support this amount of texture units"));
+
+    return NULL;
+  }
   
   struct D_texture *new_texture = (struct D_texture *)malloc(sizeof(struct D_texture));
   D_assert(new_texture, NULL);
   new_texture->type = __type;
+  new_texture->unit = __texture_unit;
 
   glGenTextures(1, &new_texture->handle);
   D_bind_texture(new_texture);
@@ -48,7 +57,7 @@ D_create_texture(char *__file_name,
   glTexParameteri(__type, GL_TEXTURE_MIN_FILTER, __filter_t);
 
   /* opengl expects the pixel data to be reversed. */
-  stbi_set_flip_vertically_on_load(true);
+  stbi_set_flip_vertically_on_load(__flip);
   u8 *texture_image_data = stbi_load(__file_name, &new_texture->width, &new_texture->height, &new_texture->nr_channels, 0);
   if (!texture_image_data)
   {
@@ -93,5 +102,6 @@ D_bind_texture(struct D_texture *__texture)
     return;
   }
 
+  glActiveTexture(__texture->unit);
   glBindTexture(__texture->type, __texture->handle);
 }

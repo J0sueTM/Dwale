@@ -22,13 +22,9 @@ out vec4 FragColor;
 
 in vec2 TexCoord;
 
-uniform sampler2D u_texture;
-uniform vec2 u_mouse;
-uniform vec2 u_window;
+uniform sampler2D u_texture_city;
+uniform sampler2D u_texture_tux;
 
 void
 main()
-{
-  FragColor = texture(u_texture, TexCoord) *
-              vec4(u_window / u_mouse, 1.0f, 1.0f);
-}
+{ FragColor = mix(texture(u_texture_city, TexCoord), texture(u_texture_tux, TexCoord), 0.2f); }
