@@ -25,7 +25,7 @@ main(int    argc,
      char **argv)
 {
   D_init();
-  struct D_window *window = D_create_window("Dwale", 800, 600, -1, true);
+  struct D_window *window = D_create_window("Dwale", 800, 600, -1, true, true);
 
   struct D_shaders *test_shaders = D_create_shaders_from_file("test/src/res/t_gl_object_vertex_shader.glsl", "test/src/res/t_gl_object_fragment_shader.glsl");
 

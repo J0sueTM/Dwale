@@ -23,7 +23,7 @@ main(int    argc,
      char **argv)
 {
   D_init();
-  struct D_window *test_window = D_create_window("Dwale", 800, 600, -1, true);
+  struct D_window *test_window = D_create_window("Dwale", 800, 600, -1, true, false);
 
   while (D_is_window_open(test_window))
   {
