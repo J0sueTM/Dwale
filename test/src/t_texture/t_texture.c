@@ -20,12 +20,30 @@
 
 #include "dwale.h"
 
+struct f32vec2 mouse_pos;
+
+static void
+_mouse_callback(GLFWwindow *__window,
+                f64         __x,
+                f64         __y)
+{
+  mouse_pos.x = (f32)__x;
+  mouse_pos.y = (f32)__y;
+}
+
 int
 main(int    argc,
      char **argv)
 {
   D_init();
   struct D_window *window = D_create_window("Dwale", 615, 402, -1, true, false);
+  glfwSetCursorPosCallback(window->handle, _mouse_callback);
+  struct f32vec2 window_dims =
+  {
+    (f32)window->current_dimensions.x,
+    (f32)window->current_dimensions.y
+  };
+
   struct D_shaders *shaders = D_create_shaders_from_file("test/src/t_texture/res/vertex_shader.glsl", "test/src/t_texture/res/fragment_shader.glsl");
 
   /* quad */
@@ -76,6 +94,8 @@ main(int    argc,
 
     D_bind_texture(test_texture);
     D_set_uniform_f32(shaders, glfwGetTime(), "u_time");
+    D_set_uniform_f32vec2(shaders, mouse_pos, "u_mouse");
+    D_set_uniform_f32vec2(shaders, window_dims, "u_window");
     D_draw_elements(__vao_quad, __ebo_quad, 6, GL_UNSIGNED_INT, shaders);
 
     D_swap_window_buffers();
