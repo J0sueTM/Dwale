@@ -23,29 +23,34 @@
 static struct D_window *_global_window;
 
 static void
-_update_current_global_dimensions()
+_update_current_dimensions()
 {
   if (_global_window->fullscreen)
   {
-    _global_window->current_global_dimensions.x = _global_window->fullscreen_dimensions->width;
-    _global_window->current_global_dimensions.y = _global_window->fullscreen_dimensions->height;
+    _global_window->current_dimensions.x = _global_window->fullscreen_dimensions->width;
+    _global_window->current_dimensions.y = _global_window->fullscreen_dimensions->height;
   }
   else
   {
-    _global_window->current_global_dimensions.x = _global_window->windowed_dimensions.x;
-    _global_window->current_global_dimensions.y = _global_window->windowed_dimensions.y;
+    _global_window->current_dimensions.x = _global_window->windowed_dimensions.x;
+    _global_window->current_dimensions.y = _global_window->windowed_dimensions.y;
   }
 
   glViewport(0, 0,
-             _global_window->current_global_dimensions.x,
-             _global_window->current_global_dimensions.y);  
+             _global_window->current_dimensions.x,
+             _global_window->current_dimensions.y);  
 }
 
 static void
 _default_framebuffer_size_callback(GLFWwindow *__window,
                                    i32         __width,
                                    i32         __height)
-{ _update_current_global_dimensions(); }
+{
+  _global_window->windowed_dimensions.x = (u32)__width;
+  _global_window->windowed_dimensions.y = (u32)__height;
+
+  _update_current_dimensions();
+}
 
 static void
 _default_error_callback(i32         __code,
@@ -57,7 +62,8 @@ D_create_window(char *__title,
                 u32   __width,
                 u32   __height,
                 i32   __monitor_index,
-                bool  __context_current)
+                bool  __context_current,
+                bool  __resizable)
 {
   if (!__title)
   {
@@ -102,7 +108,7 @@ D_create_window(char *__title,
     _global_window->monitor = NULL;
     _global_window->fullscreen = false;
 
-    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+    glfwWindowHint(GLFW_RESIZABLE, __resizable);
 
     goto normal_window_selected;
   }
@@ -174,7 +180,7 @@ D_toggle_context_current()
   D_assert_fatal(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), DERR_NOINIT("glad"));
 #endif /* __D_INIT_VIDEO_GLAD__ */
 
-  _update_current_global_dimensions();
+  _update_current_dimensions();
 
   D_raise_log("Toggled current OpenGL rendering context");
 }

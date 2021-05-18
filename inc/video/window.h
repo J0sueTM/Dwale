@@ -39,7 +39,7 @@ struct D_window
   bool fullscreen;
   const GLFWvidmode *fullscreen_dimensions;
   struct u32vec2 windowed_dimensions,
-                 current_global_dimensions;
+                 current_dimensions;
 };
 
 /**
@@ -64,7 +64,8 @@ D_create_window(char *__title,
                 u32   __width,
                 u32   __height,
                 i32   __monitor_index,
-                bool  __context_current);
+                bool  __context_current,
+                bool  __resizable);
 
 /**
  * \brief Ends the currently global window instance.
