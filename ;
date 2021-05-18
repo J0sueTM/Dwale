@@ -125,30 +125,19 @@ struct u8vec2
 struct i8vec2
 { i8 x, y; };
 
-#define D_add_vector(__l, __r) \
-{ \
-  if (sizeof(__l) != sizeof(__r)) \
-  { D_raise_error(DERR_NOPARAM("__l && __r", "Vectors can't have different types")); } \
-  else \
-  { \
-    /* Iterates through the struct's members  */ \
-    for (i32 i = 0; i < (sizeof(__l) / sizeof(__l.x)); ++i) \
-    { *(&__l.x + i) += *(&__r.x + i); } \
-  } \
-}
+#define D_VEC4(l) (sizeof(l) / 4) == sizeof(l.x)
+#define D_VEC3(l) (sizeof(l) / 3) == sizeof(l.x)
 
-#define D_add_vector_to(__l, __r, __v) \
-{ \
-  if (sizeof(__l) != sizeof(__r) && \
-      sizeof(__l) != sizeof(__v)) \
-  { D_raise_error(DERR_NOPARAM("__l && __r && __v", "Vectors can't have different types")); } \
-  else \
+#define D_add_vector(l, r) \
   { \
-    /* Iterates through the struct's members  */ \
-    for (i32 i = 0; i < (sizeof(__l) / sizeof(__l.x)); ++i) \
-    { *(&__v.x + i) = *(&__l.x + i) + *(&__r.x + i); } \
-  } \
-}
+    l.x += r.x; \
+    l.y += r.y; \
+    \
+    if (D_VEC3(x)) \
+    { l.z += r.z; } \
+    if (D_VEC4(x)) \
+    { l.w += r.w; } \
+  }
 
 #ifdef __cplusplus
 }
