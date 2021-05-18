@@ -28,13 +28,31 @@ extern "C"
 
 #include "core/core.h"
 #include "video/video.h"
-#include "video/gl/gl_object.h"
-#include "video/gl/shader.h"
+#include "video/gl/stb_image.h"
 
 struct D_texture
 {
-  u32 handle;
+  u32 handle,
+      type;
+  i32 width,
+      height,
+      nr_channels;
 };
+
+struct D_texture *
+D_create_texture(char *__file_name,
+                 u32   __type,
+                 u32   __wrap_s,
+                 u32   __wrap_t,
+                 u32   __filter_s,
+                 u32   __filter_t,
+                 u32   __format);
+
+void
+D_end_texture(struct D_texture *__texture);
+
+void
+D_bind_texture(struct D_texture *__texture);
   
 #ifdef __cplusplus
 }
