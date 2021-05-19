@@ -62,6 +62,17 @@ extern "C"
   ", " \
   y
 
+#define DERR_VECS2 \
+  DERR_NOPARAM("__l && __r", \
+               "Vectors can't be different")
+
+#define DERR_VECS3 \
+  DERR_NOPARAM("__l && __r && __v", \
+               "Vectors can't be different")
+
+#define DWARN_DIV0 \
+  "Can't divide by 0"
+
 /* Vendor specific */
 #define DERR_OPENGL "Opengl error"
 
