@@ -125,29 +125,150 @@ struct u8vec2
 struct i8vec2
 { i8 x, y; };
 
-#define D_add_vector(__l, __r) \
+#define D_check_vectors2(__l, \
+                         __r) \
+  sizeof(*__l) == sizeof(*__r)
+#define D_check_vectors3(__l, \
+                         __r, \
+                         __v) \
+  sizeof(*__l) == sizeof(*__r) && sizeof(*__l) == sizeof(*__v)
+
+#define D_add_vector(__l, \
+                     __r) \
 { \
-  if (sizeof(__l) != sizeof(__r)) \
-  { D_raise_error(DERR_NOPARAM("__l && __r", "Vectors can't have different types")); } \
+  if (!D_check_vectors2(__l, __r)) \
+  { D_raise_error(DERR_VECS2); } \
   else \
   { \
     /* Iterates through the struct's members  */ \
-    for (i32 i = 0; i < (sizeof(__l) / sizeof(__l.x)); ++i) \
-    { *(&__l.x + i) += *(&__r.x + i); } \
+    for (i32 i = 0; i < (sizeof(*__l) / sizeof((*__l).x)); ++i) \
+    { *(__l.x + i) += *(__r.x + i); } \
   } \
 }
 
-#define D_add_vector_to(__l, __r, __v) \
+#define D_add_vector_to(__l, \
+                        __r, \
+                        __v) \
 { \
-  if (sizeof(__l) != sizeof(__r) && \
-      sizeof(__l) != sizeof(__v)) \
-  { D_raise_error(DERR_NOPARAM("__l && __r && __v", "Vectors can't have different types")); } \
+  /* Iterates through the struct's members  */ \
+  for (i32 i = 0; i < (sizeof(*__l) / sizeof((*__l).x)); ++i) \
+  { *(__v.x + i) = *(__l.x + i) + *(__r.x + i); } \
+}
+
+#define D_sub_vector(__l, \
+                     __r) \
+{ \
+  if (!D_check_vectors2(__l, __r)) \
+  { D_raise_error(DERR_VECS2); } \
   else \
   { \
     /* Iterates through the struct's members  */ \
-    for (i32 i = 0; i < (sizeof(__l) / sizeof(__l.x)); ++i) \
-    { *(&__v.x + i) = *(&__l.x + i) + *(&__r.x + i); } \
+    for (i32 i = 0; i < (sizeof(*__l) / sizeof((*__l).x)); ++i) \
+    { *(__l.x + i) -= *(__r.x + i); } \
   } \
+}
+
+#define D_sub_vector_to(__l, \
+                        __r, \
+                        __v) \
+{ \
+  if (!D_check_vectors3(__l, __r, __v)) \
+  { D_raise_error(DERR_VECS3); } \
+  else \
+  { \
+    /* Iterates through the struct's members  */ \
+    for (i32 i = 0; i < (sizeof(*__l) / sizeof((*__l).x)); ++i) \
+    { *(__v.x + i) = *(__l.x + i) - (*(__r.x + i)); } \
+  } \
+}
+
+#define D_mult_vector(__l, \
+                      __r) \
+{ \
+  if (!D_check_vectors2(__l, __r)) \
+  { D_raise_error(DERR_VECS2); } \
+  else \
+  { \
+    /* Iterates through the struct's members  */ \
+    for (i32 i = 0; i < (sizeof(*__l) / sizeof((*__l).x)); ++i) \
+    { (*(__l.x + i))*= (*(__r.x + i)); } \
+  } \
+}
+
+#define D_mult_vector_to(__l, \
+                         __r, \
+                         __v) \
+{ \
+  if (!D_check_vectors3(__l, __r, __v)) \
+  { D_raise_error(DERR_VECS3); } \
+  else \
+  { \
+    /* Iterates through the struct's members  */ \
+    for (i32 i = 0; i < (sizeof(*__l) / sizeof((*__l).x)); ++i) \
+    { *(__v.x + i) = (*(__l.x + i)) * (*(__r.x + i)); } \
+  } \
+}
+
+#define D_div_vector(__l, \
+                     __r) \
+{ \
+  if (!D_check_vectors2(__l, __r)) \
+  { D_raise_error(DERR_VECS2); } \
+  else \
+  { \
+    /* Iterates through the struct's members  */ \
+    for (i32 i = 0; i < (sizeof(*__l) / sizeof((*__l).x)); ++i) \
+    { \
+      /* Checks if divisor is 0 before dividing. */ \
+      if (*(__r.x + i) != 0) \
+      { *(__l.x + i) /= (*(__r.x + i)); } \
+    } \
+  } \
+}
+
+#define D_div_vector_to(__l, \
+                        __r, \
+                        __v) \
+{ \
+  if (!D_check_vectors3(__l, __r, __v)) \
+  { D_raise_error(DERR_VECS3); } \
+  else \
+  { \
+    /* Iterates through the struct's members  */ \
+    for (i32 i = 0; i < (sizeof(*__l) / sizeof((*__l).x)); ++i) \
+    { \
+      /* Checks if divisor is 0 before dividing. */ \
+      if (*(__r.x + i) != 0) \
+      { *(__v.x + i) = (*(__l.x + i)) / (*(__r.x + i)); } \
+    } \
+  } \
+}
+
+#define D_mag_vector_to(__l, \
+                        __r) \
+{ *__r = sqrt(((*__l).x) * ((*__l).x) + ((*__l).y * (*__l).y)); }
+
+#define D_norm_vector(__v) \
+{ D_div_vector(__v, __v); }
+
+#define D_rotation_vector(__v) -atan2((f64)-((*__v).y), (*__v).x)
+
+#define D_rotation_vector_to(__l, \
+                             __r) \
+{ *__r = D_rotation_vector(__l); }
+
+#define D_rotate_vector(__type, \
+                        __v, \
+                        __d) \
+{ \
+  /* Stores a temporary .x value */ \
+  __type *temp_x = (__type *)malloc(sizeof(__type)); \
+  *temp_x = (*__v).x; \
+  \
+  (*__v).x = ((cos(__d)) * (*temp_x)) - ((sin(__d)) * ((*__v).y)); \
+  (*__v).y = ((sin(__d)) * (*temp_x)) + ((cos(__d)) * ((*__v).y)); \
+  \
+  free(temp_x); \
 }
 
 #ifdef __cplusplus
