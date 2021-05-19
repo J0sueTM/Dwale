@@ -35,7 +35,8 @@ extern "C"
 struct D_texture
 {
   u32 handle,
-      type;
+      type,
+      format;
   i32 width,
       height,
       nr_channels,

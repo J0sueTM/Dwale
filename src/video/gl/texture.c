@@ -56,6 +56,9 @@ D_create_texture(char *__file_name,
   glTexParameteri(__type, GL_TEXTURE_MIN_FILTER, __filter_s);
   glTexParameteri(__type, GL_TEXTURE_MIN_FILTER, __filter_t);
 
+  /* Saves time on checking if data is premultiplied after */
+  if (__format == GL_RGBA)
+  { stbi_set_unpremultiply_on_load(true); }
   /* opengl expects the pixel data to be reversed. */
   stbi_set_flip_vertically_on_load(__flip);
   u8 *texture_image_data = stbi_load(__file_name, &new_texture->width, &new_texture->height, &new_texture->nr_channels, 0);
@@ -100,6 +103,13 @@ D_bind_texture(struct D_texture *__texture)
     D_raise_error(DERR_NOPARAM("__texturre", "Texture can't be NULL and/or wasn't initialized"));
 
     return;
+  }
+
+  if (__texture->format == GL_RGBA &&
+      !glIsEnabled(GL_BLEND))
+  {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   }
 
   glActiveTexture(__texture->unit);
