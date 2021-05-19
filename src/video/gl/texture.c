@@ -57,6 +57,7 @@ D_create_texture(char *__file_name,
   glTexParameteri(__type, GL_TEXTURE_MIN_FILTER, __filter_t);
 
   /* Saves time on checking if data is premultiplied after */
+  new_texture->format = __format;
   if (__format == GL_RGBA)
   { stbi_set_unpremultiply_on_load(true); }
   /* opengl expects the pixel data to be reversed. */
