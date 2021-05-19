@@ -1,5 +1,5 @@
 /**
- * \file test/src/t_texture/res/vertex_shader.glsl
+ * \file test/src/res_vector/arrow_vertex_shader.glsl
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
  * \date May 16, 2021
  *
@@ -19,15 +19,17 @@
 #version 330 core
 
 layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec2 aTexCoord;
+layout (location = 1) in vec2 l_tex_coord;
 
-out vec2 TexCoord;
+out vec2 vo_tex_coord;
 
-uniform float u_time;
+uniform vec2 u_pos;
 
 void
 main()
 {
-  gl_Position = vec4(aPos.x + tan(u_time * 2), aPos.y, aPos.z, 1.0f);
-  TexCoord = vec2(aTexCoord.x, aTexCoord.y);
+  gl_Position = vec4(aPos.x + u_pos.x, 
+                     aPos.y + u_pos.y,
+                     aPos.z, 1.0f);
+  vo_tex_coord = l_tex_coord;
 }

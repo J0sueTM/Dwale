@@ -1,5 +1,5 @@
 /**
- * \file test/src/t_texture/res/vertex_shader.glsl
+ * \file test/src/res_vector/arrow_fragment_shader.glsl
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
  * \date May 16, 2021
  *
@@ -18,16 +18,12 @@
 
 #version 330 core
 
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec2 aTexCoord;
+out vec4 FragColor;
 
-out vec2 TexCoord;
+in vec2 vo_tex_coord;
 
-uniform float u_time;
+uniform sampler2D u_texture_arrow;
 
 void
 main()
-{
-  gl_Position = vec4(aPos.x + tan(u_time * 2), aPos.y, aPos.z, 1.0f);
-  TexCoord = vec2(aTexCoord.x, aTexCoord.y);
-}
+{ FragColor = texture(u_texture_arrow, vo_tex_coord); }
