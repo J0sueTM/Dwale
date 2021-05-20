@@ -31,12 +31,14 @@ workspace "Dwale"
   {
     "./inc",
     "./vendor/glfw/include/",
-    "./vendor/glad/include/"
+    "./vendor/glad/include/",
+    "./vendor/cglm/include/"
   }
 
   group "libs"
     include "./vendor/glfw/"
     include "./vendor/glad/"
+    include "./vendor/cglm/"
   group ""
 
   include "./inc"

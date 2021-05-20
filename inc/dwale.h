@@ -30,7 +30,9 @@ extern "C"
   
 #include "core/core.h"
 
-#include "util/vector.h"
+#include "cglm/vec2.h"
+#include "cglm/vec3.h"
+#include "cglm/vec4.h"
 
 #include "video/video.h"
 #include "video/window.h"
