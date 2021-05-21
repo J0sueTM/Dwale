@@ -27,18 +27,16 @@ _update_current_dimensions()
 {
   if (_global_window->fullscreen)
   {
-    _global_window->current_dimensions.x = _global_window->fullscreen_dimensions->width;
-    _global_window->current_dimensions.y = _global_window->fullscreen_dimensions->height;
+    _global_window->current_dimensions[0] = (f32)_global_window->fullscreen_dimensions->width;
+    _global_window->current_dimensions[1] = (f32)_global_window->fullscreen_dimensions->height;
   }
   else
   {
-    _global_window->current_dimensions.x = _global_window->windowed_dimensions.x;
-    _global_window->current_dimensions.y = _global_window->windowed_dimensions.y;
+    _global_window->current_dimensions[0] = _global_window->windowed_dimensions[0];
+    _global_window->current_dimensions[1] = _global_window->windowed_dimensions[1];
   }
 
-  glViewport(0, 0,
-             _global_window->current_dimensions.x,
-             _global_window->current_dimensions.y);  
+  glViewport(0, 0, _global_window->current_dimensions[0], _global_window->current_dimensions[1]);  
 }
 
 static void
@@ -46,8 +44,8 @@ _default_framebuffer_size_callback(GLFWwindow *__window,
                                    i32         __width,
                                    i32         __height)
 {
-  _global_window->windowed_dimensions.x = (u32)__width;
-  _global_window->windowed_dimensions.y = (u32)__height;
+  _global_window->windowed_dimensions[0] = (f32)__width;
+  _global_window->windowed_dimensions[1] = (f32)__height;
 
   _update_current_dimensions();
 }
@@ -59,8 +57,8 @@ _default_error_callback(i32         __code,
 
 struct D_window *
 D_create_window(char *__title,
-                u32   __width,
-                u32   __height,
+                f32   __width,
+                f32   __height,
                 i32   __monitor_index,
                 bool  __context_current,
                 bool  __resizable)
@@ -71,15 +69,10 @@ D_create_window(char *__title,
     
     return NULL;
   }
-  else if (!__width)
+  else if (__width  <= 0.0f ||
+           __height <= 0.0f)
   {
-    D_raise_error(DERR_NOPARAM("__width", "Width can't be NULL"));
-
-    return NULL;
-  }
-  else if (!__height)
-  {
-    D_raise_error(DERR_NOPARAM("__height", "Height can't be NULL"));
+    D_raise_error(DERR_NOPARAM("__width || __height", "Window size can't be less than 0"));
 
     return NULL;
   }
@@ -87,8 +80,8 @@ D_create_window(char *__title,
   _global_window = (struct D_window *)malloc(sizeof(struct D_window));
   D_assert_fatal(_global_window, NULL);
 
-  _global_window->windowed_dimensions.x = __width;
-  _global_window->windowed_dimensions.y = __height;
+  _global_window->windowed_dimensions[0] = __width;
+  _global_window->windowed_dimensions[1] = __height;
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -137,8 +130,8 @@ D_create_window(char *__title,
   }
 
 normal_window_selected:
-  _global_window->handle = glfwCreateWindow(_global_window->windowed_dimensions.x,
-                                            _global_window->windowed_dimensions.y,
+  _global_window->handle = glfwCreateWindow(_global_window->windowed_dimensions[0],
+                                            _global_window->windowed_dimensions[1],
                                             __title,
                                             _global_window->monitor,
                                             NULL);
@@ -190,10 +183,10 @@ D_is_window_open(struct D_window *_global_window)
 { return !glfwWindowShouldClose(_global_window->handle); }
 
 void
-D_clear_window(float __red,
-               float __green,
-               float __blue,
-               float __alpha)
+D_clear_window(f32 __red,
+               f32 __green,
+               f32 __blue,
+               f32 __alpha)
 {
   glClearColor(__red, __green, __blue, __alpha);
   glClear(GL_COLOR_BUFFER_BIT);

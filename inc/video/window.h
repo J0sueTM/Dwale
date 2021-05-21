@@ -28,7 +28,7 @@ extern "C"
 
 #include "core/core.h"
 #include "video/video.h"
-#include "util/vector.h"
+#include "cglm/vec2.h"
 
 struct D_window
 {
@@ -38,8 +38,7 @@ struct D_window
 
   bool fullscreen;
   const GLFWvidmode *fullscreen_dimensions;
-  struct u32vec2 windowed_dimensions,
-                 current_dimensions;
+  vec2 windowed_dimensions, current_dimensions;
 };
 
 /**
@@ -61,8 +60,8 @@ struct D_window
  */  
 struct D_window *
 D_create_window(char *__title,
-                u32   __width,
-                u32   __height,
+                f32   __width,
+                f32   __height,
                 i32   __monitor_index,
                 bool  __context_current,
                 bool  __resizable);
@@ -98,10 +97,10 @@ D_is_window_open();
  * \param __alpha Specifies the alpha channel.
  */  
 void
-D_clear_window(float __red,
-               float __green,
-               float __blue,
-               float __alpha);
+D_clear_window(f32 __red,
+               f32 __green,
+               f32 __blue,
+               f32 __alpha);
 
 /**
  * \brief Swaps the window's buffers.

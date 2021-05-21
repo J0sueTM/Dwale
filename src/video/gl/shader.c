@@ -217,55 +217,28 @@ D_set_uniform_bool(struct D_shaders *__shaders,
 { glUniform1i(glGetUniformLocation(__shaders->program, __name), __value); }
 
 void
-D_set_uniform_i32vec4(struct D_shaders *__shaders,
-                      struct i32vec4    __value,
-                      char             *__name)
-{
-  glUniform4i(glGetUniformLocation(__shaders->program, __name),
-              __value.x, __value.y, __value.z, __value.w);
-}
-
-void
-D_set_uniform_i32vec3(struct D_shaders *__shaders,
-                      struct i32vec3    __value,
-                      char             *__name)
-{
-  glUniform3i(glGetUniformLocation(__shaders->program, __name),
-              __value.x, __value.y, __value.z);
-}
-
-void
-D_set_uniform_i32vec2(struct D_shaders *__shaders,
-                      struct i32vec2    __value,
-                      char             *__name)
-{
-  glUniform2i(glGetUniformLocation(__shaders->program, __name),
-              __value.x, __value.y);
-}
-
-void
-D_set_uniform_f32vec4(struct D_shaders *__shaders,
-                      struct f32vec4    __value,
-                      char             *__name)
+D_set_uniform_vec4(struct D_shaders *__shaders,
+                   vec4              __value,
+                   char             *__name)
 {
   glUniform4f(glGetUniformLocation(__shaders->program, __name),
-              __value.x, __value.y, __value.z, __value.w);
+              __value[0], __value[1], __value[2], __value[3]);
 }
 
 void
-D_set_uniform_f32vec3(struct D_shaders *__shaders,
-                      struct f32vec3    __value,
-                      char             *__name)
+D_set_uniform_fvec3(struct D_shaders *__shaders,
+                    vec3              __value,
+                    char             *__name)
 {
   glUniform3f(glGetUniformLocation(__shaders->program, __name),
-              __value.x, __value.y, __value.z);
+              __value[0], __value[1], __value[2]);
 }
 
 void
-D_set_uniform_f32vec2(struct D_shaders *__shaders,
-                      struct f32vec2    __value,
-                      char             *__name)
+D_set_uniform_fvec2(struct D_shaders *__shaders,
+                    vec2              __value,
+                    char             *__name)
 {
   glUniform2f(glGetUniformLocation(__shaders->program, __name),
-              __value.x, __value.y);
+              __value[0], __value[1]);
 }

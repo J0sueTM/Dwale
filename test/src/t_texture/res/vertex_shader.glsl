@@ -28,6 +28,6 @@ uniform float u_time;
 void
 main()
 {
-  gl_Position = vec4(aPos.x + tan(u_time * 2), aPos.y, aPos.z, 1.0f);
+  gl_Position = vec4(aPos + sin(u_time), 1.0f);
   TexCoord = vec2(aTexCoord.x, aTexCoord.y);
 }

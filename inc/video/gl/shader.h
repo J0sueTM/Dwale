@@ -28,7 +28,9 @@ extern "C"
 
 #include "core/core.h"
 #include "video/video.h"
-#include "util/vector.h"
+#include "cglm/vec2.h"
+#include "cglm/vec3.h"
+#include "cglm/vec4.h"
 
 /* TODO(J0sueTM): Add geometry shader */
 
@@ -111,34 +113,19 @@ D_set_uniform_bool(struct D_shaders *__shaders,
                    char             *__name);
 
 void
-D_set_uniform_i32vec4(struct D_shaders *__shaders,
-                      struct i32vec4    __value,
-                      char             *__name);
+D_set_uniform_vec4(struct D_shaders *__shaders,
+                   vec4              __value,
+                   char             *__name);
 
 void
-D_set_uniform_i32vec3(struct D_shaders *__shaders,
-                      struct i32vec3    __value,
-                      char             *__name);
+D_set_uniform_vec3(struct D_shaders *__shaders,
+                   vec3              __value,
+                   char             *__name);
 
 void
-D_set_uniform_i32vec2(struct D_shaders *__shaders,
-                      struct i32vec2    __value,
-                      char             *__name);
-
-void
-D_set_uniform_f32vec4(struct D_shaders *__shaders,
-                      struct f32vec4    __value,
-                      char             *__name);
-
-void
-D_set_uniform_f32vec3(struct D_shaders *__shaders,
-                      struct f32vec3    __value,
-                      char             *__name);
-
-void
-D_set_uniform_f32vec2(struct D_shaders *__shaders,
-                      struct f32vec2    __value,
-                      char             *__name);
+D_set_uniform_vec2(struct D_shaders *__shaders,
+                   vec2              __value,
+                   char             *__name);
 
 /* TODO(J0sueTM): Add matrix uniforms */
 
