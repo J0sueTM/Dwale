@@ -3,8 +3,6 @@
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
  * \date May 16, 2021
  *
- * \brief Texture test
- *
  * Copyright (C) Josué Teodoro Moreira
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -29,7 +27,7 @@ main(int    argc,
   struct D_shaders *shaders = D_create_shaders_from_file("test/src/t_texture/res/vertex_shader.glsl",
                                                          "test/src/t_texture/res/fragment_shader.glsl");
 
-  float vertices_quad[] =
+  f32 vertices_quad[] =
   {
     /* position coords */ /* texture coords */
      0.4f,  0.7f, 0.0f,    1.0f, 1.0f,

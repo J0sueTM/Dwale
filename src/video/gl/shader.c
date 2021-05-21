@@ -242,3 +242,30 @@ D_set_uniform_fvec2(struct D_shaders *__shaders,
   glUniform2f(glGetUniformLocation(__shaders->program, __name),
               __value[0], __value[1]);
 }
+
+void
+D_set_uniform_mat4(struct D_shaders *__shaders,
+                   mat4              __value,
+                   char             *__name)
+{
+  glUniformMatrix4fv(glGetUniformLocation(__shaders->program, __name),
+                     1, GL_FALSE, (f32 *)__value);
+}
+
+void
+D_set_uniform_mat3(struct D_shaders *__shaders,
+                   mat3              __value,
+                   char             *__name)
+{
+  glUniformMatrix3fv(glGetUniformLocation(__shaders->program, __name),
+                     1, GL_FALSE, (f32 *)__value);
+}
+
+void
+D_set_uniform_mat2(struct D_shaders *__shaders,
+                   mat2              __value,
+                   char             *__name)
+{
+  glUniformMatrix2fv(glGetUniformLocation(__shaders->program, __name),
+                     1, GL_FALSE, (f32 *)__value);
+}

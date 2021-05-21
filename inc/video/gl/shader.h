@@ -31,6 +31,9 @@ extern "C"
 #include "cglm/vec2.h"
 #include "cglm/vec3.h"
 #include "cglm/vec4.h"
+#include "cglm/mat2.h"
+#include "cglm/mat3.h"
+#include "cglm/mat4.h"
 
 /* TODO(J0sueTM): Add geometry shader */
 
@@ -127,7 +130,20 @@ D_set_uniform_vec2(struct D_shaders *__shaders,
                    vec2              __value,
                    char             *__name);
 
-/* TODO(J0sueTM): Add matrix uniforms */
+void
+D_set_uniform_mat4(struct D_shaders *__shaders,
+                   mat4              __value,
+                   char             *__name);
+
+void
+D_set_uniform_mat3(struct D_shaders *__shaders,
+                   mat3              __value,
+                   char             *__name);
+
+void
+D_set_uniform_mat2(struct D_shaders *__shaders,
+                   mat2              __value,
+                   char             *__name);
 
 #ifdef __cplusplus
 }
