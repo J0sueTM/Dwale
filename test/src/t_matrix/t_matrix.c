@@ -76,9 +76,9 @@ main(int    argc,
     D_clear_window(0.1f, 0.1f, 0.1f, 1.0f);
 
     curr_time = glfwGetTime();
-    if (curr_time - prev_time >= 1.0f)
+    if (curr_time - prev_time >= 0.016f)
     {
-      glm_rotate(arrow_transform, glm_rad(6.0f), arrow_transform_axis);
+      glm_rotate(arrow_transform, glm_rad(1.0f), arrow_transform_axis);
       prev_time = curr_time;
     }
 

@@ -29,10 +29,7 @@ extern "C"
 #include "core/core.h"
 #include "video/video.h"
 
-#define D_VO_NONE    0x0
-#define D_VBO_ARRAY  0x1
-#define D_VBO_BUFFER 0x2
-#define D_VBO_ALL    0x3
+#define D_VO_NONE 0x0
 
 struct D_vbo
 {

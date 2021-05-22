@@ -1,9 +1,9 @@
 /**
- * \file inc/dwale.h
+ * \file inc/video/camera.h
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
- * \date April 22, 2021
+ * \date May 21, 2021
  *
- * \brief Base includes for dwale
+ * \brief Camera related functionalities
  * 
  * Copyright (C) Josué Teodoro Moreira
  * 
@@ -18,48 +18,28 @@
  * GNU General Public License for more details.
  */
 
-#ifndef __D_H__
-#define __D_H__
+#ifndef __D_CAMERA_H__
+#define __D_CAMERA_H__
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-#ifndef __D_INCLUDE_NONE__
-  
 #include "core/core.h"
-
-#include "cglm/vec2.h"
-#include "cglm/vec3.h"
-#include "cglm/vec4.h"
-
 #include "video/video.h"
-#include "video/window.h"
+#include "cglm/mat4.h"
 
-#include "video/gl/gl_object.h"
-#include "video/gl/shader.h"
-#include "video/gl/texture.h"
+struct D_camera
+{
+  mat4 projection;
+};
 
-#include "video/surface.h"
-#include "video/renderer.h"
-  
-#endif /* __D_INCLUDE_NONE__ */
+struct D_camera *
+D_create_camera();
 
-/**
- * \brief Initialises dwale and it's dependencies
- */
-void
-D_init();
-
-/**
- * \brief Ends dwale and it's dependencies
- */
-void
-D_end();
-
-#ifdef __cplusplus
+#ifdef __cplusplus  
 }
 #endif /* __cplusplus */
 
-#endif /* __D_H__ */
+#endif /* __D_CAMERA_H__ */
