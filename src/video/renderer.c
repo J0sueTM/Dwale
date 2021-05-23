@@ -68,13 +68,23 @@ D_draw_elements(struct D_vao     *__vao,
     return;
   }
 
-  if (__shaders)
-  { D_apply_shaders(__shaders); }
-
+  D_apply_shaders(__shaders);
   D_bind_vao(__vao);
   glDrawElements(__ebo->draw_type, __count, __type, 0);
+}
 
-#ifdef __D_DEBUG__
-  D_unbind_vao();
-#endif /* __D_DEBUG__ */
+void
+D_draw_surface(struct D_surface *__surface)
+{
+  if (!__surface)
+  {
+    D_raise_error(DERR_NOPARAM("__surface", "Surface can't be NULL"));
+
+    return;
+  }
+
+  if (__surface->ebo)
+  { D_draw_elements(__surface->vao, __surface->ebo, __surface->ebo_count, __surface->ebo_type, __surface->shaders); }
+  else
+  { D_draw_arrays(__surface->vao, __surface->vbo, __surface->shaders); }
 }

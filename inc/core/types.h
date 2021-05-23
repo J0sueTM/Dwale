@@ -55,6 +55,9 @@ typedef float  f32;
 typedef double f64;
 typedef long double f128;
 
+#define D_DISABLED 0x00
+#define D_ENABLED 0X01
+
 #endif /* __D_TYPES_H__ */
 
 #ifdef __cplusplus

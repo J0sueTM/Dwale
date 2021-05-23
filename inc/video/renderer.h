@@ -29,7 +29,9 @@ extern "C"
 #include "core/core.h"
 #include "video/video.h"
 #include "video/gl/gl_object.h"
+#include "video/gl/texture.h"
 #include "video/gl/shader.h"
+#include "video/surface.h"
 
 /**
  * \brief Creates a draw call for the given vertex buffer object.
@@ -62,6 +64,9 @@ D_draw_elements(struct D_vao     *__vao,
                 u32               __count,
                 u32               __type,
                 struct D_shaders *__shaders);
+
+void
+D_draw_surface(struct D_surface *__surface);
 
 #ifdef __cplusplus
 }

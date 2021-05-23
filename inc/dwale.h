@@ -33,6 +33,7 @@ extern "C"
 #include "cglm/vec2.h"
 #include "cglm/vec3.h"
 #include "cglm/vec4.h"
+#include "cglm/affine.h"
 
 #include "video/video.h"
 #include "video/window.h"

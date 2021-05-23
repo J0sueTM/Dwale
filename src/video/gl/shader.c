@@ -38,14 +38,14 @@ _read_from_file_to_string(FILE *__source_file)
   }
 
   long source_file_size;
-  const char *source;
+  char *source;
   if (__source_file)
   {
     fseek(__source_file, 0, SEEK_END);
     source_file_size = ftell(__source_file);
     fseek(__source_file, 0, SEEK_SET);
 
-    source = (const char *)malloc(source_file_size);
+    source = (char *)malloc(source_file_size + 1);
     if (!source)
     {
       D_raise_error("Could not allocate memory for shader source");
@@ -58,7 +58,10 @@ _read_from_file_to_string(FILE *__source_file)
     fclose(__source_file);
   }
 
-  return source;
+  /* Replaces the last digit by a NULL termination if it's not already. */
+  source[source_file_size] = '\0';
+
+  return (const char *)source;
 }
 
 u32

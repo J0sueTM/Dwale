@@ -17,7 +17,6 @@
  */
 
 #include "dwale.h"
-#include "cglm/affine.h"
 
 int
 main(int    argc,
@@ -26,7 +25,7 @@ main(int    argc,
   D_init();
   struct D_window *window = D_create_window("Dwale", 800, 600, -1, true, false);
   struct D_shaders *arrow_shaders = D_create_shaders_from_file("test/src/t_matrix/res/arrow_vertex_shader.glsl",
-                                                          "test/src/t_matrix/res/arrow_fragment_shader.glsl");
+                                                               "test/src/t_matrix/res/arrow_fragment_shader.glsl");
 
   f32 arrow_surface[] =
   {
