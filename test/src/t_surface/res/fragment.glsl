@@ -18,6 +18,8 @@
 
 #version 330 core
 
+out vec4 FragColor;
+
 in vec2 vo_tex_coord;
 
 uniform sampler2D u_texture_tux;
@@ -25,6 +27,4 @@ uniform sampler2D u_texture_gnu;
 
 void
 main()
-{
-  gl_FragColor = mix(texture(u_texture_tux, vo_tex_coord), texture(u_texture_gnu, vo_tex_coord), 0.4f);
-}
+{ FragColor = mix(texture(u_texture_tux, vo_tex_coord), texture(u_texture_gnu, vo_tex_coord), 0.3f); }

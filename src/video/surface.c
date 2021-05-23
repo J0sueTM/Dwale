@@ -3,7 +3,7 @@
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
  * \date May 21, 2021
  *
- * \brief Surface is basically a panel, where gl object can be attached together.
+ * \brief Surface is basically a panel, where gl object can be attached to.
  * 
  * Copyright (C) Josué Teodoro Moreira
  * 
@@ -21,8 +21,11 @@
 #include "video/surface.h"
 
 struct D_surface *
-D_create_surface(f32              *__vct,
+D_create_surface(u32               __vct_size,
+                 f32              *__vct,
+                 u32               __vi_size,
                  u32              *__vi,
+                 u32               __stride,
                  u32               __draw_type,
                  u32               __draw_mode,
                  u32               __ebo_count,
@@ -46,27 +49,36 @@ D_create_surface(f32              *__vct,
   D_assert(new_surface, NULL);
   new_surface->vct = __vct;
   new_surface->vi = __vi;
+  new_surface->shaders = __shaders;
   new_surface->ebo_count = __ebo_count;
   new_surface->ebo_type = __ebo_type;
-  new_surface->shaders = __shaders;
 
   new_surface->vao = D_create_vao();
   new_surface->vbo = D_create_vbo(GL_ARRAY_BUFFER, __draw_type, __draw_mode);
-  new_surface->ebo = D_create_vbo(GL_ELEMENT_ARRAY_BUFFER, __draw_type, __draw_mode);
+  if (new_surface->vi)
+  { new_surface->ebo = D_create_vbo(GL_ELEMENT_ARRAY_BUFFER, __draw_type, __draw_mode); }
 
   D_bind_vao(new_surface->vao);
-  D_vbo_data(new_surface->vbo, sizeof(new_surface->vct), new_surface->vct);
+  D_vbo_data(new_surface->vbo, __vct_size, new_surface->vct);
   if (new_surface->vi)
-  { D_vbo_data(new_surface->ebo, sizeof(new_surface->vi), new_surface->vi); }
+  { D_vbo_data(new_surface->ebo, __vi_size, new_surface->vi); }
 
-  D_vao_attrib_pointer(new_surface->vao, 0, 3, GL_FLOAT, 8 * sizeof(float), 0); /* vertices */
-  D_vao_attrib_pointer(new_surface->vao, 1, 3, GL_FLOAT, 8 * sizeof(float), 3); /* colors */
-  D_vao_attrib_pointer(new_surface->vao, 2, 2, GL_FLOAT, 8 * sizeof(float), 6); /* texture coords */
+  D_vao_attrib_pointer(new_surface->vao, 0, 3, GL_FLOAT, __stride * sizeof(float), 0); /* vertices */
+  D_vao_attrib_pointer(new_surface->vao, 1, 3, GL_FLOAT, __stride * sizeof(float), 3); /* colors */
+  D_vao_attrib_pointer(new_surface->vao, 2, 2, GL_FLOAT, __stride * sizeof(float), 6); /* texture coords */
 
-  for (i32 i = 0; i < D_MAX_TEXTURES_ON_SURFACE; ++i)
-  { new_surface->textures_status[i] = D_ENABLED; }
+  new_surface->head_texture_node = (struct D_texture_node *)malloc(sizeof(struct D_texture_node));
+  D_assert(new_surface->head_texture_node, NULL);
+  new_surface->head_texture_node->id = -1;
+  new_surface->head_texture_node->texture = NULL;
+  new_surface->head_texture_node->name = NULL;
+  new_surface->head_texture_node->status = D_DISABLED;
+  new_surface->head_texture_node->next = NULL;
+  new_surface->head_texture_node->prev = NULL;
+  new_surface->tail_texture_node = new_surface->head_texture_node;
 
   D_raise_log("Created surface");
+  return new_surface;
 }
 
 void
@@ -81,15 +93,11 @@ D_end_surface(struct D_surface *__surface)
 
   D_end_vao(__surface->vao);
   D_end_vbo(__surface->vbo);
-
   if (__surface->ebo)
   { D_end_vbo(__surface->ebo); }
-  if (__surface->textures)
-  {
-    for (i32 i = 0; i < __surface->texture_count; ++i)
-    { D_end_texture(__surface->textures[i]); }
-  }
-  D_end_shaders(__surface->shaders);
+
+  while (__surface->tail_texture_node->id != 0)
+  { D_pop_texture_from_surface(__surface); }
 
   D_raise_log("Ended surface");
 }
@@ -101,36 +109,26 @@ D_surface_has_texture(struct D_surface *__surface,
   if (!__surface ||
       !__texture)
   { return false; }
-  else if (__surface->texture_count <= 0)
+  else if (__surface->tail_texture_node->id == -1)
   { return false; }
   
-  for (i32 i = 0; i < __surface->texture_count; ++i)
+  struct D_texture_node *temp_head_texture_node = __surface->head_texture_node;
+  struct D_texture_node *temp_tail_texture_node = __surface->tail_texture_node;
+  for (i32 i = 0; i < ceill(__surface->tail_texture_node->id * 0.5f); ++i)
   {
-    if (__surface->textures[0] == __texture)
+    if (temp_head_texture_node->texture == __texture ||
+        temp_tail_texture_node->texture == __texture)
     { return true; }
+    else if (temp_head_texture_node == temp_tail_texture_node)
+    { return false; }
+
+    if (temp_head_texture_node->next)
+    { temp_head_texture_node = temp_head_texture_node->next; }
+    if (temp_tail_texture_node->prev)
+    { temp_tail_texture_node = temp_tail_texture_node->prev; }
   }
 
   return false;
-}
-
-bool
-D_surface_has_texture_on_position(struct D_surface *__surface,
-                                  u32               __position)
-{
-  if (!__surface)
-  {
-    D_raise_error(DERR_NOPARAM("__surface", "Surface can't be NULL"));
-
-    return false;
-  }
-  else if (__position >= __surface->texture_count)
-  {
-    D_raise_warning("__position out of bound");
-
-    return false;
-  }
-  
-  return D_surface_has_texture(__surface, __surface->textures[__position]);
 }
 
 void
@@ -141,20 +139,30 @@ D_push_texture_to_surface(struct D_surface *__surface,
   if (!__surface ||
       !__texture)
   {
-    D_raise_error(DERR_NOPARAM("__surface || __texture", "Surface and texture can't be NULL"));
+    D_raise_error(DERR_NOPARAM("__surface || __texture", "Surface and/or texture can't be NULL"));
 
     return;
   }
-  else if (__surface->texture_count >= D_MAX_TEXTURES_ON_SURFACE)
-  { return; }
+  else if (__surface->tail_texture_node->id == D_MAX_TEXTURES_ON_SURFACE)
+  {
+    D_raise_warning("Surface has already it's maximum of textures");
+
+    return;
+  }
   else if (D_surface_has_texture(__surface, __texture))
   { return; }
 
-  __surface->textures[__surface->texture_count] = __texture;
-  ++__surface->texture_count;
+  struct D_texture_node *new_texture_node = (struct D_texture_node *)malloc(sizeof(struct D_texture_node));
+  D_assert(new_texture_node, NULL);
+  new_texture_node->texture = __texture;
+  new_texture_node->status = D_ENABLED;
+  new_texture_node->name = __name;
+  new_texture_node->next = NULL;
 
-  if (!__surface->textures_names[__surface->texture_count])
-  { __surface->textures_names[__surface->texture_count] = (char *)malloc(1024 * sizeof(char)); }
+  new_texture_node->prev = __surface->tail_texture_node;
+  __surface->tail_texture_node->next = new_texture_node;
+  __surface->tail_texture_node = new_texture_node;
+  new_texture_node->id = new_texture_node->prev->id + 1;
 
   D_raise_log("Pushed texture to surface");
 }
@@ -168,46 +176,71 @@ D_pop_texture_from_surface(struct D_surface *__surface)
 
     return;
   }
-  else if (__surface->texture_count <= 0)
+  else if (__surface->tail_texture_node->id == -1)
   { return; }
 
-  __surface->textures[__surface->texture_count - 1] = NULL;
-  __surface->textures_names[__surface->texture_count - 1] = NULL;
-  D_set_surface_texture_status(__surface, __surface->texture_count - 1, D_DISABLED);
+  struct D_texture_node *temp_next_tail_texture_node = __surface->tail_texture_node->prev;
+  free(__surface->tail_texture_node);
+  __surface->tail_texture_node = temp_next_tail_texture_node;
   
-  --__surface->texture_count;
   D_raise_log("Popped texture from surface");
+}
+
+struct D_texture_node *
+D_get_texture_node_with_texture(struct D_surface *__surface,
+                                struct D_texture *__texture)
+{
+  if (!__surface ||
+      !__texture)
+  { return NULL; }
+  else if (__surface->tail_texture_node->id == -1)
+  { return NULL; }
+  
+  struct D_texture_node *temp_head_texture_node = __surface->head_texture_node;
+  struct D_texture_node *temp_tail_texture_node = __surface->tail_texture_node;
+  for (i32 i = 0; i < ceill(__surface->tail_texture_node->id * 0.5f); ++i)
+  {
+    if (temp_head_texture_node->texture == __texture)
+    { return temp_head_texture_node; }
+    else if (temp_tail_texture_node->texture == __texture)
+    { return temp_tail_texture_node; }
+    else if (temp_head_texture_node == temp_tail_texture_node)
+    { return NULL; }
+
+    if (temp_head_texture_node->next)
+    { temp_head_texture_node = temp_head_texture_node->next; }
+    if (temp_tail_texture_node->prev)
+    { temp_tail_texture_node = temp_tail_texture_node->prev; }
+  }
+
+  return false;
 }
 
 bool
 D_is_texture_enabled(struct D_surface *__surface,
-                     u32               __position)
+                     struct D_texture *__texture)
 {
-  if (!__surface)
+  if (!__surface ||
+      !__texture)
   {
-    D_raise_error(DERR_NOPARAM("__surface", "Surface can't be NULL"));
+    D_raise_error(DERR_NOPARAM("__surface || __texture", "Surface and/or texture can't be NULL"));
 
     return false;
   }
 
-  return *(__surface->textures_status + __position);
+  if (D_surface_has_texture(__surface, __texture))
+  { return D_get_texture_node_with_texture(__surface, __texture)->status; }
 }
 
 void
 D_set_surface_texture_status(struct D_surface *__surface,
-                             u32               __position,
+                             struct D_texture *__texture,
                              bool              __status)
 {
-  if (!D_surface_has_texture_on_position(__surface, __position))
+  if (!D_surface_has_texture(__surface, __texture))
   { return; }
-  else if (__position >= __surface->texture_count)
-  {
-    D_raise_warning("__position out of bound");
 
-    return;
-  }
-
-  __surface->textures_status[__position] = __status;
+  D_get_texture_node_with_texture(__surface, __texture)->status = __status;
 }
 
 void
@@ -220,10 +253,13 @@ D_bind_textures_from_surface(struct D_surface *__surface)
     return;
   }
   
-  for (i32 i = 0; i <= __surface->texture_count; ++i)
+  struct D_texture_node *temp_head_texture_node = __surface->head_texture_node->next;
+  while (temp_head_texture_node)
   {
-    if (D_is_texture_enabled(__surface, i))
-    { D_bind_texture(__surface->textures[i]); }
+    if (temp_head_texture_node->status)
+    { D_bind_texture(temp_head_texture_node->texture); }
+
+    temp_head_texture_node = temp_head_texture_node->next;
   }
 }
 
@@ -238,12 +274,14 @@ D_prepare_surface_for_rendering(struct D_surface *__surface)
   }
 
   D_apply_shaders(__surface->shaders);
-  for (i32 i = 0; i < __surface->texture_count; ++i)
+
+  i32 i = 0;
+  struct D_texture_node *temp_head_texture_node = __surface->head_texture_node->next;
+  while (temp_head_texture_node)
   {
-    if (D_is_texture_enabled(__surface, i))
-    {
-      D_bind_texture(__surface->textures[i]);
-      D_set_uniform_i32(__surface->shaders, __surface->textures[i]->unit, __surface->textures_names[i]);
-    }
+    D_set_uniform_i32(__surface->shaders, i, temp_head_texture_node->name);
+
+    temp_head_texture_node = temp_head_texture_node->next;
+    ++i;
   }
 }

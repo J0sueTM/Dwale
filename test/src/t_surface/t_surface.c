@@ -29,16 +29,17 @@ main(int    argc,
 
   f32 surface_vertices[] =
   {
-     0.6f,  0.4f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-     0.6f, -0.4f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-    -0.6f, -0.4f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-    -0.6f, -0.4f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
+     /* vertices */     /* colors */      /* texture coordinates */
+     0.4f,  0.7f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+     0.4f, -0.7f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+    -0.4f, -0.7f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    -0.4f,  0.7f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
   };
   u32 surface_indices[] = { 0, 1, 3, 1, 2, 3 };
   struct D_texture *tux = D_create_texture("test/src/t_surface/res/tux.png", GL_TEXTURE_2D, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, GL_RGBA, true, GL_TEXTURE0);
   struct D_texture *gnu = D_create_texture("test/src/t_surface/res/gnu.png", GL_TEXTURE_2D, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, GL_RGBA, true, GL_TEXTURE1);
   
-  struct D_surface *surface = D_create_surface(surface_vertices, surface_indices, GL_TRIANGLES, GL_STATIC_DRAW, 6, GL_UNSIGNED_INT, surface_shaders);
+  struct D_surface *surface = D_create_surface(sizeof(surface_vertices), surface_vertices, sizeof(surface_indices), surface_indices, 8, GL_TRIANGLES, GL_STATIC_DRAW, 6, GL_UNSIGNED_INT, surface_shaders);
   D_push_texture_to_surface(surface, tux, "u_texture_tux");
   D_push_texture_to_surface(surface, gnu, "u_texture_gnu");
   D_prepare_surface_for_rendering(surface);
@@ -59,6 +60,9 @@ main(int    argc,
   
 end:
   D_end_surface(surface);
+  D_end_texture(tux);
+  D_end_texture(gnu);
+  D_end_shaders(surface_shaders);
   D_end_window(window);
   D_end();
 
