@@ -22,8 +22,12 @@
 
 void
 D_init()
-{ D_init_video(); }
+{
+  D_init_video();
+}
 
 void
 D_end()
-{ D_end_video(); }
+{
+  D_end_video();
+}

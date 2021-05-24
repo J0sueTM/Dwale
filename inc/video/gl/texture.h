@@ -34,25 +34,20 @@ extern "C"
 
 struct D_texture
 {
-  u32 handle,
-      type,
-      format;
-  i32 width,
-      height,
-      nr_channels,
-      unit;
+  unsigned int handle, type, format;
+  int width, height, nr_channels, unit;
 };
 
 struct D_texture *
-D_create_texture(char *__file_name,
-                 u32   __type,
-                 u32   __wrap_s,
-                 u32   __wrap_t,
-                 u32   __filter_s,
-                 u32   __filter_t,
-                 u32   __format,
-                 bool  __flip,
-                 i32   __texture_unit);
+D_create_texture(char         *__file_name,
+                 unsigned int  __type,
+                 unsigned int  __wrap_s,
+                 unsigned int  __wrap_t,
+                 unsigned int  __filter_s,
+                 unsigned int  __filter_t,
+                 unsigned int  __format,
+                 bool          __flip,
+                 int           __texture_unit);
 
 void
 D_end_texture(struct D_texture *__texture);

@@ -31,6 +31,12 @@ extern "C"
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
+/*
+ * I'm sure you'll hardly reach this amount in a single shader.
+ * In any case, just change it and make sure the GPU supports the new value.
+ */
+#define D_MAX_TEXTURES_ON_SURFACE 16
+
 /**
  * \brief Initialises dwale's video related dependencies.
  */  

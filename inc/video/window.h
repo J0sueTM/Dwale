@@ -29,6 +29,7 @@ extern "C"
 #include "core/core.h"
 #include "video/video.h"
 #include "cglm/vec2.h"
+#include "cglm/vec4.h"
 
 struct D_window
 {
@@ -39,6 +40,8 @@ struct D_window
   bool fullscreen;
   const GLFWvidmode *fullscreen_dimensions;
   vec2 windowed_dimensions, current_dimensions;
+  
+  vec4 view_dimensions;
 };
 
 /**
@@ -60,9 +63,9 @@ struct D_window
  */  
 struct D_window *
 D_create_window(char *__title,
-                f32   __width,
-                f32   __height,
-                i32   __monitor_index,
+                float __width,
+                float __height,
+                int   __monitor_index,
                 bool  __context_current,
                 bool  __resizable);
 
@@ -97,10 +100,10 @@ D_is_window_open();
  * \param __alpha Specifies the alpha channel.
  */  
 void
-D_clear_window(f32 __red,
-               f32 __green,
-               f32 __blue,
-               f32 __alpha);
+D_clear_window(float __red,
+               float __green,
+               float __blue,
+               float __alpha);
 
 /**
  * \brief Swaps the window's buffers.
@@ -113,6 +116,18 @@ D_swap_window_buffers();
  */  
 void
 D_poll_window_events();
+
+/**
+ * \brief Sets current window's gl viewport rendering area
+ *
+ * \param __dimensions Specifies the positions of the area quad.
+ *
+ * NOTE(all): This functions expects you to give normalised values ranging:
+ *            { 0.0f, 0.0f } for the left bottom corner
+ *            { 1.0f, 1.0f } for the right top corner
+ */
+void
+D_set_window_view(vec4 __dimensions);
 
 #ifdef __cplusplus
 }

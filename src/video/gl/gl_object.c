@@ -21,9 +21,9 @@
 #include "video/gl/gl_object.h"
 
 struct D_vbo *
-D_create_vbo(u32 __buffer_type,
-             u32 __draw_type,
-             u32 __draw_mode)
+D_create_vbo(unsigned int __buffer_type,
+             unsigned int __draw_type,
+             unsigned int __draw_mode)
 {
   struct D_vbo *new_vbo = (struct D_vbo *)malloc(sizeof(struct D_vbo));
   D_assert_fatal(new_vbo, NULL);
@@ -72,8 +72,8 @@ D_end_vao(struct D_vao *__vao)
     D_raise_error(DERR_NOPARAM("__vao", "VAO can't be NULL"));
 
     return;
-  }
-
+  
+}
   glDeleteVertexArrays(1, &__vao->handle);
 
   D_raise_log("Ended vertex array object");
@@ -81,29 +81,37 @@ D_end_vao(struct D_vao *__vao)
 
 void
 D_bind_vbo(struct D_vbo *__vbo)
-{ glBindBuffer(__vbo->buffer_type, __vbo->handle); }
+{
+  glBindBuffer(__vbo->buffer_type, __vbo->handle);
+}
 
 void
 D_bind_vao(struct D_vao *__vao)
-{ glBindVertexArray(__vao->handle); }
+{
+  glBindVertexArray(__vao->handle);
+}
 
 /* NOTE(all): Does the same as calling D_bind_vbo((struct D_vbo *)0),
  * but makes code more readable
  */
 void
 D_unbind_vbo()
-{ glBindBuffer(GL_ARRAY_BUFFER, D_VO_NONE); }
+{
+  glBindBuffer(GL_ARRAY_BUFFER, D_VO_NONE);
+}
 
 /* NOTE(all): Does the same as calling D_bind_vao((struct D_vao *)0),
  * but makes code more readable
  */
 void
 D_unbind_vao()
-{ glBindVertexArray(D_VO_NONE); }
+{
+  glBindVertexArray(D_VO_NONE);
+}
 
 void
 D_vbo_data(struct D_vbo *__vbo,
-           u32           __size,
+           unsigned int  __size,
            void         *__data)
 {
   if (!__vbo)
@@ -119,10 +127,10 @@ D_vbo_data(struct D_vbo *__vbo,
 
 void
 D_vao_attrib_pointer(struct D_vao *__vao,
-                     u32           __index,
-                     i32           __size,
-                     u32           __type,
-                     u32           __stride,
+                     unsigned int  __index,
+                     int           __size,
+                     unsigned int  __type,
+                     unsigned int  __stride,
                      size_t        __offset)
 {
   if (!__vao)
@@ -133,9 +141,9 @@ D_vao_attrib_pointer(struct D_vao *__vao,
   }
 
   if (__type == GL_UNSIGNED_INT_2_10_10_10_REV)
-  { glVertexAttribIPointer(__index, __size, __type, __stride, (void *)(__offset * sizeof(i32))); }
+    glVertexAttribIPointer(__index, __size, __type, __stride, (void *)(__offset * sizeof(int)));
   else
-  { glVertexAttribPointer(__index, __size, __type, GL_FALSE, __stride, (void *)(__offset * sizeof(f32))); }
+    glVertexAttribPointer(__index, __size, __type, GL_FALSE, __stride, (void *)(__offset * sizeof(float)));
 
   glEnableVertexAttribArray(__index);
 }

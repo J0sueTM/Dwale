@@ -23,43 +23,34 @@
 void
 D_raise_log(char *__log_buffer)
 {
+#ifdef __D_DEBUG__
   if (!__log_buffer)
-  { return; }
+    return;
 
-  printf("%s[ LOG ]:%s %s.\n", C_GREEN,
-                               C_NORMAL,
-                               __log_buffer);
+  printf("%s[ LOG ]:%s %s.\n", C_GREEN, C_NORMAL, __log_buffer);
+#endif /* __D_DEBUG__ */
 }
 
 void
 D_raise_warning(char *__warning_buffer)
 {
   if (!__warning_buffer)
-  { return; }
+    return;
 
-  fprintf(stderr, "%s[ WARNING ]:%s %s.\n", C_YELLOW,
-                                            C_NORMAL,
-                                            __warning_buffer);
+  fprintf(stderr, "%s[ WARNING ]:%s %s.\n", C_YELLOW, C_NORMAL, __warning_buffer);
 }
 
 void
 D_raise_error_alt(char *__error_buffer,
                   char *__error_file,
-                  i32   __error_line)
+                  int   __error_line)
 {
   if (!__error_buffer)
   {
-    fprintf(stderr, "%s[ ERROR ]:%s %s:%d Something went wron.\n", C_RED,
-                                                                   C_NORMAL,
-                                                                   __error_file,
-                                                                   __error_line);
+    fprintf(stderr, "%s[ ERROR ]:%s %s:%d Something went wron.\n", C_RED, C_NORMAL, __error_file, __error_line);
 
     return;
   }
   
-  fprintf(stderr, "%s[ ERROR ]:%s %s:%d %s.\n", C_RED,
-                                                C_NORMAL,
-                                                __error_file,
-                                                __error_line,
-                                                __error_buffer);
+  fprintf(stderr, "%s[ ERROR ]:%s %s:%d %s.\n", C_RED, C_NORMAL, __error_file, __error_line, __error_buffer);
 }

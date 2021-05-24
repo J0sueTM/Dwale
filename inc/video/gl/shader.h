@@ -39,9 +39,7 @@ extern "C"
 
 struct D_shaders
 {
-  u32 vertex_shader,
-      fragment_shader,
-      program;
+  unsigned int vertex_shader, fragment_shader, program;
 };
 
 /**
@@ -52,9 +50,9 @@ struct D_shaders
  *
  * \return The created buffer's gpu buffer
  */
-u32
-D_create_shader(u32         __type,
-                const char *__shader_source);
+unsigned int
+D_create_shader(unsigned int  __type,
+                const char   *__shader_source);
 
 /**
  * \brief Creates both vertex and fragment shaders on a D_shaders structure
@@ -101,14 +99,14 @@ void
 D_apply_shaders(struct D_shaders *__shaders);
 
 void
-D_set_uniform_i32(struct D_shaders *__shaders,
-                  i32               __value,
+D_set_uniform_int(struct D_shaders *__shaders,
+                  int               __value,
                   char             *__name);
 
 void
-D_set_uniform_f32(struct D_shaders *__shaders,
-                  f32               __value,
-                  char             *__name);
+D_set_uniform_float(struct D_shaders *__shaders,
+                   float              __value,
+                   char              *__name);
 
 void
 D_set_uniform_bool(struct D_shaders *__shaders,

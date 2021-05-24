@@ -33,14 +33,13 @@ extern "C"
 
 struct D_vbo
 {
-  u32 handle,
-      buffer_type,
-      draw_type,
-      draw_mode;
+  unsigned int handle, buffer_type, draw_type, draw_mode;
 };
 
 struct D_vao
-{ u32 handle; };
+{
+  unsigned int handle;
+};
 
 /**
  * \brief Creates a new vertex buffer object.
@@ -51,9 +50,9 @@ struct D_vao
  * \param __draw_mode   Specifies the OPenGL vertex buffer draw mode.
  */
 struct D_vbo *
-D_create_vbo(u32 __buffer_type,
-             u32 __draw_type,
-             u32 __draw_mode);
+D_create_vbo(unsigned int __buffer_type,
+             unsigned int __draw_type,
+             unsigned int __draw_mode);
 
 /**
  * \brief Creates a new vertex array object.
@@ -117,7 +116,7 @@ D_unbind_vao();
  */
 void
 D_vbo_data(struct D_vbo *__vbo,
-           u32           __size,
+           unsigned int  __size,
            void         *__data);
 
 /**
@@ -132,10 +131,10 @@ D_vbo_data(struct D_vbo *__vbo,
  */
 void
 D_vao_attrib_pointer(struct D_vao *__vao,
-                     u32           __index,
-                     i32           __size,
-                     u32           __type,
-                     u32           __stride,
+                     unsigned int  __index,
+                     int           __size,
+                     unsigned int  __type,
+                     unsigned int  __stride,
                      size_t        __offset);
 
 

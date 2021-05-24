@@ -27,8 +27,8 @@ _update_current_dimensions()
 {
   if (_global_window->fullscreen)
   {
-    _global_window->current_dimensions[0] = (f32)_global_window->fullscreen_dimensions->width;
-    _global_window->current_dimensions[1] = (f32)_global_window->fullscreen_dimensions->height;
+    _global_window->current_dimensions[0] = (float)_global_window->fullscreen_dimensions->width;
+    _global_window->current_dimensions[1] = (float)_global_window->fullscreen_dimensions->height;
   }
   else
   {
@@ -36,32 +36,37 @@ _update_current_dimensions()
     _global_window->current_dimensions[1] = _global_window->windowed_dimensions[1];
   }
 
-  glViewport(0, 0, _global_window->current_dimensions[0], _global_window->current_dimensions[1]);  
+  glViewport((int)(_global_window->view_dimensions[0] * _global_window->current_dimensions[0]),
+             (int)(_global_window->view_dimensions[1] * _global_window->current_dimensions[1]),
+             (int)(_global_window->view_dimensions[2] * _global_window->current_dimensions[0]),
+             (int)(_global_window->view_dimensions[3] * _global_window->current_dimensions[1]));
 }
 
 static void
 _default_framebuffer_size_callback(GLFWwindow *__window,
-                                   i32         __width,
-                                   i32         __height)
+                                   int         __width,
+                                   int         __height)
 {
-  _global_window->windowed_dimensions[0] = (f32)__width;
-  _global_window->windowed_dimensions[1] = (f32)__height;
+  _global_window->windowed_dimensions[0] = (float)__width;
+  _global_window->windowed_dimensions[1] = (float)__height;
 
   _update_current_dimensions();
 }
 
 static void
-_default_error_callback(i32         __code,
+_default_error_callback(int         __code,
                         const char *__description)
-{ D_raise_error((char *)__description); }
+{
+  D_raise_error((char *)__description);
+}
 
 struct D_window *
-D_create_window(char *__title,
-                f32   __width,
-                f32   __height,
-                i32   __monitor_index,
-                bool  __context_current,
-                bool  __resizable)
+D_create_window(char  *__title,
+                float  __width,
+                float  __height,
+                int    __monitor_index,
+                bool   __context_current,
+                bool   __resizable)
 {
   if (!__title)
   {
@@ -79,7 +84,7 @@ D_create_window(char *__title,
 
   _global_window = (struct D_window *)malloc(sizeof(struct D_window));
   D_assert_fatal(_global_window, NULL);
-
+  
   _global_window->windowed_dimensions[0] = __width;
   _global_window->windowed_dimensions[1] = __height;
 
@@ -107,22 +112,19 @@ D_create_window(char *__title,
   }
   else
   {
-    i32 *monitor_count = (i32 *)malloc(sizeof(i32)), final_monitor;
+    int *monitor_count = (int *)malloc(sizeof(int)), final_monitor;
     _global_window->alt_monitors = glfwGetMonitors(monitor_count);
 
     if (__monitor_index >= *monitor_count)
-    { final_monitor = 0; }
+      final_monitor = 0;
     else
-    { final_monitor = __monitor_index; }
+      final_monitor = __monitor_index;
 
     _global_window->monitor = *(_global_window->alt_monitors + final_monitor);
     _global_window->fullscreen_dimensions = glfwGetVideoMode(_global_window->monitor);
 
-    _global_window->handle = glfwCreateWindow(_global_window->fullscreen_dimensions->width,
-                                              _global_window->fullscreen_dimensions->height,
-                                              __title,
-                                              _global_window->monitor,
-                                              NULL);
+    _global_window->handle =
+      glfwCreateWindow(_global_window->fullscreen_dimensions->width, _global_window->fullscreen_dimensions->height, __title, _global_window->monitor, NULL);
     _global_window->fullscreen = true;
 
     free(monitor_count);
@@ -130,12 +132,17 @@ D_create_window(char *__title,
   }
 
 normal_window_selected:
-  _global_window->handle = glfwCreateWindow(_global_window->windowed_dimensions[0],
-                                            _global_window->windowed_dimensions[1],
-                                            __title,
-                                            _global_window->monitor,
-                                            NULL);
+  _global_window->handle =
+    glfwCreateWindow(_global_window->windowed_dimensions[0], _global_window->windowed_dimensions[1], __title, _global_window->monitor, NULL);
+  
 end_window_creation:
+  /*
+   * NOTE(all): Since this will only show on the screen on rendering step, you
+   * still can change the view with D_set_window_view()
+   * Just be aware of some weird results if you do this during rendering.
+   */
+  D_set_window_view((vec4){ 0.0f, 0.0f, 1.0f, 1.0f });
+  
   if (__context_current)
   { 
     D_toggle_context_current(_global_window);
@@ -150,7 +157,7 @@ void
 D_end_window()
 {
   if (!_global_window)
-  { return; }
+    return;
 
   glfwDestroyWindow(_global_window->handle);
   D_raise_log("Ended window");
@@ -180,13 +187,15 @@ D_toggle_context_current()
 
 bool
 D_is_window_open(struct D_window *_global_window)
-{ return !glfwWindowShouldClose(_global_window->handle); }
+{
+  return !glfwWindowShouldClose(_global_window->handle);
+}
 
 void
-D_clear_window(f32 __red,
-               f32 __green,
-               f32 __blue,
-               f32 __alpha)
+D_clear_window(float __red,
+               float __green,
+               float __blue,
+               float __alpha)
 {
   glClearColor(__red, __green, __blue, __alpha);
   glClear(GL_COLOR_BUFFER_BIT);
@@ -194,8 +203,22 @@ D_clear_window(f32 __red,
 
 void
 D_swap_window_buffers()
-{ glfwSwapBuffers(_global_window->handle); }
+{
+  glfwSwapBuffers(_global_window->handle);
+}
 
 void
 D_poll_window_events()
-{ glfwPollEvents(); }
+{
+  glfwPollEvents();
+}
+
+void
+D_set_window_view(vec4 __dimensions)
+{
+  if (!_global_window)
+    return;
+
+  glm_vec4_copy(__dimensions, _global_window->view_dimensions);
+  _update_current_dimensions();
+}

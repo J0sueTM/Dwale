@@ -24,17 +24,17 @@ main(int    argc,
 {
   D_init();
   struct D_window *window = D_create_window("Dwale", 800, 600, -1, true, false);
-  struct D_shaders *arrow_shaders = D_create_shaders_from_file("test/src/t_matrix/res/arrow_vertex_shader.glsl",
-                                                               "test/src/t_matrix/res/arrow_fragment_shader.glsl");
+  struct D_shaders *arrow_shaders =
+    D_create_shaders_from_file("test/src/t_matrix/res/arrow_vertex_shader.glsl", "test/src/t_matrix/res/arrow_fragment_shader.glsl");
 
-  f32 arrow_surface[] =
+  float arrow_surface[] =
   {
     1.0f,  0.1f, 0.0f, 1.0f, 1.0f,
     1.0f, -0.1f, 0.0f, 1.0f, 0.0f,
     0.0f, -0.1f, 0.0f, 0.0f, 0.0f,
     0.0f,  0.1f, 0.0f, 0.0f, 1.0f
   };
-  u32 arrow_surface_indices[] = { 0, 1, 3, 1, 2, 3 };
+  unsigned int arrow_surface_indices[] = { 0, 1, 3, 1, 2, 3 };
 
   struct D_vao *arrow_vao = D_create_vao();
   struct D_vbo *arrow_vbo = D_create_vbo(GL_ARRAY_BUFFER, GL_TRIANGLES, GL_STATIC_DRAW);
@@ -46,20 +46,15 @@ main(int    argc,
   D_vao_attrib_pointer(arrow_vao, 0, 3, GL_FLOAT, 5 * sizeof(float), 0);
   D_vao_attrib_pointer(arrow_vao, 1, 2, GL_FLOAT, 5 * sizeof(float), 3);
 
-  struct D_texture *arrow_texture = D_create_texture("test/src/t_matrix/res/arrow.png",
-                                                     GL_TEXTURE_2D,
-                                                     GL_REPEAT, GL_REPEAT,
-                                                     GL_LINEAR, GL_LINEAR,
-                                                     GL_RGBA,
-                                                     true,
-                                                     GL_TEXTURE0);
+  struct D_texture *arrow_texture =
+    D_create_texture("test/src/t_matrix/res/arrow.png", GL_TEXTURE_2D, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, GL_RGBA, true, GL_TEXTURE0);
 
 #ifdef __D_DEBUG__
   D_unbind_vao();
 #endif /* __D_DEBUG__ */
 
   D_apply_shaders(arrow_shaders);
-  D_set_uniform_i32(arrow_shaders, 0, "u_texture_arrow");
+  D_set_uniform_int(arrow_shaders, 0, "u_texture_arrow");
 
   /* mat */
   mat4 arrow_transform;
@@ -68,7 +63,7 @@ main(int    argc,
   glm_rotate(arrow_transform, glm_rad(-90.0f), arrow_transform_axis);
 
   /* time */
-  f64 prev_time, curr_time;
+  double prev_time, curr_time;
 
   while (D_is_window_open(window))
   {
@@ -82,7 +77,7 @@ main(int    argc,
     }
 
     if (glfwGetKey(window->handle, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    { goto end; }
+      goto end;
 
     D_bind_texture(arrow_texture);
     D_set_uniform_mat4(arrow_shaders, arrow_transform, "u_transform_arrow");
@@ -93,6 +88,10 @@ main(int    argc,
   }
 
 end:
+  D_end_texture(arrow_texture);
+  D_end_vao(arrow_vao);
+  D_end_vbo(arrow_vbo);
+  D_end_vbo(arrow_ebo);
   D_end_window(window);
   D_end();
 

@@ -61,8 +61,8 @@ D_draw_arrays(struct D_vao     *__vao,
 void
 D_draw_elements(struct D_vao     *__vao,
                 struct D_vbo     *__ebo,
-                u32               __count,
-                u32               __type,
+                unsigned int      __count,
+                unsigned int      __type,
                 struct D_shaders *__shaders);
 
 void

@@ -26,19 +26,13 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-#include <math.h>
 #include "core/core.h"
 #include "video/video.h"
 #include "video/gl/shader.h"
 #include "video/gl/texture.h"
 #include "video/gl/gl_object.h"
 #include "cglm/vec2.h"
-
-/*
- * I'm  sure you'll hardly reach these numbers.
- * In any case, just change them and make sure the GPU supports the new values.
- */
-#define D_MAX_TEXTURES_ON_SURFACE 16
+#include <math.h>
 
 struct D_texture_node
 {
@@ -53,7 +47,7 @@ struct D_texture_node
    */
   char *name;
   bool status;
-  i32 id;
+  int id;
   struct D_texture *texture;
   struct D_texture_node *next;
   struct D_texture_node *prev;
@@ -61,8 +55,8 @@ struct D_texture_node
 
 struct D_surface
 {
-  f32 *vct; /* vertices, colors and texture coordinates */
-  u32 *vi; /* vertices indices (EBO) */
+  float *vct;       /* vertices, colors and texture coordinates */
+  unsigned int *vi; /* vertices indices (EBO) */
   
   struct D_vao *vao;
   struct D_vbo *vbo;
@@ -79,19 +73,19 @@ struct D_surface
    */
   struct D_texture_node *head_texture_node;
   struct D_texture_node *tail_texture_node;
-  u32 ebo_count, ebo_type;
+  unsigned int ebo_count, ebo_type;
 };
 
 struct D_surface *
-D_create_surface(u32               __vct_size,
-                 f32              *__vct,
-                 u32               __vi_size,
-                 u32              *__vi,
-                 u32               __stride,
-                 u32               __draw_type,
-                 u32               __draw_mode,
-                 u32               __ebo_count,
-                 u32               __ebo_type,
+D_create_surface(unsigned int       __vct_size,
+                 float             *__vct,
+                 unsigned int       __vi_size,
+                 unsigned int      *__vi,
+                 unsigned int       __stride,
+                 unsigned int       __draw_type,
+                 unsigned int       __draw_mode,
+                 unsigned int       __ebo_count,
+                 unsigned int       __ebo_type,
                  struct D_shaders *__shaders);
 
 void

@@ -21,15 +21,15 @@
 #include "video/gl/texture.h"
 
 struct D_texture *
-D_create_texture(char *__file_name,
-                 u32   __type,
-                 u32   __wrap_s,
-                 u32   __wrap_t,
-                 u32   __filter_s,
-                 u32   __filter_t,
-                 u32   __format,
-                 bool  __flip,
-                 i32   __texture_unit)
+D_create_texture(char         *__file_name,
+                 unsigned int  __type,
+                 unsigned int  __wrap_s,
+                 unsigned int  __wrap_t,
+                 unsigned int  __filter_s,
+                 unsigned int  __filter_t,
+                 unsigned int  __format,
+                 bool          __flip,
+                 int           __texture_unit)
 {
   if (!__file_name)
   {
@@ -59,10 +59,11 @@ D_create_texture(char *__file_name,
   /* Saves time on checking if data is premultiplied after */
   new_texture->format = __format;
   if (__format == GL_RGBA)
-  { stbi_set_unpremultiply_on_load(true); }
+    stbi_set_unpremultiply_on_load(true);
+  
   /* opengl expects the pixel data to be reversed. */
   stbi_set_flip_vertically_on_load(__flip);
-  u8 *texture_image_data = stbi_load(__file_name, &new_texture->width, &new_texture->height, &new_texture->nr_channels, 0);
+  char *texture_image_data = stbi_load(__file_name, &new_texture->width, &new_texture->height, &new_texture->nr_channels, 0);
   if (!texture_image_data)
   {
     D_raise_error("Could not load texture image");
@@ -72,9 +73,9 @@ D_create_texture(char *__file_name,
 
   if (__type == GL_TEXTURE_1D ||
       __type == GL_PROXY_TEXTURE_1D)
-  { glTexImage1D(__type, 0, __format, new_texture->width, 0, __format, GL_UNSIGNED_BYTE, texture_image_data); }
+    glTexImage1D(__type, 0, __format, new_texture->width, 0, __format, GL_UNSIGNED_BYTE, texture_image_data);
   else
-  { glTexImage2D(__type, 0, __format, new_texture->width, new_texture->height, 0, __format, GL_UNSIGNED_BYTE, texture_image_data); }
+    glTexImage2D(__type, 0, __format, new_texture->width, new_texture->height, 0, __format, GL_UNSIGNED_BYTE, texture_image_data);
   glGenerateMipmap(__type);
   stbi_image_free(texture_image_data);
 

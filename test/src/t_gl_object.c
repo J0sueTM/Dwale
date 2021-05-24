@@ -18,7 +18,7 @@
 
 #include "dwale.h"
 
-u32 fragment_shader, vertex_shader, shader_program;
+unsigned int fragment_shader, vertex_shader, shader_program;
 
 int
 main(int    argc,
@@ -54,7 +54,7 @@ main(int    argc,
     0.2f, -0.1f, 0.0f,
     0.1f,  0.2f, 0.0f
   };
-  u32 vertices_quad_indices[] =
+  unsigned int vertices_quad_indices[] =
   {
     0, 1, 3,
     1, 2, 3
@@ -78,14 +78,14 @@ main(int    argc,
     D_clear_window(0.2f, 0.4f, 0.1f, 1.0f);
 
     if (glfwGetKey(window->handle, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    { goto end_all; }
+      goto end_all;
 
     if (glfwGetKey(window->handle, GLFW_KEY_ENTER) == GLFW_PRESS)
-    { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); }
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     else if (glfwGetKey(window->handle, GLFW_KEY_ENTER) == GLFW_RELEASE)
-    { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    D_set_uniform_f32(test_shaders, glfwGetTime(), "u_time");
+    D_set_uniform_float(test_shaders, glfwGetTime(), "u_time");
 
     D_draw_arrays(__test_vao, __test_vbo, test_shaders);
     D_draw_elements(__vao_quad, __ebo_quad, 6, GL_UNSIGNED_INT, test_shaders);

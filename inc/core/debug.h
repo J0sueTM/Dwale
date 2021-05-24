@@ -61,7 +61,7 @@ D_raise_warning(char *__warning_buffer);
 void
 D_raise_error_alt(char *__error_buffer,
                   char *__error_file,
-                  i32   __error_line);
+                  int   __error_line);
 
 /**
  * \brief Prints a formatted error message using D_raise_error_alt,
@@ -88,7 +88,7 @@ D_raise_error_alt(char *__error_buffer,
 #define D_assert(__statement, \
                  __error_buffer) \
   if (!__statement) \
-  { D_raise_error(__error_buffer); }
+    D_raise_error(__error_buffer);
 
 /**
  * \brief Raises an error an closes dwale if __statement is false.
