@@ -36,18 +36,6 @@ _update_current_dimensions()
   }
 
   /*
-  glViewport(_global_window->view_dimensions[0] * _global_window->current_dimensions[0],
-             _global_window->view_dimensions[1] * _global_window->current_dimensions[1],
-             _global_window->view_dimensions[2] * _global_window->current_dimensions[0],
-             _global_window->view_dimensions[3] * _global_window->current_dimensions[1]);
-
-  glViewport(0.0f,
-             300.0f,
-             0.5f * _global_window->current_dimensions[0],
-             0.5f * _global_window->current_dimensions[1]);
-             */
-
-  /*
    * view_height is calculated as a simple 3 way calc between view's x:y proportion and the window's width:height.
    *
    * view_bot_left_x calculates the bottom x vector of the view by removing the already calculated view_height from 
