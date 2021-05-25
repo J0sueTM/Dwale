@@ -34,10 +34,10 @@ main(int    argc,
   float surface_vertices[] =
   {
      /* vertices */     /* colors */      /* texture coordinates */
-     1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-     1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-    -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-    -1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
+     0.4f,  0.8f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+     0.4f, -0.8f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+    -0.4f, -0.8f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    -0.4f,  0.8f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
   };
   unsigned int surface_indices[] = { 0, 1, 3, 1, 2, 3 };
   struct D_texture *tux = D_create_texture("test/src/t_surface/res/tux.png", GL_TEXTURE_2D, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, GL_RGBA, true, GL_TEXTURE0);
