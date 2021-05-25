@@ -19,13 +19,16 @@
 #version 330 core
 
 layout (location = 0) in vec3 l_pos;
+layout (location = 0) in vec3 l_color;
 layout (location = 2) in vec2 l_tex_coord;
 
 out vec2 vo_tex_coord;
+out vec3 vo_color;
 
 void
 main()
 {
   gl_Position = vec4(l_pos, 1.0f);
+  vo_color = l_color;
   vo_tex_coord = l_tex_coord;
 }

@@ -24,7 +24,6 @@ main(int    argc,
 {
   D_init();
   struct D_window *test_window = D_create_window("Dwale", 800, 600, -1, true, false);
-  D_set_window_view((vec4){0.2f, 0.2f, 0.8f, 0.8f});
 
   while (D_is_window_open(test_window))
   {

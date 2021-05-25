@@ -24,9 +24,11 @@ main(int    argc,
 {
   D_init();
 
+  vec2 window_view_corner = { 0.0f, 0.2f };
+  vec2 window_view_proportion = { 16.0f, 9.0f };
   struct D_window *window = D_create_window("Dwale", 800, 600, -1, true, false);
-  D_set_window_view((vec4){ 0.0f, 0.2f, 1.0f, 0.8f });
-  
+  D_set_window_view(window_view_corner, window_view_proportion, true);
+
   struct D_shaders *surface_shaders = D_create_shaders_from_file("test/src/t_surface/res/vertex.glsl", "test/src/t_surface/res/fragment.glsl");
 
   float surface_vertices[] =
@@ -48,7 +50,7 @@ main(int    argc,
 
   while (D_is_window_open(window))
   {
-    D_clear_window(0.1f, 0.1f, 0.1f, 1.0f);
+    D_clear_window(0.2f, 0.4f, 0.8f, 1.0f);
 
     if (glfwGetKey(window->handle, GLFW_KEY_ESCAPE) == GLFW_PRESS)
       goto end;

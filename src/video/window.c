@@ -32,14 +32,41 @@ _update_current_dimensions()
   }
   else
   {
-    _global_window->current_dimensions[0] = _global_window->windowed_dimensions[0];
-    _global_window->current_dimensions[1] = _global_window->windowed_dimensions[1];
+    glm_vec2_copy(_global_window->windowed_dimensions, _global_window->current_dimensions);
   }
 
-  glViewport((int)(_global_window->view_dimensions[0] * _global_window->current_dimensions[0]),
-             (int)(_global_window->view_dimensions[1] * _global_window->current_dimensions[1]),
-             (int)(_global_window->view_dimensions[2] * _global_window->current_dimensions[0]),
-             (int)(_global_window->view_dimensions[3] * _global_window->current_dimensions[1]));
+  /*
+  glViewport(_global_window->view_dimensions[0] * _global_window->current_dimensions[0],
+             _global_window->view_dimensions[1] * _global_window->current_dimensions[1],
+             _global_window->view_dimensions[2] * _global_window->current_dimensions[0],
+             _global_window->view_dimensions[3] * _global_window->current_dimensions[1]);
+
+  glViewport(0.0f,
+             300.0f,
+             0.5f * _global_window->current_dimensions[0],
+             0.5f * _global_window->current_dimensions[1]);
+             */
+
+  /*
+   * view_height is calculated as a simple 3 way calc between view's x:y proportion and the window's width:height.
+   *
+   * view_bot_left_x calculates the bottom x vector of the view by removing the already calculated view_height from 
+   * the total screen height and dividing by two, leaving us with the adjusted distance between screen top and bottom.
+   */
+  float view_height =
+    (_global_window->view_proportion[1] * _global_window->current_dimensions[1]) / _global_window->view_proportion[0];
+  float view_bot_left_x =
+    (_global_window->view_auto_adjust) ? (_global_window->current_dimensions[1] - view_height) * 0.5f : _global_window->view_bottom_left_corner[1];
+
+   /*
+   * NOTE(all): Since this will only show on the screen on rendering step, you
+   * still can change the view with D_set_window_view()
+   * Just be aware of some weird results if you do this during rendering.
+   */
+  glViewport(_global_window->view_bottom_left_corner[0],
+             view_bot_left_x,
+             _global_window->current_dimensions[0],
+             view_height);
 }
 
 static void
@@ -115,11 +142,7 @@ D_create_window(char  *__title,
     int *monitor_count = (int *)malloc(sizeof(int)), final_monitor;
     _global_window->alt_monitors = glfwGetMonitors(monitor_count);
 
-    if (__monitor_index >= *monitor_count)
-      final_monitor = 0;
-    else
-      final_monitor = __monitor_index;
-
+    final_monitor = (__monitor_index >= *monitor_count) ? 0 : __monitor_index;
     _global_window->monitor = *(_global_window->alt_monitors + final_monitor);
     _global_window->fullscreen_dimensions = glfwGetVideoMode(_global_window->monitor);
 
@@ -136,12 +159,6 @@ normal_window_selected:
     glfwCreateWindow(_global_window->windowed_dimensions[0], _global_window->windowed_dimensions[1], __title, _global_window->monitor, NULL);
   
 end_window_creation:
-  /*
-   * NOTE(all): Since this will only show on the screen on rendering step, you
-   * still can change the view with D_set_window_view()
-   * Just be aware of some weird results if you do this during rendering.
-   */
-  D_set_window_view((vec4){ 0.0f, 0.0f, 1.0f, 1.0f });
   
   if (__context_current)
   { 
@@ -180,8 +197,6 @@ D_toggle_context_current()
   D_assert_fatal(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), DERR_NOINIT("glad"));
 #endif /* __D_INIT_VIDEO_GLAD__ */
 
-  _update_current_dimensions();
-
   D_raise_log("Toggled current OpenGL rendering context");
 }
 
@@ -214,11 +229,15 @@ D_poll_window_events()
 }
 
 void
-D_set_window_view(vec4 __dimensions)
+D_set_window_view(vec2 __bottom_left_corner,
+                  vec2 __proportion,
+                  bool __auto_adjust)
 {
   if (!_global_window)
     return;
 
-  glm_vec4_copy(__dimensions, _global_window->view_dimensions);
+  glm_vec2_copy(__bottom_left_corner, _global_window->view_bottom_left_corner);
+  glm_vec2_copy(__proportion, _global_window->view_proportion);
+  _global_window->view_auto_adjust = __auto_adjust; 
   _update_current_dimensions();
 }
