@@ -24,10 +24,8 @@ main(int    argc,
 {
   D_init();
 
-  vec2 window_view_corner = { 0.0f, 0.2f };
-  vec2 window_view_proportion = { 16.0f, 9.0f };
-  struct D_window *window = D_create_window("Dwale", 800, 600, -1, true, false);
-  D_set_window_view(window_view_corner, window_view_proportion, true);
+  struct D_window *window = D_create_window("Dwale", 800, 600, -1, true, true);
+  D_set_window_view((vec2){ 0.0f, 0.0f }, (vec2){ 16.0f, 9.0f }, true);
 
   struct D_shaders *surface_shaders = D_create_shaders_from_file("test/src/t_surface/res/vertex.glsl", "test/src/t_surface/res/fragment.glsl");
 

@@ -41,9 +41,10 @@ struct D_window
   const GLFWvidmode *fullscreen_dimensions;
   vec2 windowed_dimensions, current_dimensions;
 
-  vec2 view_bottom_left_corner;
+  vec2 view_offset;
+  vec2 view_dimensions;
   vec2 view_proportion;
-  bool view_auto_adjust;
+  bool center_view;
 };
 
 /**
@@ -129,9 +130,9 @@ D_poll_window_events();
  *            { 1.0f, 1.0f } for the right top corner
  */
 void
-D_set_window_view(vec2 __bottom_left_corner,
+D_set_window_view(vec2 __offset,
                   vec2 __proportion,
-                  bool __auto_adjust);
+                  bool __center_view);
 
 #ifdef __cplusplus
 }

@@ -40,21 +40,51 @@ _update_current_dimensions()
    *
    * view_bot_left_x calculates the bottom x vector of the view by removing the already calculated view_height from 
    * the total screen height and dividing by two, leaving us with the adjusted distance between screen top and bottom.
-   */
   float view_height =
     (_global_window->view_proportion[1] * _global_window->current_dimensions[1]) / _global_window->view_proportion[0];
   float view_bot_left_x =
     (_global_window->view_auto_adjust) ? (_global_window->current_dimensions[1] - view_height) * 0.5f : _global_window->view_bottom_left_corner[1];
 
-   /*
    * NOTE(all): Since this will only show on the screen on rendering step, you
    * still can change the view with D_set_window_view()
    * Just be aware of some weird results if you do this during rendering.
-   */
   glViewport(_global_window->view_bottom_left_corner[0],
              view_bot_left_x,
              _global_window->current_dimensions[0],
              view_height);
+  */
+
+  /*
+   * Calculates the view's height depending on the proportion. Based on the result, we can define whether the view will be
+   * be attached to the bottom of the window or the left.
+   *
+   * In case the calculated height is bigger than the actual window size, it should be attached to the left and the width should
+   * be calculated instead of the height, and the opposite otherwise.
+   */
+  float temp_view_height = (_global_window->current_dimensions[0] * _global_window->view_proportion[1]) / _global_window->view_proportion[0];
+  if (temp_view_height > _global_window->current_dimensions[1])
+  {
+    _global_window->view_dimensions[0] =
+      ((_global_window->current_dimensions[1] * _global_window->view_proportion[0]) / _global_window->view_proportion[1]) - _global_window->view_offset[0];
+    _global_window->view_dimensions[1] = _global_window->current_dimensions[1] - _global_window->view_offset[1];
+  }
+  else
+  {
+    _global_window->view_dimensions[0] = _global_window->current_dimensions[0] - _global_window->view_offset[0];
+    _global_window->view_dimensions[1] = temp_view_height - _global_window->view_offset[1];
+  }
+
+  if (_global_window->center_view)
+  {
+    glViewport((_global_window->current_dimensions[0] * 0.5f) - (_global_window->view_dimensions[0] * 0.5f) + _global_window->view_offset[0],
+               (_global_window->current_dimensions[1] * 0.5f) - (_global_window->view_dimensions[1] * 0.5f) + _global_window->view_offset[1],
+               _global_window->view_dimensions[0], _global_window->view_dimensions[1]);
+  }
+  else
+  {
+    glViewport(_global_window->view_offset[0], _global_window->view_offset[1],
+               _global_window->view_dimensions[0], _global_window->view_dimensions[1]);
+  }
 }
 
 static void
@@ -217,15 +247,16 @@ D_poll_window_events()
 }
 
 void
-D_set_window_view(vec2 __bottom_left_corner,
+D_set_window_view(vec2 __offset,
                   vec2 __proportion,
-                  bool __auto_adjust)
+                  bool __center_view)
 {
   if (!_global_window)
     return;
 
-  glm_vec2_copy(__bottom_left_corner, _global_window->view_bottom_left_corner);
+  glm_vec2_copy(__offset, _global_window->view_offset);
   glm_vec2_copy(__proportion, _global_window->view_proportion);
-  _global_window->view_auto_adjust = __auto_adjust; 
+  _global_window->center_view = __center_view;
+  
   _update_current_dimensions();
 }
