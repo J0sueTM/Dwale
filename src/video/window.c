@@ -201,7 +201,7 @@ D_toggle_context_current()
   D_assert_fatal(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), DERR_NOINIT("glad"));
 #endif /* __D_INIT_VIDEO_GLAD__ */
 
-  D_raise_log("Toggled current OpenGL rendering context");
+  D_post_init_video();
 }
 
 bool

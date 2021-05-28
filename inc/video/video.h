@@ -44,6 +44,12 @@ void
 D_init_video();
 
 /**
+ * \brief Initialises video dependencies that can't be initialised in D_init_video
+ */
+void
+D_post_init_video();
+
+/**
  * \brief Ends dwale's video related dependencies.
  */
 void
