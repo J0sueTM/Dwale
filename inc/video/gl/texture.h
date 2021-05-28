@@ -38,6 +38,23 @@ struct D_texture
   int width, height, nr_channels, unit;
 };
 
+/**
+ * \brief Creates a new texture from given file.
+ *
+ * \param __file_name    Specifies the path (local or full) to the image file.
+ * \param __type         Specifies the texture type: GL_TEXTURE_2D or GL_TEXTURE_1D.
+ * \param __wrap_s       Specifies the left wrapping method.
+ * \param __wrap_t       Specifies the right wrapping method.
+ * \param __filter_s     Specifies the left filtering method: GL_NEAREST or GL_LINEAR.
+ * \param __filter_t     Specifies the right filtering method: GL_NEAREST OR gl_LINEAR.
+ * \param __format       Specifies the image formate: GL_RGB, GL_RGBA, etc.
+ * \param __flip         Specifies whether or not the loaded image should be flipped on memory.
+ * \param __texture_unit Specifies the shader unit for the created texture.
+ *                       NOTE(all): Make sure the gpu supports the amount of textures you're setting
+ *                       per shader. The standard is 16 so try to follow that.
+ *
+ * \return The created texture.
+ */
 struct D_texture *
 D_create_texture(char         *__file_name,
                  unsigned int  __type,
@@ -49,9 +66,15 @@ D_create_texture(char         *__file_name,
                  bool          __flip,
                  int           __texture_unit);
 
+/**
+ * \brief Ends given texture. Ends dependencies and frees allocated memory.
+ */
 void
 D_end_texture(struct D_texture *__texture);
 
+/**
+ * \brief Binds given texture.
+ */
 void
 D_bind_texture(struct D_texture *__texture);
   
