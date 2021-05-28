@@ -162,12 +162,13 @@ normal_window_selected:
     glfwCreateWindow(_global_window->windowed_dimensions[0], _global_window->windowed_dimensions[1], __title, _global_window->monitor, NULL);
   
 end_window_creation:
-  
   if (__context_current)
   { 
     D_toggle_context_current(_global_window);
     glfwSetFramebufferSizeCallback(_global_window->handle, _default_framebuffer_size_callback);
   }
+
+  D_set_window_view((vec2){ 0.0f, 0.0f }, (vec2){ 1.0f, 1.0f }, true);
 
   D_raise_log("Created window");
   return _global_window;
