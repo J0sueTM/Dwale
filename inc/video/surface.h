@@ -55,6 +55,11 @@ struct D_texture_node
 
 struct D_surface
 {
+  struct D_transformation
+  {
+    vec3 position, rotation, scale;
+  } transformation;
+  
   float *vct;       /* vertices, colors and texture coordinates */
   unsigned int *vi; /* vertices indices (EBO) */
   
@@ -68,8 +73,8 @@ struct D_surface
    * NOTE(all): Since rendering works as a layer of all rendering contexts,
    * textures are stacked(linked) into this implementation of linked list.
    *
-   * For performance reasons, it will he faster to begin iterating from the tail,
-   * if the node is nearer to it than to the head.
+   * For performance reasons, it will be faster to begin iterating from the tail
+   * if the node is nearer to it rather than to the head.
    */
   struct D_texture_node *head_texture_node;
   struct D_texture_node *tail_texture_node;

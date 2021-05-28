@@ -35,11 +35,15 @@ void
 D_post_init_video()
 {
 #ifdef __D_INIT_VIDEO__
-#ifndef __D_INIT_OPENGL__
-#define __D_INIT_OPENGL__
+#ifndef __D_INIT_VIDEO_GLAD__
+#define __D_INIT_VIDEO_GLAD__
+  D_assert_fatal(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), DERR_NOINIT("glad"));
+#endif /* __D_INIT_VIDEO_GLAD__ */
+#ifndef __D_INIT_VIDEO_OPENGL__
+#define __D_INIT_VIDEO_OPENGL__
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-#endif /* __D_INIT_OPENGL__ */
+#endif /* __D_INIT_VIDEO_OPENGL__ */
 #endif /* __D_INIT_VIDEO__ */
 }
 

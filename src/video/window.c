@@ -128,8 +128,7 @@ D_create_window(char  *__title,
   /*
    * Gets monitor handle according to __monitor_index
    *
-   * If out of bound, the primary monitor will be selected
-   * If negative, no monitor will be selected
+   * If out of bound or negative, the primary monitor will be selected
    */
   if (__monitor_index < 0)
   {
@@ -195,12 +194,6 @@ D_toggle_context_current()
   }
 
   glfwMakeContextCurrent(_global_window->handle);
-
-#ifndef __D_INIT_VIDEO_GLAD__
-#define __D_INIT_VIDEO_GLAD__
-  D_assert_fatal(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), DERR_NOINIT("glad"));
-#endif /* __D_INIT_VIDEO_GLAD__ */
-
   D_post_init_video();
 }
 
