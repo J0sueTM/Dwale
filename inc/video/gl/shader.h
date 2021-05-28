@@ -98,46 +98,109 @@ D_create_shaders_from_file(char *__vertex_shader_source_file_name,
 void
 D_apply_shaders(struct D_shaders *__shaders);
 
+ /**
+ * \brief Sets an integer uniform to shaders.
+ *
+ * \param __shaders Specifies the shaders that expects the uniform.
+ * \param __value   Specifies the integer to be setted.
+ * \param __name    Specifies the string that the shaders expects.
+ */
 void
 D_set_uniform_int(struct D_shaders *__shaders,
                   int               __value,
                   char             *__name);
 
+/**
+ * \brief Sets a float uniform to shaders.
+ *
+ * \param __shaders Specifies the shaders that expects the uniform.
+ * \param __value   Specifies the integer to be setted.
+ * \param __name    Specifies the string that the shaders expects.
+ */  
 void
 D_set_uniform_float(struct D_shaders *__shaders,
                    float              __value,
                    char              *__name);
 
+/**
+ * \brief Sets a boolean uniform to shaders.
+ *
+ * \param __shaders Specifies the shaders that expects the uniform.
+ * \param __value   Specifies the integer to be setted.
+ * \param __name    Specifies the string that the shaders expects.
+ */
 void
 D_set_uniform_bool(struct D_shaders *__shaders,
                    bool              __value,
                    char             *__name);
 
+/**
+ * \brief Sets a vec4 uniform to shaders.
+ *
+ * \param __shaders Specifies the shaders that expects the uniform.
+ * \param __value   Specifies the integer to be setted.
+ * \param __name    Specifies the string that the shaders expects.
+ */
 void
 D_set_uniform_vec4(struct D_shaders *__shaders,
                    vec4              __value,
                    char             *__name);
 
+/**
+ * \brief Sets a vec3 uniform to shaders.
+ *
+ * \param __shaders Specifies the shaders that expects the uniform.
+ * \param __value   Specifies the integer to be setted.
+ * \param __name    Specifies the string that the shaders expects.
+ */
 void
 D_set_uniform_vec3(struct D_shaders *__shaders,
                    vec3              __value,
                    char             *__name);
 
+/**
+ * \brief Sets a vec2 uniform to shaders.
+ *
+ * \param __shaders Specifies the shaders that expects the uniform.
+ * \param __value   Specifies the integer to be setted.
+ * \param __name    Specifies the string that the shaders expects.
+ */
 void
 D_set_uniform_vec2(struct D_shaders *__shaders,
                    vec2              __value,
                    char             *__name);
 
+/**
+ * \brief Sets a mat4 uniform to shaders.
+ *
+ * \param __shaders Specifies the shaders that expects the uniform.
+ * \param __value   Specifies the integer to be setted.
+ * \param __name    Specifies the string that the shaders expects.
+ */
 void
 D_set_uniform_mat4(struct D_shaders *__shaders,
                    mat4              __value,
                    char             *__name);
 
+/**
+ * \brief Sets a mat3 uniform to shaders.
+ *
+ * \param __shaders Specifies the shaders that expects the uniform.
+ * \param __value   Specifies the integer to be setted.
+ * \param __name    Specifies the string that the shaders expects.
+ */
 void
 D_set_uniform_mat3(struct D_shaders *__shaders,
                    mat3              __value,
                    char             *__name);
 
+/**
+ * \brief Sets a mat2 uniform to shaders.
+ *
+ * \param __shaders Specifies the shaders that expects the uniform.
+ * \param __value   Specifies the integer to be setted.
+ * \param __name    Specifies the string that the shaders expects.
+ */
 void
 D_set_uniform_mat2(struct D_shaders *__shaders,
                    mat2              __value,
