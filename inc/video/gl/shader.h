@@ -34,6 +34,7 @@ extern "C"
 #include "cglm/mat2.h"
 #include "cglm/mat3.h"
 #include "cglm/mat4.h"
+#include "video/gl/default_shaders.h"
 
 /* TODO(J0sueTM): Add geometry shader */
 
