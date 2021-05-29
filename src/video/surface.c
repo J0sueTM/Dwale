@@ -96,7 +96,7 @@ D_end_surface(struct D_surface *__surface)
   if (__surface->ebo)
     D_end_vbo(__surface->ebo);
 
-  while (__surface->tail_texture_node->id != 0)
+  while (__surface->tail_texture_node->id >= 0)
     D_pop_texture_from_surface(__surface);
 
   D_raise_log("Ended surface");

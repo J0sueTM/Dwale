@@ -204,6 +204,12 @@ D_is_window_open(struct D_window *_global_window)
 }
 
 void
+D_close_window()
+{
+  glfwSetWindowShouldClose(_global_window->handle, GLFW_TRUE);
+}
+
+void
 D_clear_window(float __red,
                float __green,
                float __blue,

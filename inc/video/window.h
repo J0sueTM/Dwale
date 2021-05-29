@@ -93,6 +93,12 @@ bool
 D_is_window_open();
 
 /**
+ * \brief Closes global window.
+ */
+void
+D_close_window();
+
+/**
  * \brief Clears the currently bounded OpenGL rendering context.
  *        NOTE(all): This will only clear the global window if it's the currently
  *                   bounded OpenGL rendering context. Make sure to toggle it.

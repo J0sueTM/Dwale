@@ -47,7 +47,7 @@ main(int    argc,
     D_clear_window(0.6f, 0.6f, 0.6f, 1.0f);
     
     if (glfwGetKey(window->handle, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-      goto end;
+      D_close_window();
 
     D_draw_surface(surface);
 
@@ -55,7 +55,6 @@ main(int    argc,
     D_poll_window_events();
   }
 
-end:
   D_end_surface(surface);
   D_end_shaders(shaders);
   D_end_window(window);
