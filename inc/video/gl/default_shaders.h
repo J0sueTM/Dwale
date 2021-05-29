@@ -33,9 +33,9 @@ extern "C"
   "{\n"
 #define D_GLSL_MAINEND "}\n"
 
-#define D_GLSL_LAYOUT0 "layout (location = 0) = in vec3 l_pos;\n"
-#define D_GLSL_LAYOUT1 "layout (location = 1) = in vec2 l_color;\n"
-#define D_GLSL_LAYOUT2 "layout (location = 2) = in vec2 l_tex_coord;\n"
+#define D_GLSL_LAYOUT0 "layout (location = 0) in vec3 l_pos;\n"
+#define D_GLSL_LAYOUT1 "layout (location = 1) in vec3 l_color;\n"
+#define D_GLSL_LAYOUT2 "layout (location = 2) in vec2 l_tex_coord;\n"
 
 #define D_GLSL_UNIFORMMODEL "uniform mat4 u_mat_model;\n"
 #define D_GLSL_UNIFORMVIEW  "uniform mat4 u_mat_view;\n"
@@ -68,64 +68,59 @@ extern "C"
 #define D_GLSL_FRAGIN "  gl_FragColor = vec4(vo_color, 1.0f);\n"
 #define D_GLSL_FRAGTIN(__texture_name) \
   "  gl_FragColor = texture(" \
-  __texture_name, \
+  __texture_name ", " \
   "vo_tex_coord;\n" \
   ");\n"
 #define D_GLSL_FRAGTCIN(__texture_name) \
   "  gl_FragColor = texture(" \
-  __texture_name, \
+  __texture_name ", " \
   "vo_tex_coord)" \
   " * vec4(vo_color, 1.0f);\n"
   
 #define D_vertex_simple \
   D_GLSL_VERSION \
-  D_GLSL_UNIFORM0 \
+  D_GLSL_LAYOUT0 \
   D_GLSL_MAINBEG \
   D_GLSL_POS \
-  D_GLSL_MAINEND \
-  '\0'
+  D_GLSL_MAINEND
 
 #define D_fragment_simple(__color) \
   D_GLSL_VERSION \
-  D_GLSL_UNIFORM0 \
+  D_GLSL_LAYOUT0 \
   D_GLSL_MAINBEG \
   D_GLSL_FRAG(__color) \
-  D_GLSL_MAINEND \
-  '\0'
+  D_GLSL_MAINEND
 
 #define D_vertex_simple_layouts \
   D_GLSL_VERSION \
-  D_GLSL_UNIFORM0 \
-  D_GLSL_UNIFORM1 \
+  D_GLSL_LAYOUT0 \
+  D_GLSL_LAYOUT1 \
   "out vec3 vo_color;\n" \
   D_GLSL_MAINBEG \
   D_GLSL_POS \
   "  vo_color = l_color;\n" \
-  D_GLSL_MAINEND \
-  '\0'
+  D_GLSL_MAINEND
 
 #define D_fragment_simple_layouts \
   D_GLSL_VERSION \
   "in vec3 vo_color;" \
   D_GLSL_MAINBEG \
   D_GLSL_FRAGIN \
-  D_GLSL_MAINEND \
-  '\0'
+  D_GLSL_MAINEND
 
 #define D_vertex_all_layouts \
   D_GLSL_VERSION \
-  D_GLSL_UNIFORM0 \
-  D_GLSL_UNIFORM1 \
-  D_GLSL_UNIFORM2 \
-  D_GLSL_UNIFORM3 \
+  D_GLSL_LAYOUT0 \
+  D_GLSL_LAYOUT1 \
+  D_GLSL_LAYOUT2 \
+  D_GLSL_LAYOUT3 \
   "out vec3 vo_color;\n" \
   "out vec2 vo_tex_coord;\n" \
   D_GLSL_MAINBEG \
   D_GLSL_POS \
   "  vo_color = l_color;\n" \
   "  vo_tex_coord = l_tex_coord;" \
-  D_GLSL_MAINEND \
-  '\0'
+  D_GLSL_MAINEND
 
 #define D_fragment_all_layouts(__texture_name) \
   D_GLSL_VERSION \
@@ -133,8 +128,7 @@ extern "C"
   "in vec2 vo_tex_coord;\n" \
   D_GLSL_MAINBEG \
   D_GLSL_FRAGTCIN(__texture_name) \
-  D_GLSL_MAINEND \
-  '\0'
+  D_GLSL_MAINEND
 
 #ifdef __cplusplus
 }
