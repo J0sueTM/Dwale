@@ -216,7 +216,7 @@ D_clear_window(float __red,
                float __alpha)
 {
   glClearColor(__red, __green, __blue, __alpha);
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void
