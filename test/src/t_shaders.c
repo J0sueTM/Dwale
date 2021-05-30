@@ -27,7 +27,7 @@ main(int    argc,
   struct D_window *window = D_create_window("Dwale", 800, 600, -1, true, true);
   D_set_window_view((vec2){ 0.0f, 0.0f }, (vec2){ 16.0f, 9.0f }, true);
 
-  struct D_shaders *shaders = D_create_shaders(D_vertex_simple_layouts, D_fragment_simple_layouts);
+  struct D_shaders *shaders = D_create_shaders(D_VERTEX_SIMPLE_LAYOUTS, D_FRAGMENT_SIMPLE_LAYOUTS);
   float surface_vertices[] =
   {
      1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
@@ -37,10 +37,8 @@ main(int    argc,
   };
   unsigned int surface_indices[] = { 0, 1, 3, 1, 2, 3 };
   struct D_surface *surface =
-    D_create_surface(sizeof(surface_vertices), surface_vertices,
-                     sizeof(surface_indices), surface_indices,
-                     8, GL_TRIANGLES, GL_STATIC_DRAW,
-                     6, GL_UNSIGNED_INT, shaders);
+    D_create_surface(sizeof(surface_vertices), surface_vertices, sizeof(surface_indices), surface_indices,
+                     8, GL_TRIANGLES, GL_STATIC_DRAW, 6, GL_UNSIGNED_INT, shaders);
 
   while (D_is_window_open(window))
   {
