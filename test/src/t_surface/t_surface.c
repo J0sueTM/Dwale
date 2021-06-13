@@ -27,33 +27,34 @@ main(int    argc,
   struct D_window *window = D_create_window("Dwale", 800, 600, -1, true, true);
   D_set_window_view((vec2){ 0.0f, 0.0f }, (vec2){ 16.0f, 9.0f }, true);
 
-  struct D_shaders *surface_shaders = D_create_shaders_from_file("test/src/t_surface/res/vertex.glsl", "test/src/t_surface/res/fragment.glsl");
-  float surface_vertices[] =
-  {
-     /* vertices */     /* colors */      /* texture coordinates */
-     0.2f,  0.8f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-     0.2f, -0.8f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-    -0.8f, -0.8f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-    -0.8f,  0.8f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
-  };
-  unsigned int surface_indices[] = { 0, 1, 3, 1, 2, 3 };
-  struct D_texture *tux = D_create_texture("test/src/t_surface/res/tux.png", GL_TEXTURE_2D, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, GL_RGBA, true, GL_TEXTURE0);
-  struct D_texture *gnu = D_create_texture("test/src/t_surface/res/gnu.png", GL_TEXTURE_2D, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, GL_RGBA, true, GL_TEXTURE1);
-  struct D_surface *surface = D_create_surface(sizeof(surface_vertices), surface_vertices, sizeof(surface_indices), surface_indices, 8, GL_TRIANGLES, GL_STATIC_DRAW, 6, GL_UNSIGNED_INT, surface_shaders);
+  struct D_shaders *surface_shaders =
+    D_create_shaders_from_file("test/src/t_surface/res/vertex.glsl", "test/src/t_surface/res/fragment.glsl");
+  struct D_texture *tux =
+    D_create_texture("test/src/t_surface/res/tux.png", GL_TEXTURE_2D,
+                     GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR,
+                     GL_RGBA, true, GL_TEXTURE0);
+  struct D_texture *gnu =
+    D_create_texture("test/src/t_surface/res/gnu.png", GL_TEXTURE_2D,
+                     GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR,
+                     GL_RGBA, true, GL_TEXTURE1);
+  struct D_surface *surface =
+    D_create_surface(D_SURFACE_RECTANGLE, GL_STATIC_DRAW, -1.0f, -1.0f, -1.0f, 0.4f, -0.2f, 0.4f, -0.2f, -1.0f);
+  D_set_surface_shaders(surface, surface_shaders);
+
   D_push_texture_to_surface(surface, tux, "u_texture_tux");
   D_push_texture_to_surface(surface, gnu, "u_texture_gnu");
   D_prepare_surface_for_rendering(surface);
 
-  struct D_shaders *freebsd_surface_shaders = D_create_shaders_from_file("test/src/t_surface/res/vertex.glsl", "test/src/t_surface/res/fragment_bsd.glsl");
-  float freebsd_surface_vertices[] =
-  {
-    0.8f, 0.8f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-    0.8f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-    0.3f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-    0.3f, 0.8f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
-  };
-  struct D_texture *freebsd = D_create_texture("test/src/t_surface/res/freebsd.png", GL_TEXTURE_2D, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, GL_RGBA, true, GL_TEXTURE0);
-  struct D_surface *freebsd_surface = D_create_surface(sizeof(freebsd_surface_vertices), freebsd_surface_vertices, sizeof(surface_indices), surface_indices, 8, GL_TRIANGLES, GL_STATIC_DRAW, 6, GL_UNSIGNED_INT, freebsd_surface_shaders);
+  struct D_shaders *freebsd_surface_shaders =
+    D_create_shaders_from_file("test/src/t_surface/res/vertex.glsl", "test/src/t_surface/res/fragment_bsd.glsl");
+  struct D_texture *freebsd =
+    D_create_texture("test/src/t_surface/res/freebsd.png", GL_TEXTURE_2D,
+                     GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR,
+                     GL_RGBA, true, GL_TEXTURE0);
+  struct D_surface *freebsd_surface =
+    D_create_surface(D_SURFACE_RECTANGLE, GL_STATIC_DRAW, 0.3f, 0.0f, 0.3f, 0.8f, 0.8f, 0.8f, 0.8f, 0.0f);
+  D_set_surface_shaders(freebsd_surface, freebsd_surface_shaders);
+
   D_push_texture_to_surface(freebsd_surface, freebsd, "u_texture_freebsd");
   D_prepare_surface_for_rendering(freebsd_surface);
 
@@ -79,6 +80,11 @@ end:
   D_end_texture(tux);
   D_end_texture(gnu);
   D_end_shaders(surface_shaders);
+  
+  D_end_surface(freebsd_surface);
+  D_end_texture(freebsd);
+  D_end_shaders(freebsd_surface_shaders);
+  
   D_end_window(window);
   D_end();
 

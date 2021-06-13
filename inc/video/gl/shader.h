@@ -34,7 +34,120 @@ extern "C"
 #include "cglm/mat2.h"
 #include "cglm/mat3.h"
 #include "cglm/mat4.h"
-#include "video/gl/default_shaders.h"
+
+/* default shaders */
+#define D_VERTEX_SHADER_SIMPLE \
+  "#version 330 core\n" \
+  "layout (location = 0) in vec3 l_pos;\n" \
+  "void main() {\n" \
+  "gl_Position = vec4(l_pos, 1.0f);\n" \
+  "}"
+#define D_FRAGMENT_SHADER_SIMPLE(__colors) \
+  "#version 330 core\n" \
+  "void main() {\n" \
+  "gl_FragColor = " \
+  "vec4(" \
+  __colors ");\n" \
+  "}"
+
+#define D_VERTEX_SHADER_SIMPLE_MVP \
+  "#version 330 core\n" \
+  "layout (location = 0) in vec3 l_pos;\n" \
+  "uniform mat4 u_model;\n" \
+  "uniform mat4 u_view;\n" \
+  "uniform mat4 u_projection;\n" \
+  "void main() {\n" \
+  "gl_Position = u_projection * u_view * u_model * vec4(l_pos, 1.0f);\n" \
+  "}"
+#define D_FRAGMENT_SHADER_SIMPLE_MVP(__color) \
+  D_FRAGMENT_SHADER_SIMPLE(__color)
+
+#define D_VERTEX_SHADER_SIMPLE_LAYOUTS \
+  "#version 330 core\n" \
+  "layout (location = 0) in vec3 l_pos;\n" \
+  "layout (location = 1) in vec3 l_color;\n" \
+  "out vec3 vo_color;\n" \
+  "void main() {\n" \
+  "gl_Position = vec4(l_pos, 1.0f);\n" \
+  "vo_color = l_color;\n" \
+  "}"
+#define D_FRAGMENT_SHADER_SIMPLE_LAYOUTS \
+  "#version 330 core\n" \
+  "in vec3 vo_color;\n" \
+  "void main() {\n" \
+  "gl_FragColor = vec4(vo_color, 1.0f);\n" \
+  "}"
+
+#define D_VERTEX_SHADER_SIMPLE_LAYOUTS_MVP \
+  "#version 330 core\n" \
+  "layout (location = 0) in vec3 l_pos;\n" \
+  "layout (location = 1) in vec3 l_color;\n" \
+  "out vec3 vo_color;\n" \
+  "uniform mat4 u_model;\n" \
+  "uniform mat4 u_view;\n" \
+  "uniform mat4 u_projection;\n" \
+  "void main() {\n" \
+  "gl_Position = u_projection * u_view * u_model * vec4(l_pos, 1.0f);\n" \
+  "vo_color = l_color;\n" \
+  "}"
+#define D_FRAGMENT_SHADER_SIMPLE_LAYOUTS_MVP \
+  D_FRAGMENT_SHADER_SIMPLE_LAYOUTS
+
+#define D_VERTEX_SHADER_ALL_LAYOUTS \
+  "#version 330 core\n" \
+  "layout (location = 0) in vec3 l_pos;\n" \
+  "layout (location = 1) in vec3 l_color;\n" \
+  "layout (location = 2) in vec2 l_texture_coord;\n" \
+  "out vec3 vo_color;\n" \
+  "out vec2 vo_texture_coord;\n" \
+  "void main() {\n" \
+  "gl_Position = vec4(l_pos, 1.0f);\n" \
+  "vo_color = l_color;\n" \
+  "vo_texture_coord = l_texture_coord;\n" \
+  "}"
+
+#define D_FRAGMENT_SHADER_ALL_LAYOUTS(__texture_name) \
+  "#version 330 core\n" \
+  "in vec3 vo_color;\n" \
+  "in vec2 vo_texture_coord;\n" \
+  "uniform sampler2D " __texture_name ";\n" \
+  "void main() {\n" \
+  "gl_FragColor = texture(" __texture_name ", vo_texture_coord) * vec4(vo_color, 1.0f);\n" \
+  "}"
+
+#define D_VERTEX_SHADER_ALL_LAYOUTS_MVP \
+  "#version 330 core\n" \
+  "layout (location = 0) in vec3 l_pos;\n" \
+  "layout (location = 1) in vec3 l_color;\n" \
+  "layout (location = 2) in vec2 l_texture_coord;\n" \
+  "out vec3 vo_color;\n" \
+  "out vec2 vo_texture_coord;\n" \
+  "uniform mat4 u_model;\n" \
+  "uniform mat4 u_view;\n" \
+  "uniform mat4 u_projection;\n" \
+  "void main() {\n" \
+  "gl_Position = u_projection * u_view * u_model * vec4(l_pos, 1.0f);\n" \
+  "vo_color = l_color;\n" \
+  "vo_texture_coord = l_texture_coord;\n" \
+  "}"
+#define D_FRAGMENT_SHADER_ALL_LAYOUTS_MVP(__texture_name) \
+  D_FRAGMENT_SHADER_ALL_LAYOUTS(__texture_name)
+
+#define D_VERTEX_SHADER_ALL_LAYOUTS_PRECALCULATED_MVP \
+  "#version 330 core\n" \
+  "layout (location = 0) in vec3 l_pos;\n" \
+  "layout (location = 1) in vec3 l_color;\n" \
+  "layout (location = 2) in vec2 l_texture_coord;\n" \
+  "out vec3 vo_color;\n" \
+  "out vec2 vo_texture_coord;\n" \
+  "uniform mat4 u_mvp;\n" \
+  "void main() {\n" \
+  "gl_Position = u_mvp * vec4(l_pos, 1.0f);\n" \
+  "vo_color = l_color;\n" \
+  "vo_texture_coord = l_texture_coord;\n" \
+  "}"
+#define D_FRAGMENT_SHADER_ALL_LAYOUTS_PRECALCULATED_MVP(__texture_name) \
+  D_FRAGMENT_SHADER_ALL_LAYOUTS(__texture_name)
 
 /* TODO(J0sueTM): Add geometry shader */
 
