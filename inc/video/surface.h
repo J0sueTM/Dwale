@@ -26,25 +26,38 @@ extern "C"
 {
 #endif /* __cplusplus */
 
+#include <stdarg.h>
 #include "core/core.h"
 #include "video/video.h"
 #include "video/gl/shader.h"
 #include "video/gl/texture.h"
 #include "video/gl/gl_object.h"
 #include "cglm/vec2.h"
+#include "cglm/vec3.h"
+#include "cglm/mat4.h"
 #include <math.h>
 
+#define REAL_FLOAT_IN_STRUCT_SIZE 0x04
+
+/* TODO(J0sueTM): Add shapes */
+enum D_surface_shape
+{
+  D_SURFACE_RECTANGLE = 0x01,
+  D_SURFACE_TRIANGLE  = 0X02,
+  D_SURFACE_CIRCLE = 0x03
+};
+
+/*
+ * NOTE(all): It's not a bad design choice to put these here
+ * I could put them inside the texture struct, but I want them to be
+ * local options on the surface.
+ * If I use the same texture on two different surfaces and I want to
+ * disable just the one on the first surface and/or vice versa, I can.
+ * Also, I want to be able to give different names for textures dependending
+ * on the surface they're attached to.
+ */
 struct D_texture_node
 {
-  /*
-   * NOTE(all): It's not a bad design choice to put these here
-   * I could put them inside the texture struct, but I want them to be
-   * local options on the surface.
-   * If I use the same texture on two different surfaces and I want to
-   * disable just the one on the first surface and/or vice versa, I can.
-   * Also, I want to be able to give different names for textures dependending
-   * on the surface they're attached to.
-   */
   char *name;
   bool status;
   int id;
@@ -55,14 +68,33 @@ struct D_texture_node
 
 struct D_surface
 {
-  struct D_transformation
+  union 
   {
-    vec3 position, rotation, scale;
-  } transformation;
+    struct
+    {
+      vec2 left_bottom;
+      vec2 left_top;
+      vec2 right_bottom;
+      vec2 right_top;
+    } rectangle;
+
+    struct
+    {
+      vec2 center;
+      unsigned int vertice_resolution;
+      unsigned int radius;
+    } circle;
+
+    vec3 triangle;
+  } shape;
+  mat4 model;
   
-  float *vct;       /* vertices, colors and texture coordinates */
+  float *vct; /* vertices, colors and texture coordinates */
   unsigned int *vi; /* vertices indices (EBO) */
-  
+  unsigned int draw_type;
+  unsigned int draw_mode;
+  unsigned int ebo_count, ebo_type;
+
   struct D_vao *vao;
   struct D_vbo *vbo;
   struct D_vbo *ebo;
@@ -74,49 +106,33 @@ struct D_surface
    * textures are stacked(linked) into this implementation of linked list.
    *
    * For performance reasons, it will be faster to begin iterating from the tail
-   * if the node is closer to it rather than to the head.
+   * if the node is closer to it than to the head.
    */
   struct D_texture_node *head_texture_node;
   struct D_texture_node *tail_texture_node;
-  unsigned int ebo_count, ebo_type;
 };
 
-/**
- * \brief Creates a new surface.
- *
- * \param __vct_size  Specifies the size of __vct.
- * \param __vct       Specifies the vertex color texture coordinates vertex.
- * \param __vi_size   Specifies the size of __vi.
- * \param __vi        Specifies the indices of __vct.
- *                    NOTE(all): If your surface should not have an ebo, pass __vi as NULL,
- *                    Dwale will get it as a vertex array object and render it as a vertex array object.
- * \param __stride    Specifies the stride from one vertex and the beggining of it's precedent.
- *                    In case of a 3x3x2, the stride should be 8.
- * \param __draw_type Specifies the draw type of the vbo.
- * \param __draw_mode Specifies the draw mode of the vbo.
- * \param __ebo_count Specifies the amount of indices in you __vi. If you passed __vi as NULL, this will be ignored.
- * \param __ebo_type  Specifies the type of data in __vi. If you passed __vi as NULL, this will be ignored.
- * \param __shaders   Specifies the shaders to be run when rendering the surface.
- *
- * \return The created surface.
- */
 struct D_surface *
-D_create_surface(unsigned int       __vct_size,
-                 float             *__vct,
-                 unsigned int       __vi_size,
-                 unsigned int      *__vi,
-                 unsigned int       __stride,
-                 unsigned int       __draw_type,
-                 unsigned int       __draw_mode,
-                 unsigned int       __ebo_count,
-                 unsigned int       __ebo_type,
-                 struct D_shaders *__shaders);
+D_create_surface(enum D_surface_shape  __shape,
+                 ...);
 
 /**
  * \brief Ends the surface. Frees memory and dependencies.
  */
 void
 D_end_surface(struct D_surface *__surface);
+
+/**
+ * \brief Resets surface's model matrix.
+ *
+ * \param __surface Specifies the surface to be reseted.
+ */
+void
+D_reset_surface(struct D_surface *__surface);
+
+void
+D_set_surface_shaders(struct D_surface *__surface,
+                      struct D_shaders *__shaders);
 
 /**
  * \brief Checks whether the given __surface has __texture attached or not.
@@ -192,7 +208,6 @@ D_set_surface_texture_status(struct D_surface *__surface,
  *
  * \param __surface Specifies the surface whose texture will be enabled.
  *                  NOTE(all): textures with false status will not be bound.
-
  */
 void
 D_bind_textures_from_surface(struct D_surface *__surface);

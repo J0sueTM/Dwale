@@ -20,52 +20,141 @@
 
 #include "video/surface.h"
 
-struct D_surface *
-D_create_surface(unsigned int      __vct_size,
-                 float            *__vct,
-                 unsigned int      __vi_size,
-                 unsigned int     *__vi,
-                 unsigned int      __stride,
-                 unsigned int      __draw_type,
-                 unsigned int      __draw_mode,
-                 unsigned int      __ebo_count,
-                 unsigned int      __ebo_type,
-                 struct D_shaders *__shaders)
+static void
+D_create_rectangle_surface(struct D_surface *__surface)
 {
-  if (!__vct)
+  if (!__surface)
   {
-    D_raise_error(DERR_NOPARAM("__vct", "Vertex can't be NULL"));
+    D_raise_error(DERR_NOPARAM("__surface", "Surface can't be NULL"));
 
-    return NULL;
-  }
-  else if (!__shaders)
-  {
-    D_raise_error(DERR_NOPARAM("__shaders", "Shaders can't be NULL"));
-
-    return NULL;
+    return;
   }
 
+  __surface->vct = (float *)malloc(sizeof(float) * 32);
+  D_assert(__surface->vct, NULL);
+  __surface->vi = (unsigned int *)malloc(sizeof(unsigned int) * 6);
+  D_assert(__surface->vi, NULL);
+  memset(__surface->vct, 0x00, sizeof(float) * 32);
+  memset(__surface->vi, 0x00, sizeof(unsigned int) * 6);
+
+  /*
+  {
+    __surface->shape.rectangle.right_top[0], __surface->shape.rectangle.right_top[1], 0.0f,
+    1.0f, 1.0f, 1.0f,
+    1.0f, 1.0f,
+    __surface->shape.rectangle.right_bottom[0], __surface->shape.rectangle.right_bottom[1], 0.0f,
+    1.0f, 1.0f, 1.0f,
+    1.0f, 0.0f,
+    __surface->shape.rectangle.left_bottom[0], __surface->shape.rectangle.left_bottom[1], 0.0f,
+    1.0f, 1.0f, 1.0f,
+    0.0f, 0.0f,
+    __surface->shape.rectangle.left_top[0], __surface->shape.rectangle.left_top[1], 0.0f,
+    1.0f, 1.0f, 1.0f,
+    0.0f, 1.0f
+  };
+  { 0, 1, 3, 1, 2, 3 };
+  */
+
+  /* vertices */
+  *(__surface->vct + 0) = __surface->shape.rectangle.right_top[0];
+  *(__surface->vct + 1) = __surface->shape.rectangle.right_top[1];
+  *(__surface->vct + 8) = __surface->shape.rectangle.right_bottom[0];
+  *(__surface->vct + 9) = __surface->shape.rectangle.right_bottom[1];
+  *(__surface->vct + 16) = __surface->shape.rectangle.left_bottom[0];
+  *(__surface->vct + 17) = __surface->shape.rectangle.left_bottom[1];
+  *(__surface->vct + 24) = __surface->shape.rectangle.left_top[0];
+  *(__surface->vct + 25) = __surface->shape.rectangle.left_top[1];
+
+  /* colours */
+  for (int i = 3; i < 30; i += 8)
+  {
+    *(__surface->vct + i) = 1.0f;
+    *(__surface->vct + i + 1) = 1.0f;
+    *(__surface->vct + i + 2) = 1.0f;
+  }
+
+  /* texture coordinates */
+  *(__surface->vct + 6) = 1.0f;
+  *(__surface->vct + 7) = 1.0f;
+  *(__surface->vct + 14) = 1.0f;
+  *(__surface->vct + 31) = 1.0f;
+
+  /* vertices indices */
+  *(__surface->vi + 1) = 1;
+  *(__surface->vi + 2) = 3;
+  *(__surface->vi + 3) = 1;
+  *(__surface->vi + 4) = 2;
+  *(__surface->vi + 5) = 3;
+
+  __surface->vao = D_create_vao();
+  __surface->vbo = D_create_vbo(GL_ARRAY_BUFFER, __surface->draw_type, __surface->draw_mode);
+  __surface->ebo = D_create_vbo(GL_ELEMENT_ARRAY_BUFFER, __surface->draw_type, __surface->draw_mode);
+
+  D_bind_vao(__surface->vao);
+  D_vbo_data(__surface->vbo, sizeof(float) * 32, __surface->vct);
+  D_vbo_data(__surface->ebo, sizeof(unsigned int) * 6, __surface->vi);
+
+  D_vao_attrib_pointer(__surface->vao, 0, 3, GL_FLOAT, sizeof(float) * 8, 0); /* vertices */
+  D_vao_attrib_pointer(__surface->vao, 1, 3, GL_FLOAT, sizeof(float) * 8, 3); /* colours */
+  D_vao_attrib_pointer(__surface->vao, 2, 2, GL_FLOAT, sizeof(float) * 8, 6); /* texture coordinates */
+
+  __surface->ebo_count = 6;
+  __surface->ebo_type = GL_UNSIGNED_INT;
+}
+
+struct D_surface *
+D_create_surface(enum D_surface_shape  __shape,
+                 ...)
+{
   struct D_surface *new_surface = (struct D_surface *)malloc(sizeof(struct D_surface));
   D_assert(new_surface, NULL);
-  new_surface->vct = __vct;
-  new_surface->vi = __vi;
-  new_surface->shaders = __shaders;
-  new_surface->ebo_count = __ebo_count;
-  new_surface->ebo_type = __ebo_type;
+  glm_mat4_identity(new_surface->model);
 
-  new_surface->vao = D_create_vao();
-  new_surface->vbo = D_create_vbo(GL_ARRAY_BUFFER, __draw_type, __draw_mode);
-  if (new_surface->vi)
-    new_surface->ebo = D_create_vbo(GL_ELEMENT_ARRAY_BUFFER, __draw_type, __draw_mode);
+  va_list surface_arg_list;
+  va_start(surface_arg_list, __shape);
 
-  D_bind_vao(new_surface->vao);
-  D_vbo_data(new_surface->vbo, __vct_size, new_surface->vct);
-  if (new_surface->vi)
-    D_vbo_data(new_surface->ebo, __vi_size, new_surface->vi);
+  new_surface->draw_type = GL_TRIANGLES;
+  new_surface->draw_mode = va_arg(surface_arg_list, unsigned int);
+  
+  switch (__shape)
+  {
+  case D_SURFACE_RECTANGLE:
+    /*
+     * NOTE(all): Since this is a struct we can just iterate it's members,
+     * TODO(J0sueTM): Make this work instead of the mess forward.
+    for (size_t i = 0; i < REAL_FLOAT_IN_STRUCT_SIZE * 4; i += 4)
+      *(&new_surface->shape.rectangle.left_bottom[0] + i) = floor((float)va_arg(surface_arg_list, double));
+     */
+    *(&new_surface->shape.rectangle.left_bottom[0]) = (float)va_arg(surface_arg_list, double);
+    *(&new_surface->shape.rectangle.left_bottom[1]) = (float)va_arg(surface_arg_list, double);
+    *(&new_surface->shape.rectangle.left_top[0]) = (float)va_arg(surface_arg_list, double);
+    *(&new_surface->shape.rectangle.left_top[1]) = (float)va_arg(surface_arg_list, double);
+    *(&new_surface->shape.rectangle.right_top[0]) = (float)va_arg(surface_arg_list, double);
+    *(&new_surface->shape.rectangle.right_top[1]) = (float)va_arg(surface_arg_list, double);
+    *(&new_surface->shape.rectangle.right_bottom[0]) = (float)va_arg(surface_arg_list, double);
+    *(&new_surface->shape.rectangle.right_bottom[1]) = (float)va_arg(surface_arg_list, double);
 
-  D_vao_attrib_pointer(new_surface->vao, 0, 3, GL_FLOAT, __stride * sizeof(float), 0); /* vertices */
-  D_vao_attrib_pointer(new_surface->vao, 1, 3, GL_FLOAT, __stride * sizeof(float), 3); /* colors */
-  D_vao_attrib_pointer(new_surface->vao, 2, 2, GL_FLOAT, __stride * sizeof(float), 6); /* texture coords */
+    D_create_rectangle_surface(new_surface);
+
+    break;
+  case D_SURFACE_TRIANGLE:
+    /* IMPLEMENT ME */
+
+    break;
+  case D_SURFACE_CIRCLE:
+    /* IMPLEMENT ME */
+
+    break;
+  default:
+    D_raise_error(DERR_NOPARAM("__shape", "Invalid surface shape"));
+
+    va_end(surface_arg_list);
+    D_end_surface(new_surface);
+    return NULL;
+
+    break;
+  }
+  va_end(surface_arg_list);
 
   new_surface->head_texture_node = (struct D_texture_node *)malloc(sizeof(struct D_texture_node));
   D_assert(new_surface->head_texture_node, NULL);
@@ -75,6 +164,7 @@ D_create_surface(unsigned int      __vct_size,
   new_surface->head_texture_node->status = false;
   new_surface->head_texture_node->next = NULL;
   new_surface->head_texture_node->prev = NULL;
+  
   new_surface->tail_texture_node = new_surface->head_texture_node;
 
   D_raise_log("Created surface");
@@ -91,15 +181,52 @@ D_end_surface(struct D_surface *__surface)
     return;
   }
 
-  D_end_vao(__surface->vao);
-  D_end_vbo(__surface->vbo);
+  if (__surface->vao)
+    D_end_vao(__surface->vao);
+  if (__surface->ebo)
+    D_end_vbo(__surface->vbo);
   if (__surface->ebo)
     D_end_vbo(__surface->ebo);
 
   while (__surface->tail_texture_node->id >= 0)
     D_pop_texture_from_surface(__surface);
+  if (__surface->head_texture_node)
+    free(__surface->head_texture_node);
 
   D_raise_log("Ended surface");
+}
+
+void
+D_reset_surface(struct D_surface *__surface)
+{
+  if (!__surface)
+  {
+    D_raise_error(DERR_NOPARAM("__surface", "Surface can't be NULL"));
+
+    return;
+  }
+
+  glm_mat4_identity(__surface->model);
+}
+
+void
+D_set_surface_shaders(struct D_surface *__surface,
+                      struct D_shaders *__shaders)
+{
+  if (!__shaders)
+  {
+    D_raise_error(DERR_NOPARAM("__surface", "Surface can't be NULL"));
+
+    return;
+  }
+  else if (!__shaders)
+  {
+    D_raise_error(DERR_NOPARAM("__shaders", "Shaders can't be NULL"));
+
+    return;
+  }
+
+  __surface->shaders = __shaders;
 }
 
 bool
@@ -154,15 +281,14 @@ D_push_texture_to_surface(struct D_surface *__surface,
 
   struct D_texture_node *new_texture_node = (struct D_texture_node *)malloc(sizeof(struct D_texture_node));
   D_assert(new_texture_node, NULL);
+  new_texture_node->id = __surface->tail_texture_node->id + 1;
   new_texture_node->texture = __texture;
   new_texture_node->status = true;
   new_texture_node->name = __name;
   new_texture_node->next = NULL;
-
   new_texture_node->prev = __surface->tail_texture_node;
   __surface->tail_texture_node->next = new_texture_node;
   __surface->tail_texture_node = new_texture_node;
-  new_texture_node->id = new_texture_node->prev->id + 1;
 
   D_raise_log("Pushed texture to surface");
 }
