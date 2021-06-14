@@ -66,10 +66,10 @@ main(int    argc,
       goto end;
 
     D_bind_textures_from_surface(surface);
-    D_draw_surface(surface);
+    D_draw_surface(surface, NULL);
 
     D_bind_textures_from_surface(freebsd_surface);
-    D_draw_surface(freebsd_surface);
+    D_draw_surface(freebsd_surface, NULL);
 
     D_swap_window_buffers();
     D_poll_window_events();

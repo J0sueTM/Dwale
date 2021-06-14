@@ -27,6 +27,7 @@ extern "C"
 #endif /* __cplusplus */
 
 #include <stdarg.h>
+#include <math.h>
 #include "core/core.h"
 #include "video/video.h"
 #include "video/gl/shader.h"
@@ -35,7 +36,6 @@ extern "C"
 #include "cglm/vec2.h"
 #include "cglm/vec3.h"
 #include "cglm/mat4.h"
-#include <math.h>
 
 #define REAL_FLOAT_IN_STRUCT_SIZE 0x04
 
@@ -89,7 +89,7 @@ struct D_surface
   } shape;
   mat4 model;
   
-  float *vct; /* vertices, colors and texture coordinates */
+  float *vct; /* vertices, colours and texture coordinates */
   unsigned int *vi; /* vertices indices (EBO) */
   unsigned int draw_type;
   unsigned int draw_mode;
@@ -98,12 +98,11 @@ struct D_surface
   struct D_vao *vao;
   struct D_vbo *vbo;
   struct D_vbo *ebo;
-
   struct D_shaders *shaders;  
 
   /*
    * NOTE(all): Since rendering works as a layer of all rendering contexts,
-   * textures are stacked(linked) into this implementation of linked list.
+   * textures are stacked (linked) into this implementation of linked list.
    *
    * For performance reasons, it will be faster to begin iterating from the tail
    * if the node is closer to it than to the head.
@@ -130,6 +129,12 @@ D_end_surface(struct D_surface *__surface);
 void
 D_reset_surface(struct D_surface *__surface);
 
+/**
+ * \brief Sets the shader to be called when rendering given surface.
+ *
+ * \param __surface Specifies the surface in which __shaders will be attached.
+ * \param __shaders Specifies the shader to attech to __surface.
+ */
 void
 D_set_surface_shaders(struct D_surface *__surface,
                       struct D_shaders *__shaders);

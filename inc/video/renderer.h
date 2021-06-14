@@ -32,6 +32,7 @@ extern "C"
 #include "video/gl/texture.h"
 #include "video/gl/shader.h"
 #include "video/surface.h"
+#include "video/camera.h"
 
 /**
  * \brief Creates a draw call for the given vertex buffer object.
@@ -65,8 +66,17 @@ D_draw_elements(struct D_vao     *__vao,
                 unsigned int      __type,
                 struct D_shaders *__shaders);
 
+/**
+ * \brief Creates draw calls for the vao attached to the surface.
+ *
+ * \param __surface Specifies the surface to be drawn.
+ * \param __camera  Specifies the camera to be used when rendering the surface.
+ *                  \NOTE(all): Optional, if it's a static element (Shouldn't be affected by world matrices),
+ *                              you don't need to give a camera.
+ */
 void
-D_draw_surface(struct D_surface *__surface);
+D_draw_surface(struct D_surface *__surface,
+               struct D_camera  *__camera);
 
 #ifdef __cplusplus
 }

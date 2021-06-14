@@ -27,7 +27,7 @@ main(int    argc,
   struct D_window *window = D_create_window("Dwale", 800, 600, -1, true, true);
   D_set_window_view((vec2){ 0.0f, 0.0f }, (vec2){ 16.0f, 9.0f }, true);
 
-  struct D_shaders *shaders = D_create_shaders(D_VERTEX_SIMPLE_LAYOUTS, D_FRAGMENT_SIMPLE_LAYOUTS);
+  struct D_shaders *shaders = D_create_shaders(D_VERTEX_SHADER_SIMPLE_LAYOUTS, D_FRAGMENT_SHADER_SIMPLE_LAYOUTS);
   float surface_vertices[] =
   {
      1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
@@ -47,7 +47,7 @@ main(int    argc,
     if (glfwGetKey(window->handle, GLFW_KEY_ESCAPE) == GLFW_PRESS)
       D_close_window();
 
-    D_draw_surface(surface);
+    D_draw_surface(surface, NULL);
 
     D_swap_window_buffers();
     D_poll_window_events();

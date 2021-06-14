@@ -43,6 +43,7 @@ D_draw_arrays(struct D_vao     *__vao,
 
   D_bind_vao(__vao);
   glDrawArrays(__vbo->draw_type, 0, 3);
+
 #ifdef __D_DEBUG__
   D_unbind_vao();
 #endif /* __D_DEBUG__ */
@@ -71,16 +72,27 @@ D_draw_elements(struct D_vao     *__vao,
   D_apply_shaders(__shaders);
   D_bind_vao(__vao);
   glDrawElements(__ebo->draw_type, __count, __type, 0);
+
+#ifdef __D_DEBUG__
+  D_unbind_vao();
+#endif /* __D_DEBUG__ */
 }
 
 void
-D_draw_surface(struct D_surface *__surface)
+D_draw_surface(struct D_surface *__surface,
+               struct D_camera  *__camera)
 {
   if (!__surface)
   {
     D_raise_error(DERR_NOPARAM("__surface", "Surface can't be NULL"));
 
     return;
+  }
+
+  if (__camera)
+  {
+    glm_mat4_mul(__camera->view, __surface->model, __camera->mvp);
+    D_set_uniform_mat4(__surface->shaders, __camera->mvp, "u_mvp");
   }
 
   if (__surface->ebo)

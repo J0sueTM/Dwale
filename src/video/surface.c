@@ -387,6 +387,8 @@ D_bind_textures_from_surface(struct D_surface *__surface)
 
     temp_head_texture_node = temp_head_texture_node->next;
   }
+
+  D_reset_surface(__surface);
 }
 
 void
