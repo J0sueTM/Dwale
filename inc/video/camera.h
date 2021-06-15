@@ -31,32 +31,24 @@ extern "C"
 #include "cglm/mat4.h"
 #include "cglm/cam.h"
 
-#define D_ORTHOGRAPHIC_PROJECTION 0x00
-#define D_PERSPECTIVE_PROJECTION 0x01
-
 struct D_camera
 {
-  unsigned int projection_type;
-  mat4 view, mvp;
-  float fovy, near_clip, far_clip;
+  mat4 view, projection, mvp;
+  float near_clip, far_clip;
   struct D_window *window;
 };
 
 /**
  * \brief Creates a new camera.
  *
- * \param __projection_type Specifies the type of projection.
  * \param __window          Specifies the window in which the camera should work.
- * \param __fovy            Specifies the field of view.
  * \param __near_clip       Specifies the near clip cut.
  * \param __far_clip        Specifies the far clip cut.
  *
  * \return the created camera.
  */
 struct D_camera *
-D_create_camera(unsigned int     __projection_type,
-                struct D_window *__window,
-                float            __fovy,
+D_create_camera(struct D_window *__window,
                 float            __near_clip,
                 float            __far_clip);
 

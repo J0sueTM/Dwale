@@ -91,7 +91,8 @@ D_draw_surface(struct D_surface *__surface,
 
   if (__camera)
   {
-    glm_mat4_mul(__camera->view, __surface->model, __camera->mvp);
+    glm_mat4_mul(__camera->projection, __camera->view, __camera->mvp);
+    glm_mat4_mul(__camera->mvp, __surface->model, __camera->mvp);
     D_set_uniform_mat4(__surface->shaders, __camera->mvp, "u_mvp");
   }
 

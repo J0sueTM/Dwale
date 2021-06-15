@@ -21,9 +21,7 @@
 #include "video/camera.h"
 
 struct D_camera *
-D_create_camera(unsigned int     __projection_type,
-                struct D_window *__window,
-                float            __fovy,
+D_create_camera(struct D_window *__window,
                 float            __near_clip,
                 float            __far_clip)
 {
@@ -42,9 +40,7 @@ D_create_camera(unsigned int     __projection_type,
 
   struct D_camera *new_camera = (struct D_camera *)malloc(sizeof(struct D_camera));
   D_assert(new_camera, NULL);
-  new_camera->projection_type = __projection_type;
   new_camera->window = __window;
-  new_camera->fovy = __fovy;
   new_camera->near_clip = __near_clip;
   new_camera->far_clip = __far_clip;
 
@@ -79,4 +75,8 @@ D_reset_camera(struct D_camera *__camera)
   }
 
   glm_mat4_identity(__camera->view);
+  glm_mat4_identity(__camera->projection);
+  glm_ortho(-__camera->window->view_proportion[0] / __camera->window->view_proportion[1],
+            __camera->window->view_proportion[0] / __camera->window->view_proportion[1],
+            -1.0f, 1.0f, __camera->near_clip, __camera->far_clip, __camera->projection);
 }
