@@ -38,15 +38,15 @@ _read_from_file_to_string(FILE *__source_file)
   }
 
   long source_file_size;
-  const char *source;
+  char *source;
   if (__source_file)
   {
     fseek(__source_file, 0, SEEK_END);
     source_file_size = ftell(__source_file);
     fseek(__source_file, 0, SEEK_SET);
 
-    source = (const char *)malloc(source_file_size);
-    if (source)
+    source = (char *)malloc(source_file_size + 1);
+    if (!source)
     {
       D_raise_error("Could not allocate memory for shader source");
       fclose(__source_file);
@@ -58,15 +58,18 @@ _read_from_file_to_string(FILE *__source_file)
     fclose(__source_file);
   }
 
-  return source;
+  /* Replaces the last digit by a NULL termination if it's not already. */
+  source[source_file_size] = '\0';
+
+  return (const char *)source;
 }
 
-u32
-D_create_shader(u32         __type,
-                const char *__shader_source)
+unsigned int
+D_create_shader(unsigned int  __type,
+                const char   *__shader_source)
 {
-  u32 new_shader;
-  i32 status;
+  unsigned int new_shader;
+  int status;
   char log[512];
 
   new_shader = glCreateShader(__type);
@@ -79,9 +82,9 @@ D_create_shader(u32         __type,
   {
     glGetShaderInfoLog(new_shader, 512, NULL, log);
     if (log)
-    { D_raise_error(log); }
+      D_raise_error(log);
     else
-    { D_raise_error("Couldn't compile shader"); }
+      D_raise_error("Couldn't compile shader");
 
     return 0;
   }
@@ -112,10 +115,10 @@ D_create_shaders(const char *__vertex_shader_source,
 
   new_shaders->vertex_shader = D_create_shader(GL_VERTEX_SHADER, __vertex_shader_source);
   if (!new_shaders->vertex_shader)
-  { return NULL; }
+    return NULL;
   new_shaders->fragment_shader = D_create_shader(GL_FRAGMENT_SHADER, __fragment_shader_source);
   if (!new_shaders->fragment_shader)
-  { return NULL; }
+    return NULL;
 
   new_shaders->program = glCreateProgram();
   glAttachShader(new_shaders->program, new_shaders->vertex_shader);
@@ -123,16 +126,16 @@ D_create_shaders(const char *__vertex_shader_source,
   glLinkProgram(new_shaders->program);
 
   /* error handling */
-  i32 status;
+  int status;
   char *log;
   glGetProgramiv(new_shaders->program, GL_LINK_STATUS, &status);
   if (!status)
   {
     glGetProgramInfoLog(new_shaders->program, 512, NULL, log);
     if (log)
-    { D_raise_error(log); }
+      D_raise_error(log);
     else
-    { D_raise_error("couldn't link shaders to program"); }
+      D_raise_error("couldn't link shaders to program");
 
     return NULL;
   }
@@ -196,4 +199,76 @@ D_apply_shaders(struct D_shaders *__shaders)
   }
 
   glUseProgram(__shaders->program);
+}
+
+void
+D_set_uniform_int(struct D_shaders *__shaders,
+                  int               __value,
+                  char             *__name)
+{
+  glUniform1i(glGetUniformLocation(__shaders->program, __name), __value);
+}
+
+void
+D_set_uniform_float(struct D_shaders *__shaders,
+                    float             __value,
+                    char             *__name)
+{
+  glUniform1f(glGetUniformLocation(__shaders->program, __name), __value);
+}
+
+void
+D_set_uniform_bool(struct D_shaders *__shaders,
+                   bool              __value,
+                   char             *__name)
+{
+  glUniform1i(glGetUniformLocation(__shaders->program, __name), __value);
+}
+
+void
+D_set_uniform_vec4(struct D_shaders *__shaders,
+                   vec4              __value,
+                   char             *__name)
+{
+  glUniform4f(glGetUniformLocation(__shaders->program, __name), __value[0], __value[1], __value[2], __value[3]);
+}
+
+void
+D_set_uniform_fvec3(struct D_shaders *__shaders,
+                    vec3              __value,
+                    char             *__name)
+{
+  glUniform3f(glGetUniformLocation(__shaders->program, __name), __value[0], __value[1], __value[2]);
+}
+
+void
+D_set_uniform_fvec2(struct D_shaders *__shaders,
+                    vec2              __value,
+                    char             *__name)
+{
+  glUniform2f(glGetUniformLocation(__shaders->program, __name), __value[0], __value[1]);
+}
+
+void
+D_set_uniform_mat4(struct D_shaders *__shaders,
+                   mat4              __value,
+                   char             *__name)
+{
+  glUniformMatrix4fv(glGetUniformLocation(__shaders->program, __name), 1, GL_FALSE, (float *)__value);
+}
+
+void
+D_set_uniform_mat3(struct D_shaders *__shaders,
+                   mat3              __value,
+                   char             *__name)
+{
+  glUniformMatrix3fv(glGetUniformLocation(__shaders->program, __name), 1, GL_FALSE, (float *)__value);
+}
+
+void
+D_set_uniform_mat2(struct D_shaders *__shaders,
+                   mat2              __value,
+                   char             *__name)
+{
+  glUniformMatrix2fv(glGetUniformLocation(__shaders->program, __name), 1, GL_FALSE, (float *)__value);
 }

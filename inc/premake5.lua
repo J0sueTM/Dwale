@@ -33,7 +33,8 @@ project "Dwale"
   {
     "./",
     "../vendor/glfw/include/",
-    "../vendor/glad/include/"    
+    "../vendor/glad/include/",
+    "../vendor/cglm/include/"
   }
 
   systemversion "latest"
@@ -42,7 +43,8 @@ project "Dwale"
   links 
   {
     "GLFW",
-    "GLAD"
+    "GLAD",
+    "CGLM"
   }
 
   filter "system:linux"
@@ -58,7 +60,13 @@ project "Dwale"
   filter "configurations:Debug"
     runtime "Debug"
     symbols "On"
+
+    defines
+    { "__D_DEBUG__" }
   filter "configurations:Release"
     runtime "Release"
     optimize "On"
+
+    defines
+    { "__D_RELEASE__" }
   filter ""

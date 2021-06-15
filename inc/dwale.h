@@ -30,12 +30,24 @@ extern "C"
   
 #include "core/core.h"
 
-#include "util/vector2.h"
+#include "cglm/vec2.h"
+#include "cglm/vec3.h"
+#include "cglm/vec4.h"
+#include "cglm/mat2.h"
+#include "cglm/mat3.h"
+#include "cglm/mat4.h"
+#include "cglm/affine.h"
 
 #include "video/video.h"
 #include "video/window.h"
+
 #include "video/gl/gl_object.h"
-#include "video/gl/shader.h"  
+#include "video/gl/shader.h"
+#include "video/gl/texture.h"
+
+#include "video/surface.h"
+#include "video/renderer.h"
+#include "video/camera.h"
   
 #endif /* __D_INCLUDE_NONE__ */
 

@@ -29,24 +29,20 @@ extern "C"
 #include "core/core.h"
 #include "video/video.h"
 
-#define D_VO_NONE    0x0
-#define D_VBO_ARRAY  0x1
-#define D_VBO_BUFFER 0x2
-#define D_VBO_ALL    0x3
+#define D_VO_NONE 0x0
 
 struct D_vbo
 {
-  u32 handle,
-      buffer_type,
-      draw_type,
-      draw_mode;
+  unsigned int handle, buffer_type, draw_type, draw_mode;
 };
 
 struct D_vao
-{ u32 handle; };
+{
+  unsigned int handle;
+};
 
 /**
- * \brief Creates a new vertex array object.
+ * \brief Creates a new vertex buffer object.
  *
  * \param __buffer_type Specifies the OpenGL vertex buffer type,
  *                       used on binding proccess.
@@ -54,45 +50,91 @@ struct D_vao
  * \param __draw_mode   Specifies the OPenGL vertex buffer draw mode.
  */
 struct D_vbo *
-D_create_vbo(u32 __buffer_type,
-             u32 __draw_type,
-             u32 __draw_mode);
+D_create_vbo(unsigned int __buffer_type,
+             unsigned int __draw_type,
+             unsigned int __draw_mode);
 
 /**
  * \brief Creates a new vertex array object.
+ *
+ * \return Created vertex array object's buffer, NULL could not create.
  */
 struct D_vao *
 D_create_vao();
 
+/**
+ * \brief Ends vertex buffer object
+ *
+ * \param __vbo Specifies the vertex buffer object to be ended.
+ * NOTE(all): Make sure to unbind everything related to this buffer before ending it.
+ */
 void
 D_end_vbo(struct D_vbo *__vbo);
 
+/**
+ * \brief Ends vertex array object.
+ *
+ * \param __vao Specifies the vertex array object to be ended.
+ */
 void
 D_end_vao(struct D_vao *__vao);
 
+/**
+ * \brief Binds the given vertex buffer object.
+ *
+ * \param __vbo Specifies the vertex buffer object to be ended.
+ */
 void
 D_bind_vbo(struct D_vbo *__vbo);
 
+/**
+ * \brief Binds the given vertex array object.
+ *
+ * \param __vao Specifies the vertex array object to be binded.
+ */
 void
 D_bind_vao(struct D_vao *__vao);
 
+/**
+ * \brief Unbinds the current binded vertex buffer object.
+ */
 void
 D_unbind_vbo();
 
+/**
+ * \brief Unbinds the current binded vertex array object.
+ */
 void
 D_unbind_vao();
 
+/**
+ * \brief Copies given data to vertex buffer object.
+ *
+ * \param __vbo  Specifies the vertex buffer object to which data will be copied.
+ * \param __size Specifies the size in bytes of the data.
+ * \param __data Specifies the data whose content will be copied to vbo.
+ */
 void
 D_vbo_data(struct D_vbo *__vbo,
-           u32           __size,
+           unsigned int  __size,
            void         *__data);
 
+/**
+ * \brief Creates vertex array object's attribute pointers.
+ *
+ * \param __vao    Specifies the vertex array object the attrib pointers will be created on.
+ * \param __index  Specifies the index to be modified. 
+ * \param __size   Specifies the numbers of components.
+ * \param __type   Specifies the gl type.
+ * \param __stride Specifies the distance between vertex attributes.
+ * \param __offset Specifies the offset of the first component.
+ */
 void
 D_vao_attrib_pointer(struct D_vao *__vao,
-                     u32           __index,
-                     i32           __size,
-                     u32           __type,
-                     u32           __stride,
+                     unsigned int  __index,
+                     int           __size,
+                     unsigned int  __type,
+                     unsigned int  __stride,
                      size_t        __offset);
 
 

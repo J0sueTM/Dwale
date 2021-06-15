@@ -70,6 +70,111 @@ project "DebugTest"
     optimize "On"
   filter ""    
 
+project "VectorTest"
+  kind "ConsoleApp"
+  language "C"
+
+  targetdir("./bin/%{prj.name}")
+  objdir("./bin/%{prj.name}/obj/")
+  
+  files
+  {
+     "./src/t_vector.c",
+     "../inc/",
+     "../vendor/glad/include",
+     "../vendor/glfw/include"
+  }
+
+  includedirs
+  {
+     "../vendor/glfw/include/",
+     "../vendor/glad/include/",
+     "../inc/"    
+  }
+
+  links
+  {
+    "Dwale",
+    "GLFW",
+    "GLAD",    
+  }
+
+  systemversion "latest"
+  staticruntime "On"
+
+  filter "system:linux"
+    linkoptions
+    {
+      "-lpthread",
+      "-lGL",
+      "-lXi",
+      "-lX11",
+      "-lXrandr",
+      "-lm",
+      "-ldl"
+    }
+  filter "system:windows"
+    defines
+    { "_CRT_SECURE_NO_WARNINGS" }
+  filter "configurations:Debug"
+    runtime "Debug"
+    symbols "On"
+  filter "configurations:Release"
+    runtime "Release"
+    optimize "On"
+  filter ""    
+
+project "MatrixTest"
+  kind "ConsoleApp"
+  language "C"
+
+  targetdir("./bin/%{prj.name}")
+  objdir("./bin/%{prj.name}/obj/")
+  
+  files
+  { "./src/t_matrix/t_matrix.c" }
+
+  includedirs
+  {
+     "../vendor/cglm/include",
+     "../vendor/glfw/include/",
+     "../vendor/glad/include/",
+     "../inc/"    
+  }
+
+  links
+  {
+    "Dwale",
+    "GLFW",
+    "GLAD",    
+  }
+
+  systemversion "latest"
+  staticruntime "On"
+
+  filter "system:linux"
+    linkoptions
+    {
+      "-lpthread",
+      "-lGL",
+      "-lXi",
+      "-lX11",
+      "-lXrandr",
+      "-lm",
+      "-ldl"
+    }
+  filter "system:windows"
+    defines
+    { "_CRT_SECURE_NO_WARNINGS" }
+  filter "configurations:Debug"
+    runtime "Debug"
+    symbols "On"
+  filter "configurations:Release"
+    runtime "Release"
+    optimize "On"
+  filter ""    
+
+
 project "WindowTest"
   kind "ConsoleApp"
   language "C"
@@ -166,4 +271,224 @@ project "GLObjectTest"
   filter "configurations:Release"
     runtime "Release"
     optimize "On"
-  filter ""    
+  filter ""
+
+project "TextureTest"
+  kind "ConsoleApp"
+  language "C"
+
+  targetdir("./bin/%{prj.name}")
+  objdir("./bin/%{prj.name}/obj/")
+
+  files
+  { "./src/t_texture/t_texture.c" }
+
+  includedirs
+  {
+     "../vendor/glfw/include/",
+     "../vendor/glad/include/",
+     "../inc/"    
+  }
+
+  links
+  {
+    "Dwale",
+    "GLFW",
+    "GLAD",    
+  }
+
+  systemversion "latest"
+  staticruntime "On"
+
+  filter "system:linux"
+    linkoptions
+    {
+      "-lpthread",
+      "-lGL",
+      "-lXi",
+      "-lX11",
+      "-lXrandr",
+      "-lm",
+      "-ldl"
+    }
+  filter "system:windows"
+    defines
+    { "_CRT_SECURE_NO_WARNINGS" }
+  filter "configurations:Debug"
+    runtime "Debug"
+    symbols "On"
+  filter "configurations:Release"
+    runtime "Release"
+    optimize "On"
+  filter ""
+
+project "SurfaceTest"
+  kind "ConsoleApp"
+  language "C"
+
+  targetdir("./bin/%{prj.name}")
+  objdir("./bin/%{prj.name}/obj/")
+
+  files
+  { "./src/t_surface/t_surface.c" }
+
+  includedirs
+  {
+     "../vendor/glfw/include/",
+     "../vendor/glad/include/",
+     "../vendor/cglm/include/",
+     "../inc/"    
+  }
+
+  links
+  {
+    "Dwale",
+    "GLFW",
+    "GLAD",
+    "CGLM"
+  }
+
+  systemversion "latest"
+  staticruntime "On"
+
+  filter "system:linux"
+    linkoptions
+    {
+      "-lpthread",
+      "-lGL",
+      "-lXi",
+      "-lX11",
+      "-lXrandr",
+      "-lm",
+      "-ldl"
+    }
+  filter "system:windows"
+    defines
+    { "_CRT_SECURE_NO_WARNINGS" }
+  filter "configurations:Debug"
+    runtime "Debug"
+    symbols "On"
+
+    defines
+    { "__D_DEBUG__" }
+  filter "configurations:Release"
+    runtime "Release"
+    optimize "On"
+
+    defines
+    { "__D_RELEASE__" }
+  filter ""
+
+project "ShadersTest"
+  kind "ConsoleApp"
+  language "C"
+
+  targetdir("./bin/%{prj.name}")
+  objdir("./bin/%{prj.name}/obj/")
+
+  files
+  { "./src/t_shaders.c" }
+
+  includedirs
+  {
+     "../vendor/glfw/include/",
+     "../vendor/glad/include/",
+     "../vendor/cglm/include/",
+     "../inc/"    
+  }
+
+  links
+  {
+    "Dwale",
+    "GLFW",
+    "GLAD",
+    "CGLM"
+  }
+
+  systemversion "latest"
+  staticruntime "On"
+
+  filter "system:linux"
+    linkoptions
+    {
+      "-lpthread",
+      "-lGL",
+      "-lXi",
+      "-lX11",
+      "-lXrandr",
+      "-lm",
+      "-ldl"
+    }
+  filter "system:windows"
+    defines
+    { "_CRT_SECURE_NO_WARNINGS" }
+  filter "configurations:Debug"
+    runtime "Debug"
+    symbols "On"
+
+    defines
+    { "__D_DEBUG__" }
+  filter "configurations:Release"
+    runtime "Release"
+    optimize "On"
+
+    defines
+    { "__D_RELEASE__" }
+  filter ""
+
+project "CameraTest"
+  kind "ConsoleApp"
+  language "C"
+
+  targetdir("./bin/%{prj.name}")
+  objdir("./bin/%{prj.name}/obj/")
+
+  files
+  { "./src/t_camera/t_camera.c" }
+
+  includedirs
+  {
+     "../vendor/glfw/include/",
+     "../vendor/glad/include/",
+     "../vendor/cglm/include/",
+     "../inc/"    
+  }
+
+  links
+  {
+    "Dwale",
+    "GLFW",
+    "GLAD",
+    "CGLM"
+  }
+
+  systemversion "latest"
+  staticruntime "On"
+
+  filter "system:linux"
+    linkoptions
+    {
+      "-lpthread",
+      "-lGL",
+      "-lXi",
+      "-lX11",
+      "-lXrandr",
+      "-lm",
+      "-ldl"
+    }
+  filter "system:windows"
+    defines
+    { "_CRT_SECURE_NO_WARNINGS" }
+  filter "configurations:Debug"
+    runtime "Debug"
+    symbols "On"
+
+    defines
+    { "__D_DEBUG__" }
+  filter "configurations:Release"
+    runtime "Release"
+    optimize "On"
+
+    defines
+    { "__D_RELEASE__" }
+  filter ""

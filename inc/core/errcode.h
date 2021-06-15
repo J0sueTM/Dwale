@@ -25,14 +25,9 @@
 extern "C"
 {
 #endif /* __cplusplus */
-  
-/* colours do not work on windows terminal */
-#ifdef _WIN32
-#define C_NORMAL ""
-#define C_GREEN  ""
-#define C_YELLOW ""
-#define C_RED    ""
-#else
+
+/* Colours don't seem to work on windows terminals */
+#ifndef _WIN32
 #define C_NORMAL "\e[0m"
 #define C_GREEN  "\e[1;92m"
 #define C_YELLOW "\e[1;93m"
@@ -45,22 +40,22 @@ extern "C"
  */
 
 /* Dwale specific */
-#define DERR_DNOINIT \
-  "Dwale was not initialized. Try using D_init() and D_end()"
+#define DERR_DNOINIT "Dwale was not initialized. Try using D_init() and D_end()"
 
-#define DERR_NOINIT(x) \
-  "Could not initialize " x
+#define DERR_NOINIT(x) "Could not initialize " x
 
-#define DERR_NOCREATE(x) \
-  "Could not create " x
+#define DERR_NOCREATE(x) "Could not create " x
 
 /* Syntax specific */
-#define DERR_NOPARAM(x, \
-                     y) \
-  "Invalid parameter " \
-  x \
-  ", " \
-  y
+#define DERR_NOPARAM(x, y) "Invalid parameter " x ", " y
+
+#define DERR_VECS2 \
+  DERR_NOPARAM("__l && __r", "Vectors can't be different")
+
+#define DERR_VECS3 \
+  DERR_NOPARAM("__l && __r && __v", "Vectors can't be different")
+
+#define DWARN_DIV0 "Can't divide by 0"
 
 /* Vendor specific */
 #define DERR_OPENGL "Opengl error"

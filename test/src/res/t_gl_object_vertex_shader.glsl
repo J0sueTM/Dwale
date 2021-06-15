@@ -1,12 +1,10 @@
 /**
- * \file inc/util/vector2.h
+ * \file test/src/res/t_gl_object_vertex_shader.glsl
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
- * \date April 23, 2021
+ * \date May 16, 2021
  *
- * \brief Bidimensional vector related functionalities
- * 
  * Copyright (C) Josué Teodoro Moreira
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,31 +16,11 @@
  * GNU General Public License for more details.
  */
 
-#ifndef __D_VECTOR2_H__
-#define __D_VECTOR2_H__
+#version 330 core
 
-#ifdef __cplusplus
-extern "C"
+layout (location = 0) in vec3 aPos;
+
+void main()
 {
-#endif /* __cplusplus */
-
-#include "core/core.h"
-#include <math.h>
-
-struct D_u32vector2
-{
-  u32 x;
-  u32 y;
-};
-
-struct D_i32vector2
-{
-  i32 x;
-  i32 y;
-};
-
-#ifdef __cplusplus
+  gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
 }
-#endif /* __cplusplus */
-
-#endif /* __D_VECTOR2_H__ */

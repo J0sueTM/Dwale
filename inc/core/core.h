@@ -50,7 +50,6 @@ extern "C"
 #define __D_ARCH32__
 #endif /* __amd64__ __amd64 _M_AMD64 __M_X64 __x86_64__ __x86_64 */
 
-#include "core/types.h"
 #include "core/errcode.h"
 #include "core/debug.h"
 
