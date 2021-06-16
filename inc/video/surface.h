@@ -36,6 +36,7 @@ extern "C"
 #include "cglm/vec2.h"
 #include "cglm/vec3.h"
 #include "cglm/mat4.h"
+#include "cglm/affine.h"
 
 #define REAL_FLOAT_IN_STRUCT_SIZE 0x04
 
@@ -44,7 +45,7 @@ enum D_surface_shape
 {
   D_SURFACE_RECTANGLE = 0x01,
   D_SURFACE_TRIANGLE  = 0X02,
-  D_SURFACE_CIRCLE = 0x03
+  D_SURFACE_CIRCLE    = 0x03
 };
 
 /*
@@ -88,6 +89,12 @@ struct D_surface
     vec3 triangle;
   } shape;
   mat4 model;
+
+  /* transformation */
+  float rotation;
+  vec3 pivot;
+  vec3 position;
+  vec3 scale;
   
   float *vct; /* vertices, colours and texture coordinates */
   unsigned int *vi; /* vertices indices (EBO) */
@@ -224,6 +231,36 @@ D_bind_textures_from_surface(struct D_surface *__surface);
  */
 void
 D_prepare_surface_for_rendering(struct D_surface *__surface);
+
+/* transformation */
+
+void
+D_set_surface_pivot(struct D_surface *__surface,
+                    vec2              __pivot);
+
+void
+D_set_surface_position(struct D_surface *__surface,
+                       vec2              __position);
+
+void
+D_translate_surface(struct D_surface *__surface,
+                    vec2              __translation);
+
+void
+D_set_surface_rotation(struct D_surface *__surface,
+                       float             __rotation);
+
+void
+D_rotate_surface(struct D_surface *__surface,
+                 float             __translation);
+
+void
+D_set_surface_scale(struct D_surface *__surface,
+                    vec2             __scale);
+
+void
+D_scale_surface(struct D_surface *__surface,
+                vec2              __scale);
 
 #ifdef __cplusplus
 }

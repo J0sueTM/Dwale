@@ -41,36 +41,44 @@ main(int    argc,
   D_push_texture_to_surface(tux_surface, tux_texture, "u_texture_tux");
   D_prepare_surface_for_rendering(tux_surface);
 
-  vec3 velocity = { 0.0f, 0.0f, 0.0f };
-  float rotation = 0.0f;
   while (D_is_window_open(window))
   {
     D_clear_window(0.2f, 0.2f, 0.2f, 1.0f);
 
     if (glfwGetKey(window->handle, GLFW_KEY_ESCAPE) == GLFW_PRESS)
       D_close_window(window);
-
-    if (glfwGetKey(window->handle, GLFW_KEY_LEFT) == GLFW_PRESS &&
-        glfwGetKey(window->handle, GLFW_KEY_SPACE) == GLFW_PRESS)
-      rotation += 1.0f;
-    else if (glfwGetKey(window->handle, GLFW_KEY_LEFT) == GLFW_PRESS)
-      velocity[0] -= 0.05f;
-
-    if (glfwGetKey(window->handle, GLFW_KEY_RIGHT) == GLFW_PRESS &&
-        glfwGetKey(window->handle, GLFW_KEY_SPACE) == GLFW_PRESS)
-      rotation -= 1.0f;
-    else if (glfwGetKey(window->handle, GLFW_KEY_RIGHT) == GLFW_PRESS)
-      velocity[0] += 0.05f;
-
+    
+    if (glfwGetKey(window->handle, GLFW_KEY_LEFT) == GLFW_PRESS)
+    {
+      if (glfwGetKey(window->handle, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+        D_rotate_surface(tux_surface, glm_rad(-2.0f));
+      else
+        D_translate_surface(tux_surface, (vec2){ -0.05f, 0.0f });
+    }
+    if (glfwGetKey(window->handle, GLFW_KEY_RIGHT) == GLFW_PRESS)
+    {
+      if (glfwGetKey(window->handle, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+        D_rotate_surface(tux_surface, glm_rad(2.0f));
+      else
+        D_translate_surface(tux_surface, (vec2){ 0.05f, 0.0f });
+    }
     if (glfwGetKey(window->handle, GLFW_KEY_UP) == GLFW_PRESS)
-      velocity[1] += 0.05;
+    {
+      if (glfwGetKey(window->handle, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+        D_set_surface_scale(tux_surface, (vec2){ 1.0f, tux_surface->scale[1] + 0.08f });
+      else
+        D_translate_surface(tux_surface, (vec2){ 0.0f, 0.05f });
+    }
     if (glfwGetKey(window->handle, GLFW_KEY_DOWN) == GLFW_PRESS)
-      velocity[1] -= 0.05f;
+    {
+      if (glfwGetKey(window->handle, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+        D_set_surface_scale(tux_surface, (vec2){ 1.0f, tux_surface->scale[1] - 0.08f });
+      else
+        D_translate_surface(tux_surface, (vec2){ 0.0f, -0.05f });
+    }
 
     D_bind_textures_from_surface(tux_surface);
     D_reset_camera(camera);
-    glm_translate(tux_surface->model, velocity);
-    glm_rotate(tux_surface->model, glm_rad(rotation), (vec3){ 0.0f, 0.0f, 1.0f });
     D_draw_surface(tux_surface, camera);
 
     D_swap_window_buffers();

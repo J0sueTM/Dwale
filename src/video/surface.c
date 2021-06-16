@@ -52,6 +52,7 @@ D_create_rectangle_surface(struct D_surface *__surface)
     1.0f, 1.0f, 1.0f,
     0.0f, 1.0f
   };
+
   { 0, 1, 3, 1, 2, 3 };
   */
 
@@ -115,16 +116,14 @@ D_create_surface(enum D_surface_shape  __shape,
 
   new_surface->draw_type = GL_TRIANGLES;
   new_surface->draw_mode = va_arg(surface_arg_list, unsigned int);
+  new_surface->rotation = 0.0f;
+  glm_vec2_one(new_surface->pivot);
+  glm_vec2_zero(new_surface->position);
+  glm_vec2_one(new_surface->scale);
   
   switch (__shape)
   {
   case D_SURFACE_RECTANGLE:
-    /*
-     * NOTE(all): Since this is a struct we can just iterate it's members,
-     * TODO(J0sueTM): Make this work instead of the mess forward.
-    for (size_t i = 0; i < REAL_FLOAT_IN_STRUCT_SIZE * 4; i += 4)
-      *(&new_surface->shape.rectangle.left_bottom[0] + i) = floor((float)va_arg(surface_arg_list, double));
-     */
     *(&new_surface->shape.rectangle.left_bottom[0]) = (float)va_arg(surface_arg_list, double);
     *(&new_surface->shape.rectangle.left_bottom[1]) = (float)va_arg(surface_arg_list, double);
     *(&new_surface->shape.rectangle.left_top[0]) = (float)va_arg(surface_arg_list, double);
@@ -207,6 +206,10 @@ D_reset_surface(struct D_surface *__surface)
   }
 
   glm_mat4_identity(__surface->model);
+  glm_translate(__surface->model, __surface->position);
+  glm_rotate(__surface->model, -(__surface->rotation), (vec3){ 0.0f, 0.0f, 1.0f });
+  glm_scale(__surface->model, __surface->scale);
+  /* TODO(J0sueTM): Implemente pivot */
 }
 
 void
@@ -404,12 +407,87 @@ D_prepare_surface_for_rendering(struct D_surface *__surface)
   D_apply_shaders(__surface->shaders);
 
   int i = 0;
-  struct D_texture_node *temp_head_texture_node = __surface->head_texture_node->next;
-  while (temp_head_texture_node)
+  for (struct D_texture_node *temp_head_texture_node = __surface->head_texture_node->next;
+       temp_head_texture_node;
+       temp_head_texture_node = temp_head_texture_node = temp_head_texture_node->next)
   {
     D_set_uniform_int(__surface->shaders, i, temp_head_texture_node->name);
 
-    temp_head_texture_node = temp_head_texture_node->next;
     ++i;
   }
+}
+
+void
+D_set_surface_pivot(struct D_surface *__surface,
+                    vec2              __pivot)
+{
+  if (!__surface)
+    return;
+
+  __surface->pivot[0] = __pivot[0];
+  __surface->pivot[1] = __pivot[1];
+}
+
+void
+D_set_surface_position(struct D_surface *__surface,
+                       vec2              __position)
+{
+  if (!__surface)
+    return;
+
+  __surface->position[0] = __position[0];
+  __surface->position[1] = __position[1];
+}
+
+void
+D_translate_surface(struct D_surface *__surface,
+                    vec2              __translation)
+{
+  if (!__surface)
+    return;
+
+  __surface->position[0] += __translation[0];
+  __surface->position[1] += __translation[1];
+}
+
+void
+D_set_surface_rotation(struct D_surface *__surface,
+                       float             __rotation)
+{
+  if (!__surface)
+    return;
+
+  __surface->rotation = __rotation;
+}
+
+void
+D_rotate_surface(struct D_surface *__surface,
+                 float             __rotation)
+{
+  if (!__surface)
+    return;
+
+  __surface->rotation += (__rotation);
+}
+
+void
+D_set_surface_scale(struct D_surface *__surface,
+                    vec2              __scale)
+{
+  if (!__surface)
+    return;
+
+  __surface->scale[0] = __scale[0];
+  __surface->scale[1] = __scale[1];
+}
+
+void
+D_scale_surface(struct D_surface *__surface,
+                vec2              __scale)
+{
+  if (!__surface)
+    return;
+
+  __surface->scale[0] *= __scale[0];
+  __surface->scale[1] *= __scale[1];
 }
