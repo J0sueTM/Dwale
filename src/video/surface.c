@@ -124,14 +124,14 @@ D_create_surface(enum D_surface_shape  __shape,
   switch (__shape)
   {
   case D_SURFACE_RECTANGLE:
-    *(&new_surface->shape.rectangle.left_bottom[0]) = (float)va_arg(surface_arg_list, double);
-    *(&new_surface->shape.rectangle.left_bottom[1]) = (float)va_arg(surface_arg_list, double);
-    *(&new_surface->shape.rectangle.left_top[0]) = (float)va_arg(surface_arg_list, double);
-    *(&new_surface->shape.rectangle.left_top[1]) = (float)va_arg(surface_arg_list, double);
-    *(&new_surface->shape.rectangle.right_top[0]) = (float)va_arg(surface_arg_list, double);
-    *(&new_surface->shape.rectangle.right_top[1]) = (float)va_arg(surface_arg_list, double);
-    *(&new_surface->shape.rectangle.right_bottom[0]) = (float)va_arg(surface_arg_list, double);
-    *(&new_surface->shape.rectangle.right_bottom[1]) = (float)va_arg(surface_arg_list, double);
+    new_surface->shape.rectangle.left_bottom[0]  = (float)va_arg(surface_arg_list, double);
+    new_surface->shape.rectangle.left_bottom[1]  = (float)va_arg(surface_arg_list, double);
+    new_surface->shape.rectangle.left_top[0]     = (float)va_arg(surface_arg_list, double);
+    new_surface->shape.rectangle.left_top[1]     = (float)va_arg(surface_arg_list, double);
+    new_surface->shape.rectangle.right_top[0]    = (float)va_arg(surface_arg_list, double);
+    new_surface->shape.rectangle.right_top[1]    = (float)va_arg(surface_arg_list, double);
+    new_surface->shape.rectangle.right_bottom[0] = (float)va_arg(surface_arg_list, double);
+    new_surface->shape.rectangle.right_bottom[1] = (float)va_arg(surface_arg_list, double);
 
     D_create_rectangle_surface(new_surface);
 
