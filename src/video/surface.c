@@ -209,7 +209,7 @@ D_reset_surface(struct D_surface *__surface)
   glm_translate(__surface->model, __surface->position);
   glm_rotate(__surface->model, -(__surface->rotation), (vec3){ 0.0f, 0.0f, 1.0f });
   glm_scale(__surface->model, __surface->scale);
-  /* TODO(J0sueTM): Implemente pivot */
+  /* TODO(J0sueTM): Implement pivot */
 }
 
 void

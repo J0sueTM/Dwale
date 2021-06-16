@@ -44,8 +44,9 @@ extern "C"
 enum D_surface_shape
 {
   D_SURFACE_RECTANGLE = 0x01,
-  D_SURFACE_TRIANGLE  = 0X02,
-  D_SURFACE_CIRCLE    = 0x03
+  D_SURFACE_TRIANGLE  = 0x02,
+  D_SURFACE_POLYGON   = 0x03,
+  D_SURFACE_CIRCLE    = 0x04
 };
 
 /*
@@ -67,27 +68,30 @@ struct D_texture_node
   struct D_texture_node *prev;
 };
 
+union D_shape
+{
+  struct
+  {
+    vec2 left_bottom;
+    vec2 left_top;
+    vec2 right_bottom;
+    vec2 right_top;
+  } rectangle;
+
+  struct
+  {
+    vec2 center;
+    unsigned int vertice_resolution;
+    unsigned int radius;
+  } circle;
+
+  vec3 triangle;
+};
+ 
+
 struct D_surface
 {
-  union 
-  {
-    struct
-    {
-      vec2 left_bottom;
-      vec2 left_top;
-      vec2 right_bottom;
-      vec2 right_top;
-    } rectangle;
-
-    struct
-    {
-      vec2 center;
-      unsigned int vertice_resolution;
-      unsigned int radius;
-    } circle;
-
-    vec3 triangle;
-  } shape;
+  union D_shape shape;
   mat4 model;
 
   /* transformation */
@@ -232,32 +236,72 @@ D_bind_textures_from_surface(struct D_surface *__surface);
 void
 D_prepare_surface_for_rendering(struct D_surface *__surface);
 
-/* transformation */
-
+/**
+ * \brief Sets surface's pivot point
+ *
+ * \param __surface Specifies the surface whose pivot will be setted.
+ * \param __pivot   Specifies the new pivot.
+ */
 void
 D_set_surface_pivot(struct D_surface *__surface,
                     vec2              __pivot);
 
+/**
+ * \brief Sets surface's position
+ *
+ * \param __surface  Specifies the surface whose position will be setted.
+ * \param __position Specifies the new position.
+ */
 void
 D_set_surface_position(struct D_surface *__surface,
                        vec2              __position);
 
+/**
+ * \brief Translates the surface.
+ *
+ * \param __surface     Specifies the surface to be translated.
+ * \param __translation Specifies the vector to translate the surface with.
+ */
 void
 D_translate_surface(struct D_surface *__surface,
                     vec2              __translation);
 
+/**
+ * \brief Sets the surface's rotation.
+ *
+ * \param __surface  Specifies the surface to be rotated.
+ * \param __rotation Specifies the new rotation.
+ */
 void
 D_set_surface_rotation(struct D_surface *__surface,
                        float             __rotation);
 
+/**
+ * \brief Rotates the surface.
+ *
+ * \param __surface  Specifies the surface to be rotated.
+ * \param __rotation Specifies the value to rotate the surface with.
+ */
 void
 D_rotate_surface(struct D_surface *__surface,
-                 float             __translation);
+                 float             __rotation);
 
+/**
+ * \brief Sets the surface's scale.
+ *
+ * \param __surface Specifies the surface to be scaled.
+ * \param __scale   Specifies the new scale.
+ */
 void
 D_set_surface_scale(struct D_surface *__surface,
                     vec2             __scale);
 
+/**
+ * \brief Scales the surface.
+ *
+ * \param __surface Specifies the surface to be scaled.
+ * \param __scale   Specifies the vector to scale the surface with.
+ */
 void
 D_scale_surface(struct D_surface *__surface,
                 vec2              __scale);
