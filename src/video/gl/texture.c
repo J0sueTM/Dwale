@@ -107,10 +107,6 @@ D_bind_texture(struct D_texture *__texture)
     return;
   }
 
-  if (__texture->format == GL_RGBA &&
-      !glIsEnabled(GL_BLEND))
-    D_raise_warning("Can't render rgba image. GL_BLEND isn't enabled.");
-
   glActiveTexture(__texture->unit);
   glBindTexture(__texture->type, __texture->handle);
 }

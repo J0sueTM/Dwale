@@ -1,7 +1,7 @@
 /**
- * \file test/src/t_surface/res/vertex.glsl
+ * \file test/src/t_camera/res/tux_vertex.glsl
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
- * \date May 22, 2021
+ * \date Jun 18, 2021
  *
  * Copyright (C) Josué Teodoro Moreira
  *
@@ -19,13 +19,16 @@
 #version 330 core
 
 layout (location = 0) in vec3 l_pos;
-layout (location = 1) in vec2 l_tex_coord;
+layout (location = 1) in vec2 l_uv;
 
-out vec2 vo_tex_coord;
+out vec2 vo_uv;
+
+uniform mat4 u_mvp;
+uniform vec2 u_uv_shift;
 
 void
 main()
 {
-  gl_Position = vec4(l_pos, 1.0f);
-  vo_tex_coord = l_tex_coord;
+  gl_Position = u_mvp * vec4(l_pos, 1.0f);
+  vo_uv = l_uv + u_uv_shift;
 }

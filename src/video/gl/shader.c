@@ -234,17 +234,17 @@ D_set_uniform_vec4(struct D_shaders *__shaders,
 }
 
 void
-D_set_uniform_fvec3(struct D_shaders *__shaders,
-                    vec3              __value,
-                    char             *__name)
+D_set_uniform_vec3(struct D_shaders *__shaders,
+                   vec3              __value,
+                   char             *__name)
 {
   glUniform3f(glGetUniformLocation(__shaders->program, __name), __value[0], __value[1], __value[2]);
 }
 
 void
-D_set_uniform_fvec2(struct D_shaders *__shaders,
-                    vec2              __value,
-                    char             *__name)
+D_set_uniform_vec2(struct D_shaders *__shaders,
+                   vec2              __value,
+                   char             *__name)
 {
   glUniform2f(glGetUniformLocation(__shaders->program, __name), __value[0], __value[1]);
 }

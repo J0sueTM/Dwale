@@ -43,7 +43,9 @@ D_post_init_video()
 #define __D_INIT_VIDEO_OPENGL__
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  
   glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LESS);
 #endif /* __D_INIT_VIDEO_OPENGL__ */
 #endif /* __D_INIT_VIDEO__ */
 }

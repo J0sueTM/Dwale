@@ -21,152 +21,105 @@
 #include "video/surface.h"
 
 static void
-D_create_rectangle_surface(struct D_surface *__surface)
+_end_surface_creation(struct D_surface *__surface)
 {
   if (!__surface)
-  {
-    D_raise_error(DERR_NOPARAM("__surface", "Surface can't be NULL"));
-
     return;
-  }
 
-  __surface->vct = (float *)malloc(sizeof(float) * 32);
-  D_assert(__surface->vct, NULL);
-  __surface->vi = (unsigned int *)malloc(sizeof(unsigned int) * 6);
-  D_assert(__surface->vi, NULL);
-  memset(__surface->vct, 0x00, sizeof(float) * 32);
-  memset(__surface->vi, 0x00, sizeof(unsigned int) * 6);
-
-  /*
-  {
-    __surface->shape.rectangle.right_top[0], __surface->shape.rectangle.right_top[1], 0.0f,
-    1.0f, 1.0f, 1.0f,
-    1.0f, 1.0f,
-    __surface->shape.rectangle.right_bottom[0], __surface->shape.rectangle.right_bottom[1], 0.0f,
-    1.0f, 1.0f, 1.0f,
-    1.0f, 0.0f,
-    __surface->shape.rectangle.left_bottom[0], __surface->shape.rectangle.left_bottom[1], 0.0f,
-    1.0f, 1.0f, 1.0f,
-    0.0f, 0.0f,
-    __surface->shape.rectangle.left_top[0], __surface->shape.rectangle.left_top[1], 0.0f,
-    1.0f, 1.0f, 1.0f,
-    0.0f, 1.0f
-  };
-
-  { 0, 1, 3, 1, 2, 3 };
-  */
-
-  /* vertices */
-  *(__surface->vct + 0) = __surface->shape.rectangle.right_top[0];
-  *(__surface->vct + 1) = __surface->shape.rectangle.right_top[1];
-  *(__surface->vct + 8) = __surface->shape.rectangle.right_bottom[0];
-  *(__surface->vct + 9) = __surface->shape.rectangle.right_bottom[1];
-  *(__surface->vct + 16) = __surface->shape.rectangle.left_bottom[0];
-  *(__surface->vct + 17) = __surface->shape.rectangle.left_bottom[1];
-  *(__surface->vct + 24) = __surface->shape.rectangle.left_top[0];
-  *(__surface->vct + 25) = __surface->shape.rectangle.left_top[1];
-
-  /* colours */
-  for (int i = 3; i < 30; i += 8)
-  {
-    *(__surface->vct + i) = 1.0f;
-    *(__surface->vct + i + 1) = 1.0f;
-    *(__surface->vct + i + 2) = 1.0f;
-  }
-
-  /* texture coordinates */
-  *(__surface->vct + 6) = 1.0f;
-  *(__surface->vct + 7) = 1.0f;
-  *(__surface->vct + 14) = 1.0f;
-  *(__surface->vct + 31) = 1.0f;
-
-  /* vertices indices */
-  *(__surface->vi + 1) = 1;
-  *(__surface->vi + 2) = 3;
-  *(__surface->vi + 3) = 1;
-  *(__surface->vi + 4) = 2;
-  *(__surface->vi + 5) = 3;
-
-  __surface->vao = D_create_vao();
-  __surface->vbo = D_create_vbo(GL_ARRAY_BUFFER, __surface->draw_type, __surface->draw_mode);
-  __surface->ebo = D_create_vbo(GL_ELEMENT_ARRAY_BUFFER, __surface->draw_type, __surface->draw_mode);
-
-  D_bind_vao(__surface->vao);
-  D_vbo_data(__surface->vbo, sizeof(float) * 32, __surface->vct);
-  D_vbo_data(__surface->ebo, sizeof(unsigned int) * 6, __surface->vi);
-
-  D_vao_attrib_pointer(__surface->vao, 0, 3, GL_FLOAT, sizeof(float) * 8, 0); /* vertices */
-  D_vao_attrib_pointer(__surface->vao, 1, 3, GL_FLOAT, sizeof(float) * 8, 3); /* colours */
-  D_vao_attrib_pointer(__surface->vao, 2, 2, GL_FLOAT, sizeof(float) * 8, 6); /* texture coordinates */
-
-  __surface->ebo_count = 6;
   __surface->ebo_type = GL_UNSIGNED_INT;
+  __surface->rotation = 0.0f;
+
+  glm_mat4_identity(__surface->model);
+  glm_vec2_one(__surface->pivot);
+  glm_vec2_zero(__surface->position);
+  glm_vec2_one(__surface->scale);
+  glm_vec2_zero(__surface->uv_shift);
+
+  __surface->head_texture_node = (struct D_texture_node *)malloc(sizeof(struct D_texture_node));
+  D_assert(__surface->head_texture_node, NULL);
+  __surface->head_texture_node->id = -1;
+  __surface->head_texture_node->texture = NULL;
+  __surface->head_texture_node->name = NULL;
+  __surface->head_texture_node->status = false;
+  __surface->head_texture_node->next = NULL;
+  __surface->head_texture_node->prev = NULL;
+
+  __surface->tail_texture_node = __surface->head_texture_node;
+
+  D_raise_log("Created surface");
 }
 
 struct D_surface *
-D_create_surface(enum D_surface_shape  __shape,
-                 ...)
+D_create_rectangle_surface(unsigned int __draw_mode,
+                           vec2         __left_bottom,
+                           vec2         __left_top,
+                           vec2         __right_top,
+                           vec2         __right_bottom,
+                           unsigned int __columns,
+                           unsigned int __rows)
 {
   struct D_surface *new_surface = (struct D_surface *)malloc(sizeof(struct D_surface));
   D_assert(new_surface, NULL);
-  glm_mat4_identity(new_surface->model);
-
-  va_list surface_arg_list;
-  va_start(surface_arg_list, __shape);
-
+  new_surface->draw_mode = __draw_mode;
   new_surface->draw_type = GL_TRIANGLES;
-  new_surface->draw_mode = va_arg(surface_arg_list, unsigned int);
-  new_surface->rotation = 0.0f;
-  glm_vec2_one(new_surface->pivot);
-  glm_vec2_zero(new_surface->position);
-  glm_vec2_one(new_surface->scale);
-  
-  switch (__shape)
-  {
-  case D_SURFACE_RECTANGLE:
-    new_surface->shape.rectangle.left_bottom[0]  = (float)va_arg(surface_arg_list, double);
-    new_surface->shape.rectangle.left_bottom[1]  = (float)va_arg(surface_arg_list, double);
-    new_surface->shape.rectangle.left_top[0]     = (float)va_arg(surface_arg_list, double);
-    new_surface->shape.rectangle.left_top[1]     = (float)va_arg(surface_arg_list, double);
-    new_surface->shape.rectangle.right_top[0]    = (float)va_arg(surface_arg_list, double);
-    new_surface->shape.rectangle.right_top[1]    = (float)va_arg(surface_arg_list, double);
-    new_surface->shape.rectangle.right_bottom[0] = (float)va_arg(surface_arg_list, double);
-    new_surface->shape.rectangle.right_bottom[1] = (float)va_arg(surface_arg_list, double);
 
-    D_create_rectangle_surface(new_surface);
+  new_surface->vertices_uv = (float *)malloc(sizeof(float) * 20);
+  D_assert(new_surface->vertices_uv, NULL);
+  new_surface->vertices_indices = (unsigned int *)malloc(sizeof(unsigned int) * 6);
+  D_assert(new_surface->vertices_indices, NULL);
 
-    break;
-  case D_SURFACE_TRIANGLE:
-    /* IMPLEMENT ME */
+  memset(new_surface->vertices_uv, 0x00, sizeof(float) * 20);
+  memset(new_surface->vertices_indices, 0x00, sizeof(unsigned int) * 6);
 
-    break;
-  case D_SURFACE_CIRCLE:
-    /* IMPLEMENT ME */
+  /*
+   * right_top[0], right_top[1], 0.0f, right_top_uv[0], right_top_uv[1],
+   * right_bottom[0], right_bottom[1], 0.0f, right_bottom_uv[0], right_bottom_uv[1],
+   * left_bottom[0], left_bottom[1], 0.0f, left_bottom_uv[0], left_bottom_uv[1],
+   * left_top[0], left_top[1], 0.0f, left_top_uv[0], left_top_uv[1]
+   */
 
-    break;
-  default:
-    D_raise_error(DERR_NOPARAM("__shape", "Invalid surface shape"));
+  /* vertices */
+  *(new_surface->vertices_uv + 0)  = __right_top[0];
+  *(new_surface->vertices_uv + 1)  = __right_top[1];
+  *(new_surface->vertices_uv + 5)  = __right_bottom[0];
+  *(new_surface->vertices_uv + 6)  = __right_bottom[1];
+  *(new_surface->vertices_uv + 10) = __left_bottom[0];
+  *(new_surface->vertices_uv + 11) = __left_bottom[1];
+  *(new_surface->vertices_uv + 15) = __left_top[0];
+  *(new_surface->vertices_uv + 16) = __left_top[1];
 
-    va_end(surface_arg_list);
-    D_end_surface(new_surface);
-    return NULL;
+  /*
+  *(new_surface->vertices_uv + 3)  = 1.0f;
+  *(new_surface->vertices_uv + 4)  = 1.0f;
+  *(new_surface->vertices_uv + 8)  = 1.0f;
+  *(new_surface->vertices_uv + 19) = 1.0f;
+  */
+  /* uv */
+  *(new_surface->vertices_uv + 3)  = (float)(1.0f / __columns);
+  *(new_surface->vertices_uv + 4)  = (float)(1.0f / __rows);
+  *(new_surface->vertices_uv + 8)  = (float)(1.0f / __columns);
+  *(new_surface->vertices_uv + 19) = (float)(1.0f / __rows);
 
-    break;
-  }
-  va_end(surface_arg_list);
+  /* vertices indices */
+  *(new_surface->vertices_indices + 1) = 1;
+  *(new_surface->vertices_indices + 2) = 3;
+  *(new_surface->vertices_indices + 3) = 1;
+  *(new_surface->vertices_indices + 4) = 2;
+  *(new_surface->vertices_indices + 5) = 3;
 
-  new_surface->head_texture_node = (struct D_texture_node *)malloc(sizeof(struct D_texture_node));
-  D_assert(new_surface->head_texture_node, NULL);
-  new_surface->head_texture_node->id = -1;
-  new_surface->head_texture_node->texture = NULL;
-  new_surface->head_texture_node->name = NULL;
-  new_surface->head_texture_node->status = false;
-  new_surface->head_texture_node->next = NULL;
-  new_surface->head_texture_node->prev = NULL;
-  
-  new_surface->tail_texture_node = new_surface->head_texture_node;
+  new_surface->vao = D_create_vao();
+  new_surface->vbo = D_create_vbo(GL_ARRAY_BUFFER, new_surface->draw_type, new_surface->draw_mode);
+  new_surface->ebo = D_create_vbo(GL_ELEMENT_ARRAY_BUFFER, new_surface->draw_type, new_surface->draw_mode);
 
-  D_raise_log("Created surface");
+  D_bind_vao(new_surface->vao);
+  D_vbo_data(new_surface->vbo, sizeof(float) * 20, new_surface->vertices_uv);
+  D_vbo_data(new_surface->ebo, sizeof(unsigned int) * 6, new_surface->vertices_indices);
+  D_vao_attrib_pointer(new_surface->vao, 0, 3, GL_FLOAT, sizeof(float) * 5, 0);
+  D_vao_attrib_pointer(new_surface->vao, 1, 2, GL_FLOAT, sizeof(float) * 5, 3);
+
+  new_surface->ebo_count = 6;
+  _end_surface_creation(new_surface);
+
   return new_surface;
 }
 
@@ -311,7 +264,7 @@ D_pop_texture_from_surface(struct D_surface *__surface)
   struct D_texture_node *temp_next_tail_texture_node = __surface->tail_texture_node->prev;
   free(__surface->tail_texture_node);
   __surface->tail_texture_node = temp_next_tail_texture_node;
-  
+
   D_raise_log("Popped texture from surface");
 }
 
@@ -418,6 +371,24 @@ D_prepare_surface_for_rendering(struct D_surface *__surface)
 }
 
 void
+D_set_surface_uv_shift(struct D_surface *__surface,
+                       unsigned int      __column,
+                       unsigned int      __row,
+                       vec2              __padding)
+{
+  if (!__surface)
+  {
+    D_raise_error(DERR_NOPARAM("__surface", "Surface can't be NULL"));
+
+    return;
+  }
+
+  /* The removed padding is calculated by removing the 0 to 1 percentage from the uv unity size */
+  __surface->uv_shift[0] = *(__surface->vertices_uv + 3) * (__column + *(__surface->vertices_uv + 3) * __padding[0]);
+  __surface->uv_shift[1] = *(__surface->vertices_uv + 4) * (__row + *(__surface->vertices_uv + 4) * __padding[1]);
+}
+
+void
 D_set_surface_pivot(struct D_surface *__surface,
                     vec2              __pivot)
 {
@@ -445,7 +416,7 @@ D_translate_surface(struct D_surface *__surface,
 {
   if (!__surface)
     return;
-
+  
   __surface->position[0] += __translation[0];
   __surface->position[1] += __translation[1];
 }

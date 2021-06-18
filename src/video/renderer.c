@@ -91,10 +91,13 @@ D_draw_surface(struct D_surface *__surface,
 
   if (__camera)
   {
+    D_reset_camera(__camera);
+
     glm_mat4_mul(__camera->projection, __camera->view, __camera->mvp);
     glm_mat4_mul(__camera->mvp, __surface->model, __camera->mvp);
     D_set_uniform_mat4(__surface->shaders, __camera->mvp, "u_mvp");
   }
+  D_set_uniform_vec2(__surface->shaders, __surface->uv_shift, "u_uv_shift");
 
   if (__surface->ebo)
     D_draw_elements(__surface->vao, __surface->ebo, __surface->ebo_count, __surface->ebo_type, __surface->shaders);

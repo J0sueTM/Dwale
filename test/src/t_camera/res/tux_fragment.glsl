@@ -1,7 +1,7 @@
 /**
- * \file test/src/t_surface/res/vertex.glsl
+ * \file test/src/t_camera/res/tux_fragment.glsl
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
- * \date May 22, 2021
+ * \date Jun 18, 2021
  *
  * Copyright (C) Josué Teodoro Moreira
  *
@@ -18,14 +18,12 @@
 
 #version 330 core
 
-layout (location = 0) in vec3 l_pos;
-layout (location = 1) in vec2 l_tex_coord;
+in vec2 vo_uv;
 
-out vec2 vo_tex_coord;
+uniform sampler2D u_texture_tux;
 
 void
 main()
 {
-  gl_Position = vec4(l_pos, 1.0f);
-  vo_tex_coord = l_tex_coord;
+  gl_FragColor = texture(u_texture_tux, vo_uv);
 }

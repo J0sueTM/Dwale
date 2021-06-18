@@ -71,8 +71,8 @@ D_draw_elements(struct D_vao     *__vao,
  *
  * \param __surface Specifies the surface to be drawn.
  * \param __camera  Specifies the camera to be used when rendering the surface.
- *                  \NOTE(all): Optional, if it's a static element (Shouldn't be affected by world matrices),
- *                              you don't need to give a camera.
+ *                  NOTE(all): Optional, if it's a static element (Shouldn't be affected by world matrices),
+ *                             you don't need to give a camera.
  */
 void
 D_draw_surface(struct D_surface *__surface,

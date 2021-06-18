@@ -26,7 +26,6 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-#include <stdarg.h>
 #include <math.h>
 #include "core/core.h"
 #include "video/video.h"
@@ -38,17 +37,6 @@ extern "C"
 #include "cglm/mat4.h"
 #include "cglm/affine.h"
 
-#define REAL_FLOAT_IN_STRUCT_SIZE 0x04
-
-/* TODO(J0sueTM): Add shapes */
-enum D_surface_shape
-{
-  D_SURFACE_RECTANGLE = 0x01,
-  D_SURFACE_TRIANGLE  = 0x02,
-  D_SURFACE_POLYGON   = 0x03,
-  D_SURFACE_CIRCLE    = 0x04
-};
-
 /*
  * NOTE(all): It's not a bad design choice to put these here
  * I could put them inside the texture struct, but I want them to be
@@ -57,51 +45,36 @@ enum D_surface_shape
  * disable just the one on the first surface and/or vice versa, I can.
  * Also, I want to be able to give different names for textures dependending
  * on the surface they're attached to.
+ *
+ * NOTE(all): We can have multiple textures into a single surface.
+ * However, all of them will be rendered using the same shader.
+ * Be aware of that if you're using a tilemap. in this case, just
+ * use another surface.
  */
 struct D_texture_node
 {
   char *name;
   bool status;
   int id;
+
   struct D_texture *texture;
   struct D_texture_node *next;
   struct D_texture_node *prev;
 };
 
-union D_shape
-{
-  struct
-  {
-    vec2 left_bottom;
-    vec2 left_top;
-    vec2 right_bottom;
-    vec2 right_top;
-  } rectangle;
-
-  struct
-  {
-    vec2 center;
-    unsigned int vertice_resolution;
-    unsigned int radius;
-  } circle;
-
-  vec3 triangle;
-};
- 
-
 struct D_surface
 {
-  union D_shape shape;
-  mat4 model;
-
   /* transformation */
-  float rotation;
+  mat4 model;
   vec3 pivot;
   vec3 position;
   vec3 scale;
-  
-  float *vct; /* vertices, colours and texture coordinates */
-  unsigned int *vi; /* vertices indices (EBO) */
+  float rotation;
+
+  vec2 uv_shift;
+
+  float *vertices_uv;
+  unsigned int *vertices_indices;
   unsigned int draw_type;
   unsigned int draw_mode;
   unsigned int ebo_count, ebo_type;
@@ -109,7 +82,7 @@ struct D_surface
   struct D_vao *vao;
   struct D_vbo *vbo;
   struct D_vbo *ebo;
-  struct D_shaders *shaders;  
+  struct D_shaders *shaders;
 
   /*
    * NOTE(all): Since rendering works as a layer of all rendering contexts,
@@ -122,9 +95,19 @@ struct D_surface
   struct D_texture_node *tail_texture_node;
 };
 
+/**
+ * \brief Creates a new rectangle shaped surface.
+ *
+ * \return Created rectangle surface
+ */
 struct D_surface *
-D_create_surface(enum D_surface_shape  __shape,
-                 ...);
+D_create_rectangle_surface(unsigned int __draw_mode,
+                           vec2         __left_bottom,
+                           vec2         __left_top,
+                           vec2         __right_top,
+                           vec2         __right_bottom,
+                           unsigned int __columns,
+                           unsigned int __rows);
 
 /**
  * \brief Ends the surface. Frees memory and dependencies.
@@ -235,6 +218,20 @@ D_bind_textures_from_surface(struct D_surface *__surface);
  */
 void
 D_prepare_surface_for_rendering(struct D_surface *__surface);
+
+/**
+ * \brief Sets surface's uv shift.
+ *
+ * \param __surface Specifies the surface whose uv will be setted.
+ * \param __row     Specifies the row to begin the uv with.
+ * \param __column  Specifies the column to begin te uv with.
+ * \param __padding Specifies the space to be ignored starting from the borders.
+ */
+void
+D_set_surface_uv_shift(struct D_surface *__surface,
+                       unsigned int      __column,
+                       unsigned int      __row,
+                       vec2              __padding);
 
 /**
  * \brief Sets surface's pivot point

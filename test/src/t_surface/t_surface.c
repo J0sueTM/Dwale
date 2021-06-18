@@ -38,7 +38,9 @@ main(int    argc,
                      GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR,
                      GL_RGBA, true, GL_TEXTURE1);
   struct D_surface *surface =
-    D_create_surface(D_SURFACE_RECTANGLE, GL_STATIC_DRAW, -1.0f, -1.0f, -1.0f, 0.4f, -0.2f, 0.4f, -0.2f, -1.0f);
+    D_create_rectangle_surface(GL_STATIC_DRAW, (vec2){ -1.0f, -1.0f }, (vec2){ -1.0f, 0.4f },
+                                               (vec2){ -0.2f, 0.4f }, (vec2){ -0.2f, -1.0f },
+                                               1, 1);
   D_set_surface_shaders(surface, surface_shaders);
 
   D_push_texture_to_surface(surface, tux, "u_texture_tux");
@@ -52,7 +54,9 @@ main(int    argc,
                      GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR,
                      GL_RGBA, true, GL_TEXTURE0);
   struct D_surface *freebsd_surface =
-    D_create_surface(D_SURFACE_RECTANGLE, GL_STATIC_DRAW, 0.3f, 0.0f, 0.3f, 0.8f, 0.8f, 0.8f, 0.8f, 0.0f);
+    D_create_rectangle_surface(GL_STATIC_DRAW, (vec2){ 0.3f, 0.0f }, (vec2){ 0.3f, 0.8f },
+                                               (vec2){ 0.8f, 0.8f }, (vec2){ 0.8f, 0.0f },
+                                               1, 1);
   D_set_surface_shaders(freebsd_surface, freebsd_surface_shaders);
 
   D_push_texture_to_surface(freebsd_surface, freebsd, "u_texture_freebsd");
@@ -74,7 +78,7 @@ main(int    argc,
     D_swap_window_buffers();
     D_poll_window_events();
   }
-  
+
 end:
   D_end_surface(surface);
   D_end_texture(tux);
