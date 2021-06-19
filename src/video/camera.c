@@ -44,6 +44,10 @@ D_create_camera(struct D_window *__window,
   new_camera->near_clip = __near_clip;
   new_camera->far_clip = __far_clip;
 
+  new_camera->rotation = 0.0f;
+  glm_vec3_one(new_camera->position);
+  glm_vec3_one(new_camera->scale);
+
   D_reset_camera(new_camera);
 
   D_raise_log("Created camera");
@@ -75,8 +79,76 @@ D_reset_camera(struct D_camera *__camera)
   }
 
   glm_mat4_identity(__camera->view);
+  glm_translate(__camera->view, __camera->position);
+  glm_rotate(__camera->view, __camera->rotation, (vec3){ 0.0f, 0.0f, 1.0f });
+  glm_scale(__camera->view, __camera->scale);
+  
   glm_mat4_identity(__camera->projection);
   glm_ortho(-__camera->window->view_proportion[0] / __camera->window->view_proportion[1],
             __camera->window->view_proportion[0] / __camera->window->view_proportion[1],
             -1.0f, 1.0f, __camera->near_clip, __camera->far_clip, __camera->projection);
+}
+
+void
+D_set_camera_position(struct D_camera *__camera,
+                      vec2             __position)
+{
+  if (!__camera)
+    return;
+
+  __camera->position[0] = __position[0];
+  __camera->position[1] = __position[0];
+}
+
+void
+D_translate_camera(struct D_camera *__camera,
+                   vec2             __translation)
+{
+  if (!__camera)
+    return;
+
+  __camera->position[0] -= __translation[0];
+  __camera->position[1] -= __translation[1];
+}
+
+void
+D_set_camera_rotation(struct D_camera *__camera,
+                      float            __rotation)
+{
+  if (!__camera)
+    return;
+
+  __camera->rotation = __rotation;
+}
+
+void
+D_rotate_camera(struct D_camera *__camera,
+                float            __rotation)
+{
+  if (!__camera)
+    return;
+
+  __camera->rotation += (__rotation);
+}
+
+void
+D_set_camera_scale(struct D_camera *__camera,
+                   vec2             __scale)
+{
+  if (!__camera)
+    return;
+
+  __camera->scale[0] = __scale[0];
+  __camera->scale[1] = __scale[1];
+}
+
+void
+D_scale_camera(struct D_camera *__camera,
+               vec2             __scale)
+{
+  if (!__camera)
+    return;
+
+  __camera->scale[0] *= __scale[0];
+  __camera->scale[1] *= __scale[1];
 }

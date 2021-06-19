@@ -66,18 +66,13 @@ struct D_surface
 {
   /* transformation */
   mat4 model;
-  vec3 pivot;
-  vec3 position;
-  vec3 scale;
+  vec3 position, scale;
   float rotation;
 
   vec2 uv_shift;
 
   float *vertices_uv;
-  unsigned int *vertices_indices;
-  unsigned int draw_type;
-  unsigned int draw_mode;
-  unsigned int ebo_count, ebo_type;
+  unsigned int *vertices_indices, draw_type, draw_mode, ebo_count, ebo_type;
 
   struct D_vao *vao;
   struct D_vbo *vbo;
@@ -232,16 +227,6 @@ D_set_surface_uv_shift(struct D_surface *__surface,
                        unsigned int      __column,
                        unsigned int      __row,
                        vec2              __padding);
-
-/**
- * \brief Sets surface's pivot point
- *
- * \param __surface Specifies the surface whose pivot will be setted.
- * \param __pivot   Specifies the new pivot.
- */
-void
-D_set_surface_pivot(struct D_surface *__surface,
-                    vec2              __pivot);
 
 /**
  * \brief Sets surface's position

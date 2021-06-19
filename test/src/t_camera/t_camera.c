@@ -55,11 +55,12 @@ main(int    argc,
 
     if (glfwGetKey(window->handle, GLFW_KEY_ESCAPE) == GLFW_PRESS)
       D_close_window(window);
-
     if (glfwGetKey(window->handle, GLFW_KEY_LEFT) == GLFW_PRESS)
     {
       if (glfwGetKey(window->handle, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
         D_rotate_surface(tux_surface, glm_rad(-2.0f));
+      else if (glfwGetKey(window->handle, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        D_translate_camera(camera, (vec2){ -0.1f, 0.0f });
       else
         D_translate_surface(tux_surface, (vec2){ -0.05f, 0.0f });
     }
@@ -67,6 +68,8 @@ main(int    argc,
     {
       if (glfwGetKey(window->handle, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
         D_rotate_surface(tux_surface, glm_rad(2.0f));
+      else if (glfwGetKey(window->handle, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        D_translate_camera(camera, (vec2){ 0.1f, 0.0f });
       else
         D_translate_surface(tux_surface, (vec2){ 0.05f, 0.0f });
     }
@@ -74,6 +77,10 @@ main(int    argc,
     {
       if (glfwGetKey(window->handle, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
         D_set_surface_scale(tux_surface, (vec2){ 1.0f, tux_surface->scale[1] + 0.08f });
+      else if (glfwGetKey(window->handle, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        D_rotate_camera(camera, glm_rad(2.0f));
+      else if (glfwGetKey(window->handle, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
+        D_set_camera_scale(camera, (vec2){ camera->scale[0], camera->scale[1] + 0.1f });
       else
         D_translate_surface(tux_surface, (vec2){ 0.0f, 0.05f });
     }
@@ -81,6 +88,10 @@ main(int    argc,
     {
       if (glfwGetKey(window->handle, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
         D_set_surface_scale(tux_surface, (vec2){ 1.0f, tux_surface->scale[1] - 0.08f });
+      else if (glfwGetKey(window->handle, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        D_rotate_camera(camera, glm_rad(-2.0f));
+      else if (glfwGetKey(window->handle, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
+        D_set_camera_scale(camera, (vec2){ camera->scale[0] + 0.1f, camera->scale[1] });
       else
         D_translate_surface(tux_surface, (vec2){ 0.0f, -0.05f });
     }

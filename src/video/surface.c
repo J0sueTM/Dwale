@@ -30,7 +30,6 @@ _end_surface_creation(struct D_surface *__surface)
   __surface->rotation = 0.0f;
 
   glm_mat4_identity(__surface->model);
-  glm_vec2_one(__surface->pivot);
   glm_vec2_zero(__surface->position);
   glm_vec2_one(__surface->scale);
   glm_vec2_zero(__surface->uv_shift);
@@ -162,7 +161,6 @@ D_reset_surface(struct D_surface *__surface)
   glm_translate(__surface->model, __surface->position);
   glm_rotate(__surface->model, -(__surface->rotation), (vec3){ 0.0f, 0.0f, 1.0f });
   glm_scale(__surface->model, __surface->scale);
-  /* TODO(J0sueTM): Implement pivot */
 }
 
 void
@@ -386,17 +384,6 @@ D_set_surface_uv_shift(struct D_surface *__surface,
   /* The removed padding is calculated by removing the 0 to 1 percentage from the uv unity size */
   __surface->uv_shift[0] = *(__surface->vertices_uv + 3) * (__column + *(__surface->vertices_uv + 3) * __padding[0]);
   __surface->uv_shift[1] = *(__surface->vertices_uv + 4) * (__row + *(__surface->vertices_uv + 4) * __padding[1]);
-}
-
-void
-D_set_surface_pivot(struct D_surface *__surface,
-                    vec2              __pivot)
-{
-  if (!__surface)
-    return;
-
-  __surface->pivot[0] = __pivot[0];
-  __surface->pivot[1] = __pivot[1];
 }
 
 void

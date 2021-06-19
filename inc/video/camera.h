@@ -28,11 +28,16 @@ extern "C"
 
 #include "core/core.h"
 #include "video/window.h"
+#include "cglm/vec2.h"
 #include "cglm/mat4.h"
 #include "cglm/cam.h"
+#include "cglm/affine.h"
 
 struct D_camera
 {
+  vec3 position, scale;
+  float rotation;
+  
   mat4 view, projection, mvp;
   float near_clip, far_clip;
   struct D_window *window;
@@ -67,6 +72,60 @@ D_end_camera(struct D_camera *__camera);
  */
 void
 D_reset_camera(struct D_camera *__camera);
+
+/**
+ * \brief Sets the camera's position.
+ *
+ * \param __camera   Specifies the camera whose position will be setted.
+ * \param __position Specifies the new position.
+ */
+void
+D_set_camera_position(struct D_camera *__camera,
+                      vec2             __position);
+
+/**
+ * \brief Translates the camera's view.
+ *
+ * \param __camera      Specifies the camera whose view will be translated.
+ * \param __translation Specifies the translation to be used with the camera.
+ */
+void
+D_translate_camera(struct D_camera *__camera,
+                   vec2             __translation);
+
+/**
+ * \brief Sets the camera's rotation.
+ *
+ * \param __camera   Specifies the camera whose rotation will be setted.
+ * \param __rotation Specifies the new rotation.
+ */
+void
+D_set_camera_rotation(struct D_camera *__camera,
+                      float            __rotation);
+
+/**
+ * \brief Rotates the camera's view.
+ *
+ * \param __camera   Specifies the camera whose view will be rotated.
+ * \param __rotation Specifies the rotation to be used to rotate the camera.
+ */
+void
+D_rotate_camera(struct D_camera *__camera,
+                float            __rotation);
+
+void
+D_set_camera_scale(struct D_camera *__camera,
+                   vec2             __scale);
+
+/**
+ * \brief Scales the camera's view.
+ *
+ * \param __camera Specifies the camera whose view will be scaled.
+ * \param __scale  Specifies the scale to be used to scale the camera.
+ */
+void
+D_scale_camera(struct D_camera *__camera,
+               vec2             __scale);
 
 #ifdef __cplusplus
 }
