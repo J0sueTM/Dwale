@@ -38,6 +38,7 @@ main(int    argc,
     D_create_rectangle_surface(GL_STATIC_DRAW, (vec2){ -0.7f, -0.8f }, (vec2){ -0.7f, 0.8f },
                                                (vec2){ 0.7f, 0.8f }, (vec2){ 0.7f, -0.8f },
                                                3, 9);
+  
   int animation_frame = 0;
   int animation_choice = 0;
   double last_frame, current_frame;

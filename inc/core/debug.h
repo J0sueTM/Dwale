@@ -27,8 +27,6 @@ extern "C"
 #endif /* __cplusplus */
 
 #include "core/core.h"
-#define __D_INCLUDE_NONE__
-#include "dwale.h"
 
 #define USE_ERRNO NULL
 
@@ -89,6 +87,25 @@ D_raise_error_alt(char *__error_buffer,
                  __error_buffer) \
   if (!__statement) \
     D_raise_error(__error_buffer);
+
+#define D_assert_return(__statement, \
+                        __error_buffer, \
+                        __return) \
+  if (!__statement) \
+  { \
+    D_raise_error(__error_buffer); \
+    \
+    return __return; \
+  }
+
+#define D_assert_return_void(__statement, \
+                             __error_buffer) \
+  if (!__statement) \
+  { \
+    D_raise_error(__error_buffer); \
+    \
+    return; \
+  }
 
 /**
  * \brief Raises an error an closes dwale if __statement is false.

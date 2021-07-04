@@ -113,6 +113,12 @@ void
 D_rotate_camera(struct D_camera *__camera,
                 float            __rotation);
 
+/**
+ * \brief Sets the camera's scale.
+ *
+ * \param __camera Specifies the camera whose scale will be setted.
+ * \param __scale  Specifies the new scale.
+ */
 void
 D_set_camera_scale(struct D_camera *__camera,
                    vec2             __scale);

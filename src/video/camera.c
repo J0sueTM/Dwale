@@ -45,7 +45,7 @@ D_create_camera(struct D_window *__window,
   new_camera->far_clip = __far_clip;
 
   new_camera->rotation = 0.0f;
-  glm_vec3_one(new_camera->position);
+  glm_vec3_zero(new_camera->position);
   glm_vec3_one(new_camera->scale);
 
   D_reset_camera(new_camera);

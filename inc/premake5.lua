@@ -26,7 +26,7 @@ project "Dwale"
   files
   {
     "./**.h",
-    "../src/**.c"
+    "../src/**.c",
   }
 
   includedirs
