@@ -27,6 +27,8 @@ extern "C"
 #endif /* __cplusplus */
 
 #include "core/core.h"
+#define __D_INCLUDE_NONE__
+#include "dwale.h"
 
 #define USE_ERRNO NULL
 

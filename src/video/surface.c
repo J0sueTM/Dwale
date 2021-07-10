@@ -308,8 +308,10 @@ D_is_texture_enabled(struct D_surface *__surface,
     return false;
   }
 
-  if (D_surface_has_texture(__surface, __texture))
-    return D_get_texture_node_with_texture(__surface, __texture)->status;
+  if (!D_surface_has_texture(__surface, __texture))
+    return NULL;
+
+  return D_get_texture_node_with_texture(__surface, __texture)->status;
 }
 
 void
@@ -360,7 +362,7 @@ D_prepare_surface_for_rendering(struct D_surface *__surface)
   int i = 0;
   for (struct D_texture_node *temp_head_texture_node = __surface->head_texture_node->next;
        temp_head_texture_node;
-       temp_head_texture_node = temp_head_texture_node = temp_head_texture_node->next)
+       temp_head_texture_node = temp_head_texture_node->next)
   {
     D_set_uniform_int(__surface->shaders, i, temp_head_texture_node->name);
 
