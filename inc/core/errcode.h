@@ -26,13 +26,10 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-/* Colours don't seem to work on windows terminals */
-#ifndef _WIN32
 #define C_NORMAL "\e[0m"
 #define C_GREEN  "\e[1;92m"
 #define C_YELLOW "\e[1;93m"
 #define C_RED    "\e[1;91m"
-#endif /* _WIN32 */  
 
 /*
  * This error code list should be upgraded throughout development time.
