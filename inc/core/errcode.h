@@ -26,10 +26,17 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-#define C_NORMAL "\e[0m"
-#define C_GREEN  "\e[1;92m"
-#define C_YELLOW "\e[1;93m"
-#define C_RED    "\e[1;91m"
+#ifdef _WIN32
+# define C_NORMAL "" 
+# define C_GREEN  "" 
+# define C_YELLOW "" 
+# define C_RED    "" 
+#else
+# define C_NORMAL "\e[0m"
+# define C_GREEN  "\e[1;92m"
+# define C_YELLOW "\e[1;93m"
+# define C_RED    "\e[1;91m"
+#endif /* _WIN32 */
 
 /*
  * This error code list should be upgraded throughout development time.

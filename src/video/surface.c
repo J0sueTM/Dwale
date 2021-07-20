@@ -4,14 +4,14 @@
  * \date May 21, 2021
  *
  * \brief Surface is basically a panel, where gl object can be attached to.
- * 
+ *
  * Copyright (C) Josué Teodoro Moreira
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -192,7 +192,7 @@ D_surface_has_texture(struct D_surface *__surface,
     return false;
   else if (__surface->tail_texture_node->id == -1)
     return false;
-  
+
   struct D_texture_node *temp_head_texture_node = __surface->head_texture_node;
   struct D_texture_node *temp_tail_texture_node = __surface->tail_texture_node;
   for (int i = 0; i < ceill(__surface->tail_texture_node->id * 0.5f); ++i)
@@ -275,7 +275,7 @@ D_get_texture_node_with_texture(struct D_surface *__surface,
     return NULL;
   else if (__surface->tail_texture_node->id == -1)
     return NULL;
-  
+
   struct D_texture_node *temp_head_texture_node = __surface->head_texture_node;
   struct D_texture_node *temp_tail_texture_node = __surface->tail_texture_node;
   for (int i = 0; i < ceill(__surface->tail_texture_node->id * 0.5f); ++i)
@@ -334,7 +334,7 @@ D_bind_textures_from_surface(struct D_surface *__surface)
 
     return;
   }
-  
+
   struct D_texture_node *temp_head_texture_node = __surface->head_texture_node->next;
   while (temp_head_texture_node)
   {
@@ -405,7 +405,7 @@ D_translate_surface(struct D_surface *__surface,
 {
   if (!__surface)
     return;
-  
+
   __surface->position[0] += __translation[0];
   __surface->position[1] += __translation[1];
 }

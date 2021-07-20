@@ -150,6 +150,7 @@ D_create_window(char  *__title,
 
     _global_window->handle =
       glfwCreateWindow(_global_window->fullscreen_dimensions->width, _global_window->fullscreen_dimensions->height, __title, _global_window->monitor, NULL);
+    D_assert(_global_window->handle, "Could not create window");
     _global_window->fullscreen = true;
 
     free(monitor_count);
@@ -159,6 +160,7 @@ D_create_window(char  *__title,
 normal_window_selected:
   _global_window->handle =
     glfwCreateWindow(_global_window->windowed_dimensions[0], _global_window->windowed_dimensions[1], __title, _global_window->monitor, NULL);
+  D_assert(_global_window->handle, "Could not create window");
   
 end_window_creation:
   if (__context_current)
@@ -188,7 +190,7 @@ D_toggle_context_current()
 {
   if (!_global_window)
   {
-    D_raise_error(DERR_NOPARAM("_global_window", "Global window can't be NULL. Check if you created it"));
+    D_raise_error(DERR_NOPARAM("_global_window", "Global window can't be NULL."));
 
     return;
   }
