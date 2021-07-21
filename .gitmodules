@@ -1,3 +1,6 @@
 [submodule "vendor/glfw"]
 	path = vendor/glfw
 	url = https://github.com/J0sueTM/glfw.git
+[submodule "vendor/portaudio"]
+	path = vendor/portaudio
+	url = https://github.com/PortAudio/portaudio.git
