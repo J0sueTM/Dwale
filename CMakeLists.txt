@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
 
-set(CMAKE_C_COMPILER "C:/MinGW/bin/gcc.exe")
-set(CMAKE_CXX_COMPILER "C:/MinGW/bin/g++.exe")
-
 project(Dwale VERSION 1.0 LANGUAGES C)
 set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON CACHE BOOL "" FORCE)
@@ -62,9 +59,12 @@ add_library(cglm SHARED
   ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cglm/src/ray.c
   ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cglm/src/affine2d.c)
 
+# portaudio
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/portaudio)
+
 add_library(Dwale SHARED ${SRC})
 if (WIN32)
-  target_link_libraries(Dwale mingw32 glad glfw cglm opengl32 OpenGL::GL)
+  target_link_libraries(Dwale mingw32 glad glfw cglm portaudio opengl32 OpenGL::GL)
 else ()
-  target_link_libraries(Dwale glad glfw cglm OpenGL::GL)
+  target_link_libraries(Dwale glad glfw cglm portaudio OpenGL::GL)
 endif (WIN32)
