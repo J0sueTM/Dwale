@@ -27,19 +27,22 @@ add_executable(VectorTest ${CMAKE_CURRENT_SOURCE_DIR}/src/t_vector.c)
 target_link_libraries(VectorTest Dwale)
 
 add_executable(MatrixTest ${CMAKE_CURRENT_SOURCE_DIR}/src/t_matrix/t_matrix.c)
-target_link_libraries(MatrixTest Dwale)
+target_link_libraries(MatrixTest Dwale OpenGL::GL)
 
 add_executable(WindowTest ${CMAKE_CURRENT_SOURCE_DIR}/src/t_window.c)
-target_link_libraries(WindowTest Dwale)
+target_link_libraries(WindowTest Dwale OpenGL::GL)
 
 add_executable(GLObjectTest ${CMAKE_CURRENT_SOURCE_DIR}/src/t_gl_object.c)
-target_link_libraries(GLObjectTest Dwale)
+target_link_libraries(GLObjectTest Dwale OpenGL::GL)
 
 add_executable(TextureTest ${CMAKE_CURRENT_SOURCE_DIR}/src/t_texture/t_texture.c)
-target_link_libraries(TextureTest Dwale)
+target_link_libraries(TextureTest Dwale OpenGL::GL)
 
 add_executable(SurfaceTest ${CMAKE_CURRENT_SOURCE_DIR}/src/t_surface/t_surface.c)
-target_link_libraries(SurfaceTest Dwale)
+target_link_libraries(SurfaceTest Dwale OpenGL::GL)
 
 add_executable(CameraTest ${CMAKE_CURRENT_SOURCE_DIR}/src/t_camera/t_camera.c)
-target_link_libraries(CameraTest Dwale)
+target_link_libraries(CameraTest Dwale OpenGL::GL)
+
+add_executable(AudioTest ${CMAKE_CURRENT_SOURCE_DIR}/src/t_audio/t_audio.c)
+target_link_libraries(AudioTest Dwale OpenGL::GL OpenAL)

@@ -48,6 +48,8 @@ extern "C"
 #include "video/surface.h"
 #include "video/renderer.h"
 #include "video/camera.h"
+
+#include "audio/audio.h"
   
 #endif /* __D_INCLUDE_NONE__ */
 

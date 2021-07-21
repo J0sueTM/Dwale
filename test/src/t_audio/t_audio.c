@@ -1,10 +1,8 @@
 /**
- * \file inc/audio/audio.h
+ * \file test/src/t_audio.c
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
- * \date July 21, 2021
+ * \date July 20, 2021
  *
- * \brief Audio related utilities
- * 
  * Copyright (C) Josué Teodoro Moreira
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -18,19 +16,16 @@
  * GNU General Public License for more details.
  */
 
-#ifndef __D_AUDIO_H__
-#define __D_AUDIO_H__
+#include "dwale.h"
 
-#include "core/core.h"
-#include "AL/alc.h"
+int
+main(void)
+{
+  D_init();
+  D_init_audio();
 
-void
-D_init_audio();
-
-void
-D_end_audio();
-
-bool
-check_alc_errors();
-
-#endif /* __D_AUDIO_H__ */
+  D_end_audio();
+  D_end();
+  
+  return 0;
+}

@@ -41,7 +41,7 @@ set(SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/video/surface.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/video/camera.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/video/renderer.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/audio/audio.c
+  ${CMAKE_CUR}
   ${CMAKE_CURRENT_SOURCE_DIR}/src/audio/stb_vorbis.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/dwale.c)
 
