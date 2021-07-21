@@ -21,3 +21,4 @@ Session.vim
 **/Makefile
 *.Make
 *.make
+inc/dwale_export.h

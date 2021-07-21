@@ -16,20 +16,29 @@
 
 cmake_minimum_required(VERSION 3.20)
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
 project(Dwale VERSION 1.0 LANGUAGES C)
-set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON CACHE BOOL "" FORCE)
+set(LIBTYPE "STATIC")
+
+include(GNUInstallDirs)
+include(GenerateExportHeader)
 
 if (DWALE_DEBUG)
-  set(CMAKE_C_FLAGS "-g")
+  if (MSVC)
+    add_definitions(-DNDEBUG -D_WINDOWS -D_USRDLL)
+    add_compile_options(/Gy /Oi)
+  else ()
+    set(CMAKE_C_FLAGS "-g")
+  endif (MSVC)
+  set(DEFAULT_BUILD_TYPE "Debug")
+else ()
+  set(DEFAULT_BUILD_TYPE "Release")
 endif (DWALE_DEBUG)
 
-include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cglm/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/vendor/portaudio/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 set(SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/core/debug.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/video/video.c
@@ -49,8 +58,7 @@ set(SRC
 find_package(OpenGL REQUIRED)
 
 # glad
-add_library(glad SHARED
-  ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/src/glad.c)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad)
 
 # glfw
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -62,7 +70,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw)
 if (MSVC)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/cglm)
 else ()
-  add_library(cglm SHARED
+  add_library(cglm STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cglm/src/euler.c
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cglm/src/affine.c
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cglm/src/io.c
@@ -86,22 +94,52 @@ else ()
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cglm/src/affine2d.c)
 endif (MSVC)
 
-# portaudio
-# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/portaudio)
-
 # openal_soft
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/openal_soft)
 
-add_library(Dwale SHARED ${SRC})
+add_library(Dwale STATIC ${SRC})
 if (WIN32)
   if (MSVC)
-    target_link_libraries(Dwale glad glfw cglm portaudio opengl32 OpenGL::GL OpenAL)
+    target_link_libraries(Dwale glad glfw cglm opengl32 OpenGL::GL OpenAL)
   else ()
-    target_link_libraries(Dwale mingw32 glad glfw cglm portaudio opengl32 OpenGL::GL OpenAL)
+    target_link_libraries(Dwale mingw32 glad glfw cglm opengl32 OpenGL::GL OpenAL)
   endif (MSVC)
 else ()
-  target_link_libraries(Dwale glad glfw cglm portaudio OpenGL::GL OpenAL)
+  target_link_libraries(Dwale glad glfw cglm OpenGL::GL OpenAL)
 endif (WIN32)
+
+if (WIN32 AND MSVC)
+  set_target_properties(Dwale PROPERTIES
+    OUTPUT_NAME ${PROJECT_NAME}
+    POSITION_INDEPENDENT_CODE ON
+    CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+else ()
+  set_target_properties(Dwale PROPERTIES
+    OUTPUT_NAME ${PROJECT_NAME}
+    POSITION_INDEPENDENT_CODE ON)
+endif (WIN32 AND MSVC)
+
+target_include_directories(Dwale
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include>
+    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw/include>
+    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cglm/include>
+    ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+GENERATE_EXPORT_HEADER(Dwale
+BASE_NAME Dwale
+EXPORT_MACRO_NAME dwale_export
+EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/inc/dwale_export.h
+STATIC_DEFINE SHARED_EXPORTS_BUILT_AS_STATIC)
+
+install(TARGETS ${PROJECT_NAME}
+        EXPORT  ${PROJECT_NAME}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 if (DWALE_DEBUG)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
