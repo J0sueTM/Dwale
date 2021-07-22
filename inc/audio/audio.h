@@ -5,7 +5,7 @@
  *
  * \brief Audio related utilities
  * 
- * Copyright (C) Josué Teodoro Moreira
+ * Copyright (C) Josue Teodoro Moreira
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,15 +22,38 @@
 #define __D_AUDIO_H__
 
 #include "core/core.h"
+#define STB_VORBIS_HEADER_ONLY
+#include "audio/stb_vorbis.c"
+#include "AL/al.h"
 #include "AL/alc.h"
 
-void
+struct D_audio
+{
+  ALCdevice *device;
+  ALCcontext *context;
+};
+
+struct D_audio_stream
+{
+  int channels, sample_rate, samples;
+  short *data;
+
+  unsigned int buffer, source, format, state;
+};
+
+struct D_audio *
 D_init_audio();
 
 void
-D_end_audio();
+D_end_audio(struct D_audio *__audio);
+
+struct D_audio_stream *
+D_create_audio_stream(const char *__file_name);
+
+void
+D_end_audio_stream(struct D_audio_stream *__audio_stream);
 
 bool
-check_alc_errors();
+D_is_audio_stream_playing(struct D_audio_stream *__audio_stream);
 
 #endif /* __D_AUDIO_H__ */

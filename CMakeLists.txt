@@ -39,6 +39,14 @@ else ()
   set(DEFAULT_BUILD_TYPE "Release")
 endif (DWALE_DEBUG)
 
+include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cglm/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/vendor/openal_soft/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/vendor/freealut/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/inc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/core/debug.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/video/video.c
@@ -50,8 +58,8 @@ set(SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/video/surface.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/video/camera.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/video/renderer.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/audio/audio.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/audio/stb_vorbis.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/audio/audio.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/dwale.c)
 
 # OpenGL
@@ -97,6 +105,9 @@ endif (MSVC)
 # openal_soft
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/openal_soft)
 
+# freealut
+# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/freealut)
+
 add_library(Dwale STATIC ${SRC})
 if (WIN32)
   if (MSVC)
@@ -118,16 +129,6 @@ else ()
     OUTPUT_NAME ${PROJECT_NAME}
     POSITION_INDEPENDENT_CODE ON)
 endif (WIN32 AND MSVC)
-
-target_include_directories(Dwale
-  PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-  PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include>
-    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw/include>
-    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cglm/include>
-    ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 GENERATE_EXPORT_HEADER(Dwale
 BASE_NAME Dwale

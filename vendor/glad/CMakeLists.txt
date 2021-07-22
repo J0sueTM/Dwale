@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.20)
 
 include(GNUInstallDirs)
 
+include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 add_library(glad STATIC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/glad.c)
 if (WIN32)
@@ -23,13 +26,6 @@ else ()
     OUTPUT_NAME glad
     POSITION_INDEPENDENT_CODE ON)
 endif (WIN32 AND MSVC)
-
-target_include_directories(glad
-  PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-  PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 install(TARGETS glad
         EXPORT  glad

@@ -3,7 +3,7 @@
  * \author Josué Teodoro Moreira <teodoro.josue@protonmail.ch>
  * \date July 21, 2021
  *
- * Copyright (C) Josué Teodoro Moreira
+ * Copyright (C) Josue Teodoro Moreira
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,57 +18,84 @@
 
 #include "audio/audio.h"
 
-static ALCdevice *global_device;
-
-void
+struct D_audio *
 D_init_audio()
 {
-  global_device = alcOpenDevice(NULL);
-  D_assert_return_void(global_device, DERR_NOINIT("OpenAL"));
+  struct D_audio *new_audio = (struct D_audio *)malloc(sizeof(struct D_audio *));
+  D_assert(new_audio, NULL);
+
+  new_audio->device = alcOpenDevice(NULL);
+  D_assert(new_audio->device, DERR_NOINIT("OpenAL: Device"));
+
+  new_audio->context = alcCreateContext(new_audio->device, 0);
+  if (!alcMakeContextCurrent(new_audio->context))
+  {
+    D_raise_error("OpenAL: Could not make context current");
+
+    return NULL;
+  }
+
+  return new_audio;
 }
 
 void
-D_end_audio()
+D_end_audio(struct D_audio *__audio)
 {
-  alcCloseDevice(global_device);
+  D_assert_return_void(__audio, DERR_NOPARAM("__audio", "Audio can't be NULL"));
+
+  alcMakeContextCurrent(NULL);
+  if (__audio->context)
+    alcDestroyContext(__audio->context);
+  if (__audio->device)
+    alcCloseDevice(__audio->device);
+}
+
+struct D_audio_stream *
+D_create_audio_stream(const char *__file_name)
+{
+  struct D_audio_stream *new_audio_stream = (struct D_audio_stream *)malloc(sizeof(struct D_audio_stream));
+  D_assert(new_audio_stream, NULL);
+
+  new_audio_stream->samples = stb_vorbis_decode_filename(__file_name,
+                                                         &new_audio_stream->channels,
+                                                         &new_audio_stream->sample_rate,
+                                                         &new_audio_stream->data);
+
+  if (new_audio_stream->channels == 2)
+    new_audio_stream->format = AL_FORMAT_STEREO16;
+  else
+    new_audio_stream->format = AL_FORMAT_MONO16;
+
+  alGenBuffers(1, &new_audio_stream->buffer);
+  alBufferData(new_audio_stream->buffer, new_audio_stream->format, new_audio_stream->data,
+               new_audio_stream->samples * 2 * sizeof(short), new_audio_stream->sample_rate);
+
+  alGenSources(1, &new_audio_stream->source);
+  alSourceQueueBuffers(new_audio_stream->source, 1, &new_audio_stream->buffer);
+  alSourcePlay(new_audio_stream->source);
+
+  while (D_is_audio_stream_playing(new_audio_stream))
+    Sleep(50);
+
+  return new_audio_stream;
+}
+
+void
+D_end_audio_stream(struct D_audio_stream *__audio_stream)
+{
+  D_assert_return_void(__audio_stream, DERR_NOPARAM("__audio_stream", "Audio stream can't be NULL"));
+
+  free(__audio_stream->data);
+  free(__audio_stream);
 }
 
 bool
-check_alc_errors()
+D_is_audio_stream_playing(struct D_audio_stream *__audio_stream)
 {
-  ALCenum err = alcGetError(global_device);
-  if (err != ALC_NO_ERROR)
-  {
-    switch (err)
-    {
-    case ALC_INVALID_VALUE:
-      D_raise_error("OpenAL: An invalid value was passed to an OpenAL function");
-      
-      break;
-    case ALC_INVALID_DEVICE:
-      D_raise_error("OpenAL: A bad device was passed to an OpenAL function");
-      
-      break;
-    case ALC_INVALID_CONTEXT:
-      D_raise_error("OpenAL: A bad context was pased to an OpenAL function");
-      
-      break;
-    case ALC_INVALID_ENUM:
-      D_raise_error("OpenAL: An unknown enum enum was passed to an OpenAL function");
-      
-      break;
-    case ALC_OUT_OF_MEMORY:
-      D_raise_error("OpenAL: Out of memory");
-      
-      break;
-    default:
-      D_raise_error("OpenAL: Something went wrong");
+  if (__audio_stream)
+    alGetSourcei(__audio_stream->source, AL_SOURCE_STATE, &__audio_stream->state);
+  else
+    __audio_stream->state = false;
 
-      break;
-    }
-
-    return false;
-  }
-
-  return true;
+  return __audio_stream->state;
 }

@@ -45,4 +45,4 @@ add_executable(CameraTest ${CMAKE_CURRENT_SOURCE_DIR}/src/t_camera/t_camera.c)
 target_link_libraries(CameraTest Dwale OpenGL::GL)
 
 add_executable(AudioTest ${CMAKE_CURRENT_SOURCE_DIR}/src/t_audio/t_audio.c)
-target_link_libraries(AudioTest Dwale OpenGL::GL OpenAL)
+target_link_libraries(AudioTest Dwale)
