@@ -4,6 +4,3 @@
 [submodule "vendor/openal_soft"]
 	path = vendor/openal_soft
 	url = https://github.com/kcat/openal-soft.git
-[submodule "vendor/freealut"]
-	path = vendor/freealut
-	url = https://github.com/J0sueTM/freealut.git

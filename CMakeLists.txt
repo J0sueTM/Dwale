@@ -105,9 +105,6 @@ endif (MSVC)
 # openal_soft
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/openal_soft)
 
-# freealut
-# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/freealut)
-
 add_library(Dwale STATIC ${SRC})
 if (WIN32)
   if (MSVC)

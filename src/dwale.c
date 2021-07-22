@@ -20,14 +20,18 @@
 
 #include "dwale.h"
 
+static struct D_audio *audio;
+
 void
 D_init()
 {
   D_init_video();
+  audio = D_init_audio(audio);
 }
 
 void
 D_end()
 {
+  D_end_audio(audio);
   D_end_video();
 }

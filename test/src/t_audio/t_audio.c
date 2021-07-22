@@ -24,12 +24,10 @@ int
 main()
 {
   D_init();
-  struct D_audio *test_audio = D_init_audio();
 
   struct D_audio_stream *test_audio_stream = D_create_audio_stream("test/src/t_audio/res/test_music.ogg");
   D_end_audio_stream(test_audio_stream);
   
-  D_end_audio(test_audio);
   D_end();
   
   return 0;

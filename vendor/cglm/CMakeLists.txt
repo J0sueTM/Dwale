@@ -6,8 +6,8 @@ set(CMAKE_C_STANDARD_REQUIRED YES)
 set(DEFAULT_BUILD_TYPE "Release")
 
 set(CGLM_BUILD)
-option(CGLM_SHARED "Shared build" ON)
-option(CGLM_STATIC "Static build" OFF)
+option(CGLM_SHARED "Shared build" OFF)
+option(CGLM_STATIC "Static build" ON)
 option(CGLM_USE_C99 "" OFF)
 option(CGLM_USE_TEST "Enable Tests" OFF)
 

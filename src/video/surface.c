@@ -309,7 +309,7 @@ D_is_texture_enabled(struct D_surface *__surface,
   }
 
   if (!D_surface_has_texture(__surface, __texture))
-    return NULL;
+    return false;
 
   return D_get_texture_node_with_texture(__surface, __texture)->status;
 }
