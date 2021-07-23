@@ -1,6 +1,6 @@
 # Dwale
 
-#### _An open source, efficiency focused game framework_
+#### An open source, efficiency focused game engine/framework
 
 # Clone
 
@@ -23,61 +23,48 @@ $ git submodule add https://github.com/J0sueTM/Dwale.git vendor/Dwale
 $ git submodule update --init --recursive
 ```
 
-## Install
+# Compile
 
-There is already a premake5 workspace ready to use.
+Dwale uses cmake, so unless you get to compile and link Dwale and it's vendors right, I recommend that you use it as well.
 
-* Linux
-Any gnu make works perfect.
-  ```sh
-  $ premake5 *
-  
-  # * = The generated file type. Whether gmake or gmake2
-  #   | gmake
-  #   | gmake2
+```sh
+$ mkdir bin
+$ cd bin
+```
 
-  $ make # for compiling
-  ```
-  
-* Unix
-I haven't tested on unix yet. However, I don't think it differs that much from linux. Please open a PR or an issue if there's something wrong.
-  ```sh
-  $ premake5 *
-  
-  # * = The generated file type. For mac os I recommend:
-  #   | gmake
-  #   | gmake2
-  #   | xcode4
+## Create build files
 
-  $ make # for compiling
-  ```
-  
-* Windows
-I recommend using Visual Studio. I haven't tested with any other IDE or compiler.
-  ```batch
-  $ premake5 *
- 
-  :: * = The version of your Visual Studio.
-  ::   | vs2005
-  ::   | vs2006
-  ::   | vs2007
-  ::   | vs2008
-  ::   | vs2009
-  ::   | vs2010
-  ::   | vs2011
-  ::   | vs2012
-  ::   | vs2013
-  ::   | vs2014
-  ::   | vs2015
-  ::   | vs2016
-  ::   | vs2017
-  ::   | vs2018
-  ::   | vs2019
-  ```
+```sh
+$ # Debug
+$ cmake -S .. -B . -D DWALE_DEBUG=ON
+$  
+$ # Release
+$ cmake -S .. -B .
+```
+
+By default, Dwale will build and link statically. If you don't want so:
+
+```sh
+$ # Debug
+$ cmake -S .. -B . -D DWALE_DEBUG=ON -D BUILD_SHARED_LIBS=ON
+$
+$ # Release
+$ cmake -S .. -B . -D BUILD_SHARED_LIBS=ON
+```
+
+## Build
+
+```sh
+$ # Debug
+$ cmake --build . --target Dwale --config Debug
+$  
+$ # Release
+$ cmake --build . --target Dwale --config Release
+```
 
 ## Dependencies
 
-All Dwale dependencies are already into the vendor folder.
+All Dwale dependencies are already into the vendor folder, except for OpenGL, which you should have installed on your machine.
 
 | Vendor | Website | Source Code |
 | ------ | ------- | ----------- |
@@ -85,8 +72,13 @@ All Dwale dependencies are already into the vendor folder.
 | GLAD | https://glad.dav1d.de/ | https://github.com/dav1dde/glad-web |
 | CGLM | https://cglm.readthedocs.io/en/latest/ | https://github.com/recp/cglm |
 | STB | https://nothings.org/stb/stb_h.html | https://github.com/nothings/stb |
+| OPENAL SOFT | https://openal-soft.org/ | https://github.com/kcat/openal-soft |
 
-Check out [Premake's documentation if you're stuck](https://premake.github.io/docs/).
+# What I learnt
 
-A project by JosuÃ© Teodoro Moreira
+- OpenGL (Graphics Programming)
+- OpenAL (Audio Programming)
+- Cmake
+- Premake (I used premake before cmake, check the old versions of this repository)
 
+A project by Josué Teodoro Moreira
