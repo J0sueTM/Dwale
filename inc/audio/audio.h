@@ -31,7 +31,7 @@ extern "C"
 #include "audio/stb_vorbis.c"
 #include "AL/al.h"
 #include "AL/alc.h"
-
+#include "cglm/vec3.h"
 #ifndef _WIN32
 #include <pthread.h>
 #endif /* _WIN32 */
@@ -48,16 +48,25 @@ struct D_audio_stream
   short *data;
 
   unsigned int buffer, source, format, state;
+  float gain, min_gain, max_gain;
 };
 
 struct D_audio *
 D_init_audio();
 
 void
-D_end_audio(struct D_audio *__audio);
+D_end_audio();
+
+void
+D_set_audio_gain(float __gain);
+
+void
+D_set_audio_position(vec3 __position);
 
 struct D_audio_stream *
 D_create_audio_stream(const char *__file_name,
+                      float       __min_gain,
+                      float       __max_gain,
                       float       __gain,
                       bool        __loop);
 
@@ -67,8 +76,14 @@ D_end_audio_stream(struct D_audio_stream *__audio_stream);
 void
 D_play_audio_stream(struct D_audio_stream *__audio_stream);
 
+void
+D_pause_audio_stream(struct D_audio_stream *__audio_stream);
+
+void
+D_stop_audio_stream(struct D_audio_stream *__audio_stream);
+
 bool
-D_is_audio_stream_playing(struct D_audio_stream *__audio_stream);
+D_is_audio_stream_active(struct D_audio_stream *__audio_stream);
 
 void
 D_set_audio_stream_gain(struct D_audio_stream *__audio_stream,
@@ -77,6 +92,14 @@ D_set_audio_stream_gain(struct D_audio_stream *__audio_stream,
 void
 D_set_audio_stream_loop(struct D_audio_stream *__audio_stream,
                         bool                   __loop);
+
+void
+D_set_audio_stream_position(struct D_audio_stream *__audio_stream,
+                            vec3                   __position);
+
+void
+D_set_audio_stream_offset(struct D_audio_stream *__audio_stream,
+                          float                  __offset);
 
 #ifdef __cplusplus
 }

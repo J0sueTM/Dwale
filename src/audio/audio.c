@@ -32,11 +32,10 @@ _update_audio_stream(void *__arg)
 {
   struct D_audio_stream *temp_audio_stream = (struct D_audio_stream *)__arg;
 
-  while (D_is_audio_stream_playing(temp_audio_stream))
+  while (D_is_audio_stream_active(temp_audio_stream))
     D_sleep(0.1f);
 
-  alSourceUnqueueBuffers(temp_audio_stream->source, 1, &temp_audio_stream->buffer);
-  alSourceStop(temp_audio_stream->source);
+  D_set_audio_stream_offset(temp_audio_stream, 0.0f);
 
 #ifdef _WIN32
   return 0;
@@ -75,8 +74,22 @@ D_end_audio(struct D_audio *__audio)
     alcCloseDevice(__audio->device);
 }
 
+void
+D_set_audio_gain(float __gain)
+{
+  alListenerf(AL_GAIN, __gain);
+}
+
+void
+D_set_audio_position(vec3 __position)
+{
+  alListener3f(AL_POSITION, __position[0], __position[1], __position[2]);
+}
+
 struct D_audio_stream *
 D_create_audio_stream(const char *__file_name,
+                      float       __min_gain,
+                      float       __max_gain,
                       float       __gain,
                       bool        __loop)
 {
@@ -98,6 +111,12 @@ D_create_audio_stream(const char *__file_name,
                new_audio_stream->samples * 2 * sizeof(short), new_audio_stream->sample_rate);
 
   alGenSources(1, &new_audio_stream->source);
+  alSourceQueueBuffers(new_audio_stream->source, 1, &new_audio_stream->buffer);
+
+  new_audio_stream->min_gain = __min_gain;
+  new_audio_stream->max_gain = __max_gain;
+  alSourcef(new_audio_stream->source, AL_MIN_GAIN, new_audio_stream->min_gain);
+  alSourcef(new_audio_stream->source, AL_MAX_GAIN, new_audio_stream->max_gain);
   D_set_audio_stream_gain(new_audio_stream, __gain);
   D_set_audio_stream_loop(new_audio_stream, __loop);
 
@@ -121,9 +140,11 @@ D_play_audio_stream(struct D_audio_stream *__audio_stream)
 {
   if (!__audio_stream)
     return;
-  
-  alSourceQueueBuffers(__audio_stream->source, 1, &__audio_stream->buffer);
+
+  unsigned int old_state = __audio_stream->state;
   alSourcePlay(__audio_stream->source);
+  if (old_state == AL_PAUSED)
+    return;
 
   /* Thread will wait until source ends */
 #ifdef _WIN32
@@ -135,15 +156,34 @@ D_play_audio_stream(struct D_audio_stream *__audio_stream)
 #endif /* _WIN32 */
 }
 
-bool
-D_is_audio_stream_playing(struct D_audio_stream *__audio_stream)
+void
+D_pause_audio_stream(struct D_audio_stream *__audio_stream)
 {
-  if (__audio_stream)
-    alGetSourcei(__audio_stream->source, AL_SOURCE_STATE, &__audio_stream->state);
-  else
-    __audio_stream->state = false;
+  if (!__audio_stream)
+    return;
 
-  return __audio_stream->state;
+  alSourcePause(__audio_stream->source);
+}
+
+void
+D_stop_audio_stream(struct D_audio_stream *__audio_stream)
+{
+  if (!__audio_stream)
+    return;
+
+  alSourceStop(__audio_stream->source);
+  alSourceUnqueueBuffers(__audio_stream->source, 1, &__audio_stream->buffer);
+}
+
+bool
+D_is_audio_stream_active(struct D_audio_stream *__audio_stream)
+{
+  if (!__audio_stream)
+    return AL_STOPPED;
+  
+  alGetSourcei(__audio_stream->source, AL_SOURCE_STATE, &__audio_stream->state);
+
+  return __audio_stream->state != AL_STOPPED;
 }
 
 void
@@ -153,7 +193,13 @@ D_set_audio_stream_gain(struct D_audio_stream *__audio_stream,
   if (!__audio_stream)
     return;
 
+  if (__gain <= 0.0f ||
+      __gain <= __audio_stream->min_gain ||
+      __gain >= __audio_stream->max_gain)
+    return;
+
   alSourcef(__audio_stream->source, AL_GAIN, __gain);
+  __audio_stream->gain = __gain;
 }
 
 void
@@ -164,4 +210,24 @@ D_set_audio_stream_loop(struct D_audio_stream *__audio_stream,
     return;
 
   alSourcei(__audio_stream->source, AL_LOOPING, __loop);
+}
+
+void
+D_set_audio_stream_position(struct D_audio_stream *__audio_stream,
+                            vec3                   __position)
+{
+  if (!__audio_stream)
+    return;
+
+  alSource3f(__audio_stream->source, AL_POSITION, __position[0], __position[1], __position[3]);
+}
+
+void
+D_set_audio_stream_offset(struct D_audio_stream *__audio_stream,
+                          float                  __offset)
+{
+  if (!__audio_stream)
+    return;
+
+  alSourcef(__audio_stream->source, AL_SEC_OFFSET, __offset);
 }
