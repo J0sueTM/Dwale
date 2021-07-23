@@ -32,11 +32,13 @@ extern "C"
 #include <string.h>
 #include <memory.h>
 #include <errno.h>
-
+  
 #ifdef _WIN32
 #include <Windows.h>
+#define D_sleep(__seconds) Sleep(__seconds * 1000)
 #else
 #include <unistd.h>
+#define D_sleep(__seconds) sleep(__seconds)
 #endif /*_WIN32 */
 
 #if defined(__amd64__)  || \

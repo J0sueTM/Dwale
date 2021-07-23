@@ -18,14 +18,25 @@
 
 #include "dwale.h"
 
-struct D_audio *audio;
-
 int
 main()
 {
   D_init();
 
-  struct D_audio_stream *test_audio_stream = D_create_audio_stream("test/src/t_audio/res/test_music.ogg");
+  struct D_window *window = D_create_window("AudioTest", 800, 600, -1, true, true);
+
+  struct D_audio_stream *test_audio_stream = D_create_audio_stream("test/src/t_audio/res/bell.ogg", 1.0f, true);
+    
+  D_play_audio_stream(test_audio_stream);
+
+  while (D_is_window_open(window))
+  {
+    D_clear_window(0.2f, 0.2f, 0.2f, 1.0f);
+
+    D_swap_window_buffers();
+    D_poll_window_events();
+  }
+
   D_end_audio_stream(test_audio_stream);
   
   D_end();

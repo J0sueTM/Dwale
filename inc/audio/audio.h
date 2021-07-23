@@ -21,11 +21,20 @@
 #ifndef __D_AUDIO_H__
 #define __D_AUDIO_H__
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 #include "core/core.h"
 #define STB_VORBIS_HEADER_ONLY
 #include "audio/stb_vorbis.c"
 #include "AL/al.h"
 #include "AL/alc.h"
+
+#ifndef _WIN32
+#include <pthread.h>
+#endif /* _WIN32 */
 
 struct D_audio
 {
@@ -48,12 +57,29 @@ void
 D_end_audio(struct D_audio *__audio);
 
 struct D_audio_stream *
-D_create_audio_stream(const char *__file_name);
+D_create_audio_stream(const char *__file_name,
+                      float       __gain,
+                      bool        __loop);
 
 void
 D_end_audio_stream(struct D_audio_stream *__audio_stream);
 
+void
+D_play_audio_stream(struct D_audio_stream *__audio_stream);
+
 bool
 D_is_audio_stream_playing(struct D_audio_stream *__audio_stream);
+
+void
+D_set_audio_stream_gain(struct D_audio_stream *__audio_stream,
+                        float                  __gain);
+
+void
+D_set_audio_stream_loop(struct D_audio_stream *__audio_stream,
+                        bool                   __loop);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* __D_AUDIO_H__ */
