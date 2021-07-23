@@ -14,7 +14,7 @@ if (WIN32)
     target_link_libraries(glad OpenGL::GL)
   endif (MSVC)
 else ()
-  target_link_librarise(glad OpenGL::GL)  
+  target_link_libraries(glad OpenGL::GL)  
 endif (WIN32)
 
 if (WIN32 AND MSVC)
