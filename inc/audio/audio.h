@@ -29,8 +29,15 @@ extern "C"
 #include "core/core.h"
 #define STB_VORBIS_HEADER_ONLY
 #include "audio/stb_vorbis.c"
+
+#ifdef _WIN32
 #include "AL/al.h"
 #include "AL/alc.h"
+#else
+#include <AL/al.h>
+#include <AL/alc.h>
+#endif /* _win32 */
+
 #include "cglm/vec3.h"
 #ifndef _WIN32
 #include <pthread.h>

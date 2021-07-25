@@ -25,7 +25,7 @@ static pthread_t audio_stream_update_thread_id;
 
 #ifdef _WIN32
 DWORD WINAPI
-#elif
+#else
 static void *
 #endif /* _WIN32 */
 _update_audio_stream(void *__arg)

@@ -41,7 +41,7 @@ if (DWALE_DEBUG)
     add_definitions(-DNDEBUG -D_WINDOWS -D_USRDLL)
     add_compile_options(/Gy /Oi)
   else ()
-    set(CMAKE_C_FLAGS "-g")
+    set(CMAKE_C_FLAGS "-g -D __D_DEBUG__")
   endif (MSVC)
   set(DEFAULT_BUILD_TYPE "Debug")
 else ()
@@ -53,7 +53,6 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw/include
   ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cglm/include
   ${CMAKE_CURRENT_SOURCE_DIR}/vendor/openal_soft/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/vendor/freealut/include
   ${CMAKE_CURRENT_SOURCE_DIR}/inc
   ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(SRC
@@ -111,8 +110,12 @@ else ()
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cglm/src/affine2d.c)
 endif (MSVC)
 
-# openal_soft
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/openal_soft)
+if (_WIN32)
+  # openal_soft
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/openal_soft)
+else ()
+  find_package(OpenAL REQUIRED)
+endif (_WIN32)
 
 add_library(Dwale ${DWALE_BUILD} ${SRC})
 if (WIN32)
@@ -122,7 +125,7 @@ if (WIN32)
     target_link_libraries(Dwale mingw32 glad glfw cglm opengl32 OpenGL::GL OpenAL pthread)
   endif (MSVC)
 else ()
-  target_link_libraries(Dwale glad glfw cglm OpenGL::GL OpenAL pthread)
+  target_link_libraries(Dwale glad glfw cglm OpenGL::GL openal pthread)
 endif (WIN32)
 
 if (WIN32 AND MSVC)
